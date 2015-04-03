@@ -1,0 +1,20 @@
+{
+  "name": "sjs",
+  "private": true,
+  "version": "1.0.0",
+  "description": "SJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp"
+  },
+  "bin": {
+    "gulp": "./bin/gulp.js"
+  },
+  "devDependencies": {
+    "gulp": "latest",
+    "gulp-rename": "latest",
+    "gulp-util": "latest",
+    "gulp-ejs": "latest"
+  }
+}

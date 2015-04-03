@@ -1,24 +1,6 @@
 (function(){
-	var types = [NodeList, Node, Object, String, Number];
 
-	Object.prototype.extend = function (key, val) {
-		this[key] = val;
-	}
-
-	Object.prototype.implement = function (key, val) {
-		this.prototype[key] = val;
-	}
-
-	Object.prototype.invoke = function (key, val) {
-		var items = this, item;
-		for (var i = 0; item = items[i++];) {
-			item.prototype[key] = val;
-		}
-	}
-
-	if (window.$ == null) window.extend('$', function(elements) {
-		return document.querySelectorAll(elements);
-	});
+	<%- include('modules/Core.js'); %>
 
 	Object.implement('isArray', function(data){
 		if (Object.prototype.toString.call(data) == '[object Array]')
@@ -207,6 +189,30 @@
 
 		return item.parentNode;
 	});
+
+	[NodeList, Node].invoke('getElement', function(selector){
+		var item;
+
+		if (typeOf(this) === 'nodelist') {
+			item = this.first();
+		} else {
+			item = this;
+		}
+
+		return item.querySelectorAll(selector).first();
+	});
+
+	[NodeList, Node].invoke('getElements', function(selector){
+		var item;
+
+		if (typeOf(this) === 'nodelist') {
+			item = this.first();
+		} else {
+			item = this;
+		}
+
+		return item.querySelectorAll(selector);
+	});	
 
 
 	var Element = function (tag, object) {
