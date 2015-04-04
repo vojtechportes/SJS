@@ -330,7 +330,7 @@ $('div').getStyle('background-color');
 
 #### removeStyle
 
-Remove style from element or return files in case element has no such style
+Remove style from element or return false in case element has no such style
 
 ```javascript
 $('div').removeStyle('color');

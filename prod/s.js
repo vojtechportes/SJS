@@ -386,7 +386,6 @@
 		} else {
 			var item = this;
 			$.each(object, function(val, key){
-				console.log(this);
 				item.style[key] = val;
 			});
 		}
