@@ -2,8 +2,8 @@
 
 Simple javascript library for **modern browsers**.
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 11kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 6.5kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 12kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 7.3kb</strong>
 
 --------------------------------------------------------------------------------------
 
@@ -18,10 +18,10 @@ Simple javascript library for **modern browsers**.
 		<th width="20">Opera</th>
 	</tr>
 	<tr>
-		<td width="20" background="orange">9</td>
-		<td width="20" background="green">&nbsp;</td>
-		<td width="20" background="green">&nbsp;</td>
-		<td width="20" background="green">&nbsp;</td>
+		<td width="20">9</td>
+		<td width="20" background="green">ALL</td>
+		<td width="20" background="green">ALL</td>
+		<td width="20" background="green">ALL</td>
 		<td width="20" background="orange">27+</td>
 	</tr>
 </table>
