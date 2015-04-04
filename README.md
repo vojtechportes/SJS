@@ -2,6 +2,15 @@
 
 Simple javascript library
 
+- [Core]
+- [Each]
+- [Element]
+- [Element Class]
+- [Element Style]
+- [Element Event]
+- [Type]
+- [String]
+
 ## Core
 
 ### extend
@@ -261,7 +270,7 @@ Arguments:
 $('div').toggleClass('active');
 ```
 
-## Element style
+## Element Style
 
 ### setStyle
 
