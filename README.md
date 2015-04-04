@@ -26,7 +26,7 @@ Core
 
 #### extend
 
-Extends type Object
+Extend type Object
 
 ```javascript
 window.extend('$', function(){
@@ -36,7 +36,7 @@ window.extend('$', function(){
 
 #### implement
 
-Implements new prototype extension to type Object
+Implement new prototype extension to type Object
 
 ```javascript
 Node.implement('method', function(){
@@ -46,7 +46,7 @@ Node.implement('method', function(){
 
 #### invoke
 
-Implements new prototype extensions to type Object
+Implement new prototype extensions to type Object
 
 ```javascript
 [Node, NodeList].invoke('method', function(){
