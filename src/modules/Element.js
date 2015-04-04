@@ -23,6 +23,9 @@
 					break;
 				case 'html':
 					if (typeOf(value) === 'array') {
+						if (typeOf(value[2]) === 'undefined')
+							value[2] = 'inside';
+						
 						element.inject(value[0], value[1], value[2]);
 					} else {
 						element.set(key, value);
