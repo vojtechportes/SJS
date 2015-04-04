@@ -18,11 +18,11 @@ Simple javascript library for **modern browsers**.
 		<th width="20">Opera</th>
 	</tr>
 	<tr>
-		<td width="20" style="background: orange;">9</td>
-		<td width="20" style="background: green;">&nbsp;</td>
-		<td width="20" style="background: green;">&nbsp;</td>
-		<td width="20" style="background: green;">&nbsp;</td>
-		<td width="20" style="background: orange;">27+</td>
+		<td width="20" background="orange">9</td>
+		<td width="20" background="green">&nbsp;</td>
+		<td width="20" background="green">&nbsp;</td>
+		<td width="20" background="green">&nbsp;</td>
+		<td width="20" background="orange">27+</td>
 	</tr>
 </table>
 
@@ -40,6 +40,7 @@ Simple javascript library for **modern browsers**.
 	- [ ] fireEvent
 	- [ ] cloneEvent
 - [Type](#type)
+- [Array](#array)
 - [String](#string)
 
 Core
