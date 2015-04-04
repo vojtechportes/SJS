@@ -9,9 +9,22 @@ Simple javascript library
 
 ## Browser support
 
-| IE  | Chrome | Firefox | Safari | Opera |
-| --  | ------ | ------- | ------ | ----- |
-| 10+ | 31+    | 31+     | 7+     | 27+   |
+<table>
+	<tr>
+		<th width="20">IE</th>
+		<th width="20">Chrome</th>
+		<th width="20">Firefox</th>
+		<th width="20">Safari</th>
+		<th width="20">Opera</th>
+	</tr>
+	<tr>
+		<td width="20">10+</td>
+		<td width="20">31+</td>
+		<td width="20">31+</td>
+		<td width="20">7+</td>
+		<td width="20">27+</td>
+	</tr>
+</table>
 
 --------------------------------------------------------------------------------------
 
