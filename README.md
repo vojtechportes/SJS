@@ -18,7 +18,7 @@ Simple javascript library for **modern browsers**.
 	</tr>
 	<tr>
 		<td width="20">9+</td>
-		<td width="20" background="green">ALL</td>
+		<td width="20" background="green">8+</td>
 		<td width="20" background="green">ALL</td>
 		<td width="20" background="green">ALL</td>
 	</tr>
