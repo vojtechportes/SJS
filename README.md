@@ -76,7 +76,7 @@ Implement new prototype extensions to type Object
 
 #### Dollar selector
 
-Dollar selector is an funciton which return html collection
+Dollar selector is an funciton which returns html collection
 
 ```javascript
 $('body div');
@@ -95,7 +95,7 @@ Each
 
 #### each
 
-A generic iterator function which can be used on arrays, objects or arrays
+A generic iterator function which can be used on NodeList, objects or arrays
 
 Array
 ```javascript
