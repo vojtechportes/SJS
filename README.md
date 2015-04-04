@@ -2,7 +2,7 @@
 
 Simple javascript library
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 11kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 11kb</strong><br>
 <strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 6.5kb</strong>
 
 --------------------------------------------------------------------------------------
@@ -228,9 +228,9 @@ Arguments:
 
 ```
 $('body div.wrapper').inject('div', {
-		'class': 'inner',
-		'text': 'lorem ipsum dolor sit amet...'
-	}, 'after');
+	'class': 'inner',
+	'text': 'lorem ipsum dolor sit amet...'
+}, 'after');
 ```
 
 Element Class
