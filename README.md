@@ -2,8 +2,9 @@
 
 Simple javascript library
 
-** [s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js) ~ 12kb **
-** [s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js) ~ 7kb **
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js) ~ 12kb</strong>
+
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js) ~ 7kb</strong>
 
 --------------------------------------------------------------------------------------
 
