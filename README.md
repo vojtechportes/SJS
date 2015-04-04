@@ -1,6 +1,6 @@
 # SJS
 
-Simple javascript library
+Simple javascript library for ** modern browsers **.
 
 <strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 11kb</strong><br>
 <strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 6.5kb</strong>
