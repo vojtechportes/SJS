@@ -28,7 +28,7 @@ Core
 
 Extends type Object
 
-```
+```javascript
 window.extend('$', function(){
 	// Some code
 });
@@ -38,7 +38,7 @@ window.extend('$', function(){
 
 Implements new prototype extension to type Object
 
-```
+```javascript
 Node.implement('method', function(){
 	// Some code
 });
@@ -48,7 +48,7 @@ Node.implement('method', function(){
 
 Implements new prototype extensions to type Object
 
-```
+```javascript
 [Node, NodeList].invoke('method', function(){
 	// Some code
 });
@@ -58,13 +58,13 @@ Implements new prototype extensions to type Object
 
 Dollar selector is an funciton which return html collection
 
-```
+```javascript
 $('body div');
 ```
 
 #### DOM Ready
 
-```
+```javascript
 document.addEvent('ready', function(){
 	// Some code
 });
@@ -78,14 +78,14 @@ Each
 A generic iterator function which can be used on arrays, objects or arrays
 
 Array
-```
+```javascript
 $.each([1,2,3], function(value, key){
 	// Some code
 });
 ```
 
 HTML collection 
-```
+```javascript
 $('div').each(function(value, key){
 	// Some code
 });
@@ -103,7 +103,7 @@ arguments:
 
 Argument object can contain multiple key types: attribute (eg. class, id, href), data, text, html, styles and events. html can be an array with another element constructor or html.
 
-```
+```javascript
 new Element('div', {
 	'class': 'item first',
 	'data': {
@@ -130,7 +130,7 @@ new Element('div', {
 
 Select first element from html collection
 
-```
+```javascript
 $('div').first();
 ```
 
@@ -138,7 +138,7 @@ $('div').first();
 
 Select last element from html collection
 
-```
+```javascript
 $('div').last();
 ```
 
@@ -152,7 +152,7 @@ Arguments:
 * value - value of attribute
 * type - type of attribute - data or attr (default)
 
-```
+```javascript
 $('div').set('href', 'http://www.domain.tld');
 ```
 
@@ -165,7 +165,7 @@ Arguments:
 * name - name of attribute
 * type - type of attribute data or attr (default)
 
-```
+```javascript
 // <div data-content='{"heading": "lorem ipsum", "text": "dolor sit amet"}'></div>
 
 $('div').get('content', 'data');
@@ -176,7 +176,7 @@ $('div').get('content', 'data');
 
 Get parent of element
 
-```
+```javascript
 $('div.someElement').getParent();
 ```
 
@@ -188,7 +188,7 @@ Arguments:
 
 * selector
 
-```
+```javascript
 $('body div.wrapper').getElement('div')
 ```
 
@@ -200,7 +200,7 @@ Arguments:
 
 * selector
 
-```
+```javascript
 $('body div.wrapper').getElements('div')
 ```
 
@@ -212,7 +212,7 @@ Arguments:
 
 * selector
 
-```
+```javascript
 $('body div.wrapper').removeElement('div')
 ```
 
@@ -226,7 +226,7 @@ Arguments:
 * object - see Element constructor
 * where - before, after, inside (default)
 
-```
+```javascript
 $('body div.wrapper').inject('div', {
 	'class': 'inner',
 	'text': 'lorem ipsum dolor sit amet...'
@@ -244,7 +244,7 @@ Arguments:
 
 * name - class name/s
 
-```
+```javascript
 $('div').addClass('item first');
 ```
 
@@ -256,7 +256,7 @@ Arguments:
 
 * name - class name
 
-```
+```javascript
 $('div').hasClass('item');
 ```
 
@@ -268,7 +268,7 @@ Arguments:
 
 * name - class name
 
-```
+```javascript
 $('div').removeClass('item');
 ```
 
@@ -280,7 +280,7 @@ Arguments:
 
 * name - class name
 
-```
+```javascript
 $('div').toggleClass('active');
 ```
 
@@ -296,7 +296,7 @@ Arguments:
 * property
 * value
 
-```
+```javascript
 $('div').setStyle('background-color', 'blue');
 ```
 
@@ -308,13 +308,14 @@ Arguments:
 
 * object - style object
 
-```
+```javascript
 $('div').setStyles({
 	'background-color': 'blue',
 	'font-size': '48px',
 	'color': 'white'
 });
 ```
+
 #### getStyle
 
 Return style value or false in case element has no such style
@@ -323,7 +324,7 @@ Arguments:
 
 * property
 
-```
+```javascript
 $('div').getStyle('background-color');
 ```
 
@@ -331,7 +332,7 @@ $('div').getStyle('background-color');
 
 Remove style from element or return files in case element has no such style
 
-```
+```javascript
 $('div').removeStyle('color');
 ```
 
@@ -349,7 +350,7 @@ Arguments:
 * element
 * type - type of event (eg. click, scroll etc.)
 
-```
+```javascript
 window.getEventCache($('div').first(), 'click');
 
 // return eg.: {'type': 'click', 'fce': function(){ console.log('click') }, 'eid': 'e_78354214568'} 
@@ -357,7 +358,7 @@ window.getEventCache($('div').first(), 'click');
 
 #### Event constructor (cache)
 
-```
+```javascript
 new Event(object)
 ```
 
@@ -365,7 +366,7 @@ new Event(object)
 
 Add event to cache
 
-```
+```javascript
 var e = new Event({
 	'el': $('div').first(),
 	'type': 'click',
@@ -379,7 +380,7 @@ e.register();
 
 Remove event from cache
 
-```
+```javascript
 var e - new Event({'el': $('div').first(), 'eid': 'e_78354214568'});
 ```
 
@@ -393,7 +394,7 @@ Arguments:
 * callback
 * capture - true or false (default)
 
-```
+```javascript
 $('div').first().addEvent('click', function(){
 	event.stopPropagation();
 	console.log('click');
@@ -409,7 +410,7 @@ Arguments:
 * type - eg. click, scroll etc.
 * capture - true or false (default)
 
-```
+```javascript
 $('div').first().removeEvent('click');
 ```
 
@@ -420,7 +421,7 @@ String
 
 Return camel case string
 
-```
+```javascript
 'lorem ipsum'.toCamelCase();
 
 // return LoremIpsum
@@ -430,7 +431,7 @@ Return camel case string
 
 Return string with first letter in upper case format
 
-```
+```javascript
 'lorem ipsum'.firstUpper();
 
 // return Lorem ipsum
@@ -447,7 +448,7 @@ Arguments:
 
 * data
 
-```
+```javascript
 var a = [1, 2, 3];
 $.isArray(a);
 
@@ -475,7 +476,7 @@ Arguments:
 
 * data
 
-```
+```javascript
 typeOf($('div'));
 
 // Return nodelist
