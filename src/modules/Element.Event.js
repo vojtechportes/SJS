@@ -12,7 +12,7 @@
 	};
 
 	Object.implement('getEventCache', function(element, type) {
-		if (typeOf(window.eventCache[element]) !== 'undefined') {
+		if (typeof window.eventCache[element] !== 'undefined') {
 			var events = window.eventCache[element], e;
 			e = false;
 
@@ -35,7 +35,7 @@
 	}
 
 	Event.implement('register', function(){
-		if (typeOf(window.eventCache[this.el]) === 'undefined')
+		if (typeof window.eventCache[this.el] === 'undefined')
 			window.eventCache.extend(this.el, {});
 
 		window.eventCache[this.el].extend(this.eventID, {'type': this.type, 'fce': this.fce, 'eid': this.eventID});
@@ -48,10 +48,10 @@
 
 	[Node, NodeList].invoke('addEvent', function(type, callback, capture){
 		type = translateEvent(type);
-		if (typeOf(capture) === 'undefined')
+		if (typeof capture === 'undefined')
 			capture = false;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 				var item, events;			
 				this.each(function(item) {
 					var e = new Event({'el': item, 'type': type, 'fce': callback});
@@ -67,10 +67,10 @@
 		var elEvent;
 		type = translateEvent(type);
 		
-		if (typeOf(capture) === 'undefined')
+		if (typeof capture === 'undefined')
 			capture = false;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 				this.each(function(item) {
 					elEvent = window.getEventCache(item, type);
 					item.removeEventListener(type, elEvent.fce, capture);
@@ -88,7 +88,7 @@
 	[Node, NodeList].invoke('fireEvent', function(type){
 		// TBD
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			this.each(function(item) {
 			});
 		} else {

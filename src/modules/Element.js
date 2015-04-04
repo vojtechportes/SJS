@@ -5,10 +5,10 @@
 			switch (key) {
 				case 'data':
 					$.each(value, function(data, k){
-						if (typeOf(data) === 'object' || typeOf(data) === 'array') {
-							element.dataset[k] = JSON.stringify(data);
+						if (data instanceof Object) {
+							element.setData(k, JSON.stringify(data));
 						} else {
-							element.dataset[k] = data;
+							element.setData(k, data);
 						}
 					});
 					break;
@@ -18,12 +18,11 @@
 					});
 					break;
 				case 'styles':
-					console.log(value);
 					element.setStyles(value);
 					break;
 				case 'html':
-					if (typeOf(value) === 'array') {
-						if (typeOf(value[2]) === 'undefined')
+					if (value instanceof Array) {
+						if (typeof value[2] === 'undefined')
 							value[2] = 'inside';
 						
 						element.inject(value[0], value[1], value[2]);
@@ -40,6 +39,22 @@
 		return element;
 	};
 
+	Node.implement('setData', function(key, val){
+		if (this.dataset !== undefined) {
+			this.dataset[key] = val;
+		} else {
+			this.setAttribute('data-' + key, val);
+		}
+	});
+
+	Node.implement('getData', function(key, val){
+		if (this.dataset !== undefined) {
+			return this.dataset[key];
+		} else {
+			return this.getAttribute('data-' + key);
+		}
+	});
+
 	NodeList.implement('first', function() {
 		return this.item(0);
 	});
@@ -49,17 +64,17 @@
 	});
 
 	[NodeList, Node].invoke('set', function(name, value, type) {
-		if (typeOf(type) === 'undefined')
+		if (typeof type === 'undefined')
 			type = 'attr';
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			var item;
 			for (var i = 0; item = this[i++];) {
 				if (type == 'data') {
-					if (typeOf(value) === 'object' || typeOf(value) === 'array') {
-						item.dataset[name] = JSON.stringify(value);
+					if (item instanceof Object) {
+						item.setData(name, JSON.stringify(value));
 					} else {
-						item.dataset[name] = value;
+						item.setData(name, value);
 					}
 				} else {
 					switch (name) {
@@ -77,10 +92,10 @@
 			} 
 		} else {
 			if (type == 'data') {
-				if (typeOf(value) === 'object' || typeOf(value) === 'array') {
-					this.dataset[name] = JSON.stringify(value);
+				if (this instanceof Object) {
+					this.setData(name, JSON.stringify(value));
 				} else {
-					this.dataset[name] = value;
+					this.setData(name, value);
 				}
 			} else {			
 				switch (name) {
@@ -99,14 +114,14 @@
 	});	
 
 	[NodeList, Node].invoke('get', function(name, type) {
-		if (typeOf(type) === 'undefined')
+		if (typeof type === 'undefined')
 			type = 'attr';
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			var item = this.first();
 			if (type == 'data') {
-				var data = item.dataset[name];
-				if (typeOf(data) !== 'undefined') {
+				var data = item.getData(name);
+				if (typeof data !== 'undefined') {
 					try {
 						return JSON.parse(data);
 					} catch(e) {
@@ -131,8 +146,8 @@
 			}
 		} else {
 			if (type == 'data') {
-				var data = this.dataset[name];
-				if (typeOf(data) !== 'undefined') {
+				var data = this.getData(name);
+				if (typeof data !== 'undefined') {
 					try {
 						return JSON.parse(data);
 					} catch(e) {
@@ -160,7 +175,7 @@
 	[NodeList, Node].invoke('getParent', function(){
 		var item;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
@@ -172,7 +187,7 @@
 	[NodeList, Node].invoke('getElement', function(selector){
 		var item;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
@@ -184,7 +199,7 @@
 	[NodeList, Node].invoke('getElements', function(selector){
 		var item;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
@@ -195,7 +210,7 @@
 
 	[NodeList, Node].invoke('inject', function(tag, object, where){
 		var element = new Element(tag, object), parent;
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			parent = this.first();
 		} else {
 			parent = this;
@@ -217,7 +232,7 @@
 
 	[NodeList, Node].invoke('removeElement', function(){
 		var item;
-		if (typeOf(this) !== 'nodelist') {
+		if (this instanceof NodeList) {
 			this.remove();		
 		} else {
 			this.each(function(item){

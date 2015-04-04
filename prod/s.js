@@ -1,5 +1,3 @@
-(function(){
-
 	var types = [NodeList, Node, Object, String, Number];
 
 	Object.prototype.extend = function (key, val) {
@@ -21,41 +19,21 @@
 		return document.querySelectorAll(elements);
 	});
 
+	Array.implement('clear', function () {
+	    var dups = {};
+	    return this.filter(function(el) {
+	        var hash = el.valueOf();
+	        var isDup = dups[hash];
+	        dups[hash] = true;
+	        return !isDup;
+	    });
+	});
+
 	Object.implement('isArray', function(data){
 		if (Object.prototype.toString.call(data) == '[object Array]')
 			return true;
 		return false;
-	})
-
-	var typeOf = function(data) {
-		if (typeof data !== 'undefined') {
-			var string = Object.prototype.toString.call(data);
-			var regex = new RegExp(/\[(object NodeList|object Node|object HTMLCollection|object Array|object Object)\]/);
-			var match = string.match(regex);
-		}
-
-		if (match && typeof data !== 'undefined') {
-			switch (match[1]) {
-				case 'object NodeList':
-					return 'nodelist';
-					break;
-				case 'object Node':
-					return 'node';
-					break;
-				case 'object HTMLCollection':
-					return 'htmlcollection';
-					break;
-				case 'object Array':
-					return 'array';
-					break;
-				case 'object Object':
-					return 'object';
-					break;
-			}
-		} else {
-			return typeof data;
-		}
-	};
+	});
 
 	String.implement('toCamelCase', function() {
 	    return this
@@ -79,9 +57,9 @@
 			callback = arguments[1];
 		}
 
-		if (typeOf(data) === 'object') {
+		if (this instanceof Object) {
 			for (var key in data) {
-				if (data.hasOwnProperty(key))
+				if (data.hasOwnProperty(key) && key !== 'length')
 					callback(data[key], key);
 			}
 		} else {
@@ -98,10 +76,10 @@
 			switch (key) {
 				case 'data':
 					$.each(value, function(data, k){
-						if (typeOf(data) === 'object' || typeOf(data) === 'array') {
-							element.dataset[k] = JSON.stringify(data);
+						if (data instanceof Object) {
+							element.setData(k, JSON.stringify(data));
 						} else {
-							element.dataset[k] = data;
+							element.setData(k, data);
 						}
 					});
 					break;
@@ -111,12 +89,11 @@
 					});
 					break;
 				case 'styles':
-					console.log(value);
 					element.setStyles(value);
 					break;
 				case 'html':
-					if (typeOf(value) === 'array') {
-						if (typeOf(value[2]) === 'undefined')
+					if (value instanceof Array) {
+						if (typeof value[2] === 'undefined')
 							value[2] = 'inside';
 						
 						element.inject(value[0], value[1], value[2]);
@@ -133,6 +110,22 @@
 		return element;
 	};
 
+	Node.implement('setData', function(key, val){
+		if (this.dataset !== undefined) {
+			this.dataset[key] = val;
+		} else {
+			this.setAttribute('data-' + key, val);
+		}
+	});
+
+	Node.implement('getData', function(key, val){
+		if (this.dataset !== undefined) {
+			return this.dataset[key];
+		} else {
+			return this.getAttribute('data-' + key);
+		}
+	});
+
 	NodeList.implement('first', function() {
 		return this.item(0);
 	});
@@ -142,17 +135,17 @@
 	});
 
 	[NodeList, Node].invoke('set', function(name, value, type) {
-		if (typeOf(type) === 'undefined')
+		if (typeof type === 'undefined')
 			type = 'attr';
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			var item;
 			for (var i = 0; item = this[i++];) {
 				if (type == 'data') {
-					if (typeOf(value) === 'object' || typeOf(value) === 'array') {
-						item.dataset[name] = JSON.stringify(value);
+					if (item instanceof Object) {
+						item.setData(name, JSON.stringify(value));
 					} else {
-						item.dataset[name] = value;
+						item.setData(name, value);
 					}
 				} else {
 					switch (name) {
@@ -170,10 +163,10 @@
 			} 
 		} else {
 			if (type == 'data') {
-				if (typeOf(value) === 'object' || typeOf(value) === 'array') {
-					this.dataset[name] = JSON.stringify(value);
+				if (this instanceof Object) {
+					this.setData(name, JSON.stringify(value));
 				} else {
-					this.dataset[name] = value;
+					this.setData(name, value);
 				}
 			} else {			
 				switch (name) {
@@ -192,14 +185,14 @@
 	});	
 
 	[NodeList, Node].invoke('get', function(name, type) {
-		if (typeOf(type) === 'undefined')
+		if (typeof type === 'undefined')
 			type = 'attr';
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			var item = this.first();
 			if (type == 'data') {
-				var data = item.dataset[name];
-				if (typeOf(data) !== 'undefined') {
+				var data = item.getData(name);
+				if (typeof data !== 'undefined') {
 					try {
 						return JSON.parse(data);
 					} catch(e) {
@@ -224,8 +217,8 @@
 			}
 		} else {
 			if (type == 'data') {
-				var data = this.dataset[name];
-				if (typeOf(data) !== 'undefined') {
+				var data = this.getData(name);
+				if (typeof data !== 'undefined') {
 					try {
 						return JSON.parse(data);
 					} catch(e) {
@@ -253,7 +246,7 @@
 	[NodeList, Node].invoke('getParent', function(){
 		var item;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
@@ -265,7 +258,7 @@
 	[NodeList, Node].invoke('getElement', function(selector){
 		var item;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
@@ -277,7 +270,7 @@
 	[NodeList, Node].invoke('getElements', function(selector){
 		var item;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
@@ -288,7 +281,7 @@
 
 	[NodeList, Node].invoke('inject', function(tag, object, where){
 		var element = new Element(tag, object), parent;
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			parent = this.first();
 		} else {
 			parent = this;
@@ -310,7 +303,7 @@
 
 	[NodeList, Node].invoke('removeElement', function(){
 		var item;
-		if (typeOf(this) !== 'nodelist') {
+		if (this instanceof NodeList) {
 			this.remove();		
 		} else {
 			this.each(function(item){
@@ -323,37 +316,71 @@
 		if (name.indexOf(' '))
 			name = name.split(/\s/)
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			var item;
-			this.each(function(item) {
-				DOMTokenList.prototype.add.apply(item.classList, name);
+			this.each(function(item, key) {
+				if (typeof DOMTokenList !== 'undefined') {
+					DOMTokenList.prototype.add.apply(item.classList, name);
+				} else {
+					var classes = item.className.split(/\s/) || [];
+					item.className = classes.concat(name).clear().join(' ');
+				}
 			}); 
 		} else {
-			DOMTokenList.prototype.add.apply(this.classList, name);
+			if (typeof DOMTokenList !== 'undefined') {
+				DOMTokenList.prototype.add.apply(this.classList, name);
+			} else {
+				var classes = this.className.split(/\s/) || [];
+				this.className = classes.concat(name).clear().join(' ');
+			}
 		}
 	});
 
 	[NodeList, Node].invoke('hasClass', function(name){
-		if (typeOf(this) === 'nodelist') {
-			return this.first().classList.contains(name);
+		if (this instanceof NodeList) {
+			if (typeof DOMTokenList !== 'undefined') {
+				return this.first().classList.contains(name);
+			} else {
+				return (this.first().className.split(/\s/).indexOf(name)) ? true : false;
+			}
 		} else {
-			return this.classList.contains(name);
+			if (typeof DOMTokenList !== 'undefined') {
+				return this.classList.contains(name);
+			} else {
+				return (this.className.split(/\s/).indexOf(name)) ? true : false;
+			}
 		}
 	});
 
 	[NodeList, Node].invoke('removeClass', function(name) {
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			this.each(function(item) {
-				item.classList.remove(name);
+				if (typeof DOMTokenList !== 'undefined') {
+					item.classList.remove(name);
+				} else {
+					var classes = item.className.split(/\s/);
+					if (classes.indexOf(name)) {
+						delete classes[classes.indexOf(name)];
+						item.className = classes.join(' ');
+					}
+				}
 			}); 
 		} else {
-			this.classList.add(name);
+			if (typeof DOMTokenList !== 'undefined') {
+				this.classList.remove(name);
+			} else {
+				var classes = this.className.split(/\s/);
+				if (classes.indexOf(name)) {
+					delete classes[classes.indexOf(name)];
+					this.className = classes.join(' ');
+				}
+			}
 		}
 	});
 
 	[NodeList, Node].invoke('toggleClass', function(name) {
 		var item;
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();					
 		} else {
 			item = this;
@@ -367,7 +394,7 @@
 	});	
 
 	[NodeList, Node].invoke('setStyle', function(key, val){
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			this.each(function(item) {
 				item.style[key] = val;
 			});
@@ -377,7 +404,7 @@
 	});
 
 	[NodeList, Node].invoke('setStyles', function(object){
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			this.each(function(item) {
 				$.each(object, function(val, key){
 					item.style[key] = val;
@@ -393,24 +420,24 @@
 
 	[NodeList, Node].invoke('getStyle', function(key) {
 		var item;
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
 		}
-		if (typeOf(item.style[key]) !== 'undefined')
+		if (typeof item.style[key] !== 'undefined')
 			return item.style[key];
 		return false;
 	});
 
 	[NodeList, Node].invoke('removeStyle', function(key) {
 		var item;
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();
 		} else {
 			item = this;
 		}
-		if (typeOf(item.style[key]) !== 'undefined')
+		if (typeof item.style[key] !== 'undefined')
 			item.style[key] = null;
 		return false;
 	});
@@ -429,7 +456,7 @@
 	};
 
 	Object.implement('getEventCache', function(element, type) {
-		if (typeOf(window.eventCache[element]) !== 'undefined') {
+		if (typeof window.eventCache[element] !== 'undefined') {
 			var events = window.eventCache[element], e;
 			e = false;
 
@@ -452,7 +479,7 @@
 	}
 
 	Event.implement('register', function(){
-		if (typeOf(window.eventCache[this.el]) === 'undefined')
+		if (typeof window.eventCache[this.el] === 'undefined')
 			window.eventCache.extend(this.el, {});
 
 		window.eventCache[this.el].extend(this.eventID, {'type': this.type, 'fce': this.fce, 'eid': this.eventID});
@@ -465,10 +492,10 @@
 
 	[Node, NodeList].invoke('addEvent', function(type, callback, capture){
 		type = translateEvent(type);
-		if (typeOf(capture) === 'undefined')
+		if (typeof capture === 'undefined')
 			capture = false;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 				var item, events;			
 				this.each(function(item) {
 					var e = new Event({'el': item, 'type': type, 'fce': callback});
@@ -484,10 +511,10 @@
 		var elEvent;
 		type = translateEvent(type);
 		
-		if (typeOf(capture) === 'undefined')
+		if (typeof capture === 'undefined')
 			capture = false;
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 				this.each(function(item) {
 					elEvent = window.getEventCache(item, type);
 					item.removeEventListener(type, elEvent.fce, capture);
@@ -505,11 +532,9 @@
 	[Node, NodeList].invoke('fireEvent', function(type){
 		// TBD
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			this.each(function(item) {
 			});
 		} else {
 		}
 	});
-
-})();

@@ -9,9 +9,9 @@
 			callback = arguments[1];
 		}
 
-		if (typeOf(data) === 'object') {
+		if (this instanceof Object) {
 			for (var key in data) {
-				if (data.hasOwnProperty(key))
+				if (data.hasOwnProperty(key) && key !== 'length')
 					callback(data[key], key);
 			}
 		} else {

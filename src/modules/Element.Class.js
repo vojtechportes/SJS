@@ -2,37 +2,71 @@
 		if (name.indexOf(' '))
 			name = name.split(/\s/)
 
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			var item;
-			this.each(function(item) {
-				DOMTokenList.prototype.add.apply(item.classList, name);
+			this.each(function(item, key) {
+				if (typeof DOMTokenList !== 'undefined') {
+					DOMTokenList.prototype.add.apply(item.classList, name);
+				} else {
+					var classes = item.className.split(/\s/) || [];
+					item.className = classes.concat(name).clear().join(' ');
+				}
 			}); 
 		} else {
-			DOMTokenList.prototype.add.apply(this.classList, name);
+			if (typeof DOMTokenList !== 'undefined') {
+				DOMTokenList.prototype.add.apply(this.classList, name);
+			} else {
+				var classes = this.className.split(/\s/) || [];
+				this.className = classes.concat(name).clear().join(' ');
+			}
 		}
 	});
 
 	[NodeList, Node].invoke('hasClass', function(name){
-		if (typeOf(this) === 'nodelist') {
-			return this.first().classList.contains(name);
+		if (this instanceof NodeList) {
+			if (typeof DOMTokenList !== 'undefined') {
+				return this.first().classList.contains(name);
+			} else {
+				return (this.first().className.split(/\s/).indexOf(name)) ? true : false;
+			}
 		} else {
-			return this.classList.contains(name);
+			if (typeof DOMTokenList !== 'undefined') {
+				return this.classList.contains(name);
+			} else {
+				return (this.className.split(/\s/).indexOf(name)) ? true : false;
+			}
 		}
 	});
 
 	[NodeList, Node].invoke('removeClass', function(name) {
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			this.each(function(item) {
-				item.classList.remove(name);
+				if (typeof DOMTokenList !== 'undefined') {
+					item.classList.remove(name);
+				} else {
+					var classes = item.className.split(/\s/);
+					if (classes.indexOf(name)) {
+						delete classes[classes.indexOf(name)];
+						item.className = classes.join(' ');
+					}
+				}
 			}); 
 		} else {
-			this.classList.add(name);
+			if (typeof DOMTokenList !== 'undefined') {
+				this.classList.remove(name);
+			} else {
+				var classes = this.className.split(/\s/);
+				if (classes.indexOf(name)) {
+					delete classes[classes.indexOf(name)];
+					this.className = classes.join(' ');
+				}
+			}
 		}
 	});
 
 	[NodeList, Node].invoke('toggleClass', function(name) {
 		var item;
-		if (typeOf(this) === 'nodelist') {
+		if (this instanceof NodeList) {
 			item = this.first();					
 		} else {
 			item = this;

@@ -1,6 +1,6 @@
-(function(){
-
 <%- include('modules/Core.js'); %>
+
+<%- include('modules/Array.js'); %>
 
 <%- include('modules/Type.js'); %>
 
@@ -15,5 +15,3 @@
 <%- include('modules/Element.Style.js'); %>
 
 <%- include('modules/Element.Event.js'); %>
-
-})();

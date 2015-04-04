@@ -18,11 +18,11 @@ Simple javascript library for **modern browsers**.
 		<th width="20">Opera</th>
 	</tr>
 	<tr>
-		<td width="20">10+</td>
-		<td width="20">31+</td>
-		<td width="20">31+</td>
-		<td width="20">7+</td>
-		<td width="20">27+</td>
+		<td width="20" style="background: orange;">9</td>
+		<td width="20" style="background: green;">&nbsp;</td>
+		<td width="20" style="background: green;">&nbsp;</td>
+		<td width="20" style="background: green;">&nbsp;</td>
+		<td width="20" style="background: orange;">27+</td>
 	</tr>
 </table>
 
@@ -161,6 +161,30 @@ Select last element from html collection
 
 ```javascript
 $('div').last();
+```
+#### setData
+
+Node.dataset wrapper
+
+Arguments:
+
+* key
+* value
+
+```javascript
+$('div').first().setData('content', ['a', 'b']);
+```
+
+#### getData
+
+Node.dataset wrapper
+
+Arguments:
+
+* key
+
+```javascript
+$('div').first().getData('content');
 ```
 
 #### set
@@ -397,7 +421,7 @@ var e = new Event({
 e.register();
 ```
 
-#### unregister
+##### unregister
 
 Remove event from cache
 
@@ -481,29 +505,16 @@ $.isArray(b);
 // Return false
 ```
 
-#### (function) typeOf
+Array
+-----
 
-Return type of argument.
+#### clear
 
-Function has following extra types:
-
-* nodelist
-* node
-* htmlcollection
-* array
-* object
-
-Arguments:
-
-* data
+Clear duplicited in array
 
 ```javascript
-typeOf($('div'));
+['a', 'b', 'a'].clear();
 
-// Return nodelist
-
-typeOf($('div').first());
-
-// Return node
+// return ['a', 'b']
 ```
 
