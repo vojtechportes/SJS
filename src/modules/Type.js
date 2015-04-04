@@ -5,14 +5,13 @@
 	})
 
 	var typeOf = function(data) {
-		if (typeof data === 'undefined')
-			data = this;
+		if (typeof data !== 'undefined') {
+			var string = Object.prototype.toString.call(data);
+			var regex = new RegExp(/\[(object NodeList|object Node|object HTMLCollection|object Array|object Object)\]/);
+			var match = string.match(regex);
+		}
 
-		var string = Object.prototype.toString.call(data);
-		var regex = new RegExp(/\[(object NodeList|object Node|object HTMLCollection|object Array|object Object)\]/);
-		var match = string.match(regex);
-
-		if (match) {
+		if (match && typeof data !== 'undefined') {
 			switch (match[1]) {
 				case 'object NodeList':
 					return 'nodelist';
@@ -34,5 +33,3 @@
 			return typeof data;
 		}
 	};
-
-	types.invoke('typeOf', typeOf);

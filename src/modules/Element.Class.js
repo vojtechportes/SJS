@@ -4,9 +4,9 @@
 
 		if (typeOf(this) === 'nodelist') {
 			var item;
-			for (var i = 0; item = this[i++];) {
+			this.each(function(item) {
 				DOMTokenList.prototype.add.apply(item.classList, name);
-			} 
+			}); 
 		} else {
 			DOMTokenList.prototype.add.apply(this.classList, name);
 		}
@@ -22,10 +22,9 @@
 
 	[NodeList, Node].invoke('removeClass', function(name) {
 		if (typeOf(this) === 'nodelist') {
-			var item;
-			for (var i = 0; item = this[i++];) {
+			this.each(function(item) {
 				item.classList.remove(name);
-			} 
+			}); 
 		} else {
 			this.classList.add(name);
 		}

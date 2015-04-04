@@ -28,14 +28,13 @@
 	})
 
 	var typeOf = function(data) {
-		if (typeof data === 'undefined')
-			data = this;
+		if (typeof data !== 'undefined') {
+			var string = Object.prototype.toString.call(data);
+			var regex = new RegExp(/\[(object NodeList|object Node|object HTMLCollection|object Array|object Object)\]/);
+			var match = string.match(regex);
+		}
 
-		var string = Object.prototype.toString.call(data);
-		var regex = new RegExp(/\[(object NodeList|object Node|object HTMLCollection|object Array|object Object)\]/);
-		var match = string.match(regex);
-
-		if (match) {
+		if (match && typeof data !== 'undefined') {
 			switch (match[1]) {
 				case 'object NodeList':
 					return 'nodelist';
@@ -57,8 +56,6 @@
 			return typeof data;
 		}
 	};
-
-	types.invoke('typeOf', typeOf);
 
 	String.implement('toCamelCase', function() {
 	    return this
@@ -98,16 +95,35 @@
 		var element = document.createElement(tag);
 
 		$.each(object, function(value, key){
-			if (key === 'data') {
-				$.each(value, function(data, k){
-					if (typeOf(data) === 'object' || typeOf(data) === 'array') {
-						element.dataset[k] = JSON.stringify(data);
+			switch (key) {
+				case 'data':
+					$.each(value, function(data, k){
+						if (typeOf(data) === 'object' || typeOf(data) === 'array') {
+							element.dataset[k] = JSON.stringify(data);
+						} else {
+							element.dataset[k] = data;
+						}
+					});
+					break;
+				case 'events':
+					$.each(value, function(data, k){
+						element.addEvent(k, data);
+					});
+					break;
+				case 'styles':
+					console.log(value);
+					element.setStyles(value);
+					break;
+				case 'html':
+					if (typeOf(value) === 'array') {
+						element.inject(value[0], value[1], value[2]);
 					} else {
-						element.dataset[k] = data;
+						element.set(key, value);
 					}
-				});
-			} else {
-				element.set(key, value);
+					break;
+				default:
+					element.set(key, value);
+					break;
 			}
 		});
 
@@ -176,7 +192,7 @@
 		if (typeOf(type) === 'undefined')
 			type = 'attr';
 
-		if (this.typeOf() === 'nodelist') {
+		if (typeOf(this) === 'nodelist') {
 			var item = this.first();
 			if (type == 'data') {
 				var data = item.dataset[name];
@@ -267,9 +283,6 @@
 		return item.querySelectorAll(selector);
 	});	
 
-
-
-
 	[NodeList, Node].invoke('inject', function(tag, object, where){
 		var element = new Element(tag, object), parent;
 		if (typeOf(this) === 'nodelist') {
@@ -292,15 +305,26 @@
 		}
 	});			
 
+	[NodeList, Node].invoke('removeElement', function(){
+		var item;
+		if (typeOf(this) !== 'nodelist') {
+			this.remove();		
+		} else {
+			this.each(function(item){
+				item.remove();
+			});	
+		}
+	});
+
 	[NodeList, Node].invoke('addClass', function(name) {
 		if (name.indexOf(' '))
 			name = name.split(/\s/)
 
 		if (typeOf(this) === 'nodelist') {
 			var item;
-			for (var i = 0; item = this[i++];) {
+			this.each(function(item) {
 				DOMTokenList.prototype.add.apply(item.classList, name);
-			} 
+			}); 
 		} else {
 			DOMTokenList.prototype.add.apply(this.classList, name);
 		}
@@ -316,10 +340,9 @@
 
 	[NodeList, Node].invoke('removeClass', function(name) {
 		if (typeOf(this) === 'nodelist') {
-			var item;
-			for (var i = 0; item = this[i++];) {
+			this.each(function(item) {
 				item.classList.remove(name);
-			} 
+			}); 
 		} else {
 			this.classList.add(name);
 		}
@@ -340,31 +363,151 @@
 		}
 	});	
 
+	[NodeList, Node].invoke('setStyle', function(key, val){
+		if (typeOf(this) === 'nodelist') {
+			this.each(function(item) {
+				item.style[key] = val;
+			});
+		} else {
+			this.style[key] = val;
+		}
+	});
 
+	[NodeList, Node].invoke('setStyles', function(object){
+		if (typeOf(this) === 'nodelist') {
+			this.each(function(item) {
+				$.each(object, function(val, key){
+					item.style[key] = val;
+				});
+			});
+		} else {
+			var item = this;
+			$.each(object, function(val, key){
+				console.log(this);
+				item.style[key] = val;
+			});
+		}
+	});
+
+	[NodeList, Node].invoke('getStyle', function(key) {
+		var item;
+		if (typeOf(this) === 'nodelist') {
+			item = this.first();
+		} else {
+			item = this;
+		}
+		if (typeOf(item.style[key]) !== 'undefined')
+			return item.style[key];
+		return false;
+	});
+
+	[NodeList, Node].invoke('removeStyle', function(key) {
+		var item;
+		if (typeOf(this) === 'nodelist') {
+			item = this.first();
+		} else {
+			item = this;
+		}
+		if (typeOf(item.style[key]) !== 'undefined')
+			item.style[key] = null;
+		return false;
+	});
+
+	window.extend('eventCache', {});
+
+	var translateEvent = function (event) {
+		switch (event) {
+			case 'ready':
+				return 'DOMContentLoaded';
+				break;
+			default:
+				return event;
+				break;
+		}
+	};
+
+	Object.implement('getEventCache', function(element, type) {
+		if (typeOf(window.eventCache[element]) !== 'undefined') {
+			var events = window.eventCache[element], e;
+			e = false;
+
+			$.each(events, function(val, key){
+				if (val.type === type)
+					e = val;
+			});
+
+			return e;
+		} else {
+			return false;
+		}
+	});
+
+	var Event = function (object) {
+		this.eventID = object.eid || 'e_' + new Date().getTime();
+		this.el = object.el || null;
+		this.type = object.type || null;
+		this.fce = object.fce || null;
+	}
+
+	Event.implement('register', function(){
+		if (typeOf(window.eventCache[this.el]) === 'undefined')
+			window.eventCache.extend(this.el, {});
+
+		window.eventCache[this.el].extend(this.eventID, {'type': this.type, 'fce': this.fce, 'eid': this.eventID});
+		return window.eventCache[this.el][this.eventID].fce;
+	});
+
+	Event.implement('unregister', function(){
+		delete window.eventCache[this.el][this.eventID];
+	});
 
 	[Node, NodeList].invoke('addEvent', function(type, callback, capture){
+		type = translateEvent(type);
 		if (typeOf(capture) === 'undefined')
 			capture = false;
 
 		if (typeOf(this) === 'nodelist') {
-				var item, events;
-				for (var i = 0; item = this[i++];) {
-					item.addEventListener(type, callback, capture);
-				} 
+				var item, events;			
+				this.each(function(item) {
+					var e = new Event({'el': item, 'type': type, 'fce': callback});
+					item.addEventListener(type, e.register(), capture);
+				}); 
 			} else {	
-				this.addEventListener(type, callback, capture);
+				var e = new Event({'el': this, 'type': type, 'fce': callback});
+				this.addEventListener(type, e.register(), capture);
 			}
 	});
 
 	[Node, NodeList].invoke('removeEvent', function(type, callback, capture){
-		/*if (typeOf(this) === 'nodelist') {
-				var item;
-				for (var i = 0; item = this[i++];) {
-					return item['on' + type] = null;
-				} 
+		var elEvent;
+		type = translateEvent(type);
+		
+		if (typeOf(capture) === 'undefined')
+			capture = false;
+
+		if (typeOf(this) === 'nodelist') {
+				this.each(function(item) {
+					elEvent = window.getEventCache(item, type);
+					item.removeEventListener(type, elEvent.fce, capture);
+					var e = new Event({'el': item, 'eid': elEvent.eid});
+					e.unregister();
+				}); 
 			} else {
-				return this['on' + type] = null;
-			}*/
+				elEvent = window.getEventCache(this, type);
+				this.removeEventListener(type, elEvent.fce, capture);
+				var e = new Event({'el': this, 'eid': elEvent.eid});
+				e.unregister();
+			}
+	});
+
+	[Node, NodeList].invoke('fireEvent', function(type){
+		// TBD
+
+		if (typeOf(this) === 'nodelist') {
+			this.each(function(item) {
+			});
+		} else {
+		}
 	});
 
 })();

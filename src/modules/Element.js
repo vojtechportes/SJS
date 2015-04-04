@@ -2,16 +2,35 @@
 		var element = document.createElement(tag);
 
 		$.each(object, function(value, key){
-			if (key === 'data') {
-				$.each(value, function(data, k){
-					if (typeOf(data) === 'object' || typeOf(data) === 'array') {
-						element.dataset[k] = JSON.stringify(data);
+			switch (key) {
+				case 'data':
+					$.each(value, function(data, k){
+						if (typeOf(data) === 'object' || typeOf(data) === 'array') {
+							element.dataset[k] = JSON.stringify(data);
+						} else {
+							element.dataset[k] = data;
+						}
+					});
+					break;
+				case 'events':
+					$.each(value, function(data, k){
+						element.addEvent(k, data);
+					});
+					break;
+				case 'styles':
+					console.log(value);
+					element.setStyles(value);
+					break;
+				case 'html':
+					if (typeOf(value) === 'array') {
+						element.inject(value[0], value[1], value[2]);
 					} else {
-						element.dataset[k] = data;
+						element.set(key, value);
 					}
-				});
-			} else {
-				element.set(key, value);
+					break;
+				default:
+					element.set(key, value);
+					break;
 			}
 		});
 
@@ -80,7 +99,7 @@
 		if (typeOf(type) === 'undefined')
 			type = 'attr';
 
-		if (this.typeOf() === 'nodelist') {
+		if (typeOf(this) === 'nodelist') {
 			var item = this.first();
 			if (type == 'data') {
 				var data = item.dataset[name];
@@ -171,9 +190,6 @@
 		return item.querySelectorAll(selector);
 	});	
 
-
-
-
 	[NodeList, Node].invoke('inject', function(tag, object, where){
 		var element = new Element(tag, object), parent;
 		if (typeOf(this) === 'nodelist') {
@@ -195,3 +211,14 @@
 				break;
 		}
 	});			
+
+	[NodeList, Node].invoke('removeElement', function(){
+		var item;
+		if (typeOf(this) !== 'nodelist') {
+			this.remove();		
+		} else {
+			this.each(function(item){
+				item.remove();
+			});	
+		}
+	});
