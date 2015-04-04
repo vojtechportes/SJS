@@ -9,20 +9,18 @@ Simple javascript library for **modern browsers**.
 
 ## Browser support
 
-<table>
+<table width="100">
 	<tr>
-		<th width="20">IE</th>
-		<th width="20">Chrome</th>
-		<th width="20">Firefox</th>
-		<th width="20">Safari</th>
-		<th width="20">Opera</th>
+		<th width="25">IE</th>
+		<th width="25">Chrome</th>
+		<th width="25">Firefox</th>
+		<th width="25">Safari</th>
 	</tr>
 	<tr>
-		<td width="20">9</td>
+		<td width="20">9+</td>
 		<td width="20" background="green">ALL</td>
 		<td width="20" background="green">ALL</td>
 		<td width="20" background="green">ALL</td>
-		<td width="20" background="orange">27+</td>
 	</tr>
 </table>
 
