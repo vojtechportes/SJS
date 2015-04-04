@@ -3,11 +3,16 @@
 Simple javascript library
 
 - [Core](#core)
+	- [Dollar selector](#dollar-selector)
+	- [DOM Ready](#dom-ready)
 - [Each](#each)
 - [Element](#element)
+	- [] cloneElement
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
+	- [] fireEvent
+	- [] cloneEvent
 - [Type](#type)
 - [String](#string)
 
