@@ -2,17 +2,20 @@
 
 Simple javascript library
 
+- [s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 12kb
+- [s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 7kb
+
 - [Core](#core)
 	- [Dollar selector](#dollar-selector)
 	- [DOM Ready](#dom-ready)
 - [Each](#each)
 - [Element](#element)
-	- [] cloneElement
+	- [ ] cloneElement
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
-	- [] fireEvent
-	- [] cloneEvent
+	- [ ] fireEvent
+	- [ ] cloneEvent
 - [Type](#type)
 - [String](#string)
 
