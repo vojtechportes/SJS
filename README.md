@@ -2,18 +2,18 @@
 
 Simple javascript library
 
-- [Core]
-- [Each]
-- [Element]
-- [Element Class]
-- [Element Style]
-- [Element Event]
-- [Type]
-- [String]
+- [Core](#core)
+- [Each](#each)
+- [Element](#element)
+- [Element Class](#element-class)
+- [Element Style](#element-style)
+- [Element Event](#element-event)
+- [Type](#type)
+- [String](#string)
 
 ## Core
 
-### extend
+#### extend
 
 Extends type Object
 
@@ -23,7 +23,7 @@ window.extend('$', function(){
 });
 ```
 
-### implement
+#### implement
 
 Implements new prototype extension to type Object
 
@@ -33,7 +33,7 @@ Node.implement('method', function(){
 });
 ```
 
-### invoke
+#### invoke
 
 Implements new prototype extensions to type Object
 
@@ -43,7 +43,7 @@ Implements new prototype extensions to type Object
 });
 ```
 
-### Dollar selector
+#### Dollar selector
 
 Dollar selector is an funciton which return html collection
 
@@ -51,7 +51,7 @@ Dollar selector is an funciton which return html collection
 $('body div');
 ```
 
-### DOM Ready
+#### DOM Ready
 
 ```
 document.addEvent('ready', function(){
@@ -61,7 +61,7 @@ document.addEvent('ready', function(){
 
 ## Each
 
-### each
+#### each
 
 A generic iterator function which can be used on arrays, objects or arrays
 
@@ -81,7 +81,7 @@ $('div').each(function(value, key){
 
 ## Element
 
-### Element constructor
+#### Element constructor
 
 arguments:
 
@@ -113,7 +113,7 @@ new Element('div', {
 	}]
 });
 ``` 
-### first
+#### first
 
 Select first element from html collection
 
@@ -121,7 +121,7 @@ Select first element from html collection
 $('div').first();
 ```
 
-### last
+#### last
 
 Select last element from html collection
 
@@ -129,7 +129,7 @@ Select last element from html collection
 $('div').last();
 ```
 
-### set
+#### set
 
 Set attribute or data attribute to element
 
@@ -143,7 +143,7 @@ Arguments:
 $('div').set('href', 'http://www.domain.tld');
 ```
 
-### get
+#### get
 
 Get attribute or data attribute from element
 
@@ -159,7 +159,7 @@ $('div').get('content', 'data');
 
 // return {"heading": "lorem ipsum", "text": "dolor sit amet"}
 ```
-### getParent
+#### getParent
 
 Get parent of element
 
@@ -167,7 +167,7 @@ Get parent of element
 $('div.someElement').getParent();
 ```
 
-### getElement
+#### getElement
 
 Return first html element
 
@@ -179,7 +179,7 @@ Arguments:
 $('body div.wrapper').getElement('div')
 ```
 
-### getElemens
+#### getElemens
 
 Return all html elements as html collection
 
@@ -191,7 +191,7 @@ Arguments:
 $('body div.wrapper').getElements('div')
 ```
 
-### removeElement
+#### removeElement
 
 Remove html element or collection of elements
 
@@ -203,7 +203,7 @@ Arguments:
 $('body div.wrapper').removeElement('div')
 ```
 
-### inject
+#### inject
 
 Inject element to current element
 
@@ -222,7 +222,7 @@ $('body div.wrapper').inject('div', {
 
 ## Element Class
 
-### addClass
+#### addClass
 
 Add class to element/s
 
@@ -234,7 +234,7 @@ Arguments:
 $('div').addClass('item first');
 ```
 
-### hasClass
+#### hasClass
 
 Returns true or false
 
@@ -246,7 +246,7 @@ Arguments:
 $('div').hasClass('item');
 ```
 
-### removeClass
+#### removeClass
 
 Remove class from element/s
 
@@ -258,7 +258,7 @@ Arguments:
 $('div').removeClass('item');
 ```
 
-### toggleClass
+#### toggleClass
 
 Toggle class on element
 
@@ -272,7 +272,7 @@ $('div').toggleClass('active');
 
 ## Element Style
 
-### setStyle
+#### setStyle
 
 Add style to element/s
 
@@ -285,7 +285,7 @@ Arguments:
 $('div').setStyle('background-color', 'blue');
 ```
 
-### setStyles
+#### setStyles
 
 Add style object to element/s
 
@@ -300,7 +300,7 @@ $('div').setStyles({
 	'color': 'white'
 });
 ```
-### getStyle
+#### getStyle
 
 Return style value or false in case element has no such style
 
@@ -312,7 +312,7 @@ Arguments:
 $('div').getStyle('background-color');
 ```
 
-### removeStyle
+#### removeStyle
 
 Remove style from element or return files in case element has no such style
 
@@ -324,7 +324,7 @@ $('div').removeStyle('color');
 
 All events are stored on window object. They are accesible on window.eventCache.
 
-### getEventCache
+#### getEventCache
 
 Return all informations about element event from window object
 
@@ -339,13 +339,13 @@ window.getEventCache($('div').first(), 'click');
 // return eg.: {'type': 'click', 'fce': function(){ console.log('click') }, 'eid': 'e_78354214568'} 
 ```
 
-### Event constructor (cache)
+#### Event constructor (cache)
 
 ```
 new Event(object)
 ```
 
-#### register
+##### register
 
 Add event to cache
 
@@ -359,7 +359,7 @@ var e = new Event({
 e.register();
 ```
 
-### unregister
+#### unregister
 
 Remove event from cache
 
@@ -367,7 +367,7 @@ Remove event from cache
 var e - new Event({'el': $('div').first(), 'eid': 'e_78354214568'});
 ```
 
-### addEvent
+#### addEvent
 
 Add event to element/s
 
@@ -384,7 +384,7 @@ $('div').first().addEvent('click', function(){
 });
 ```
 
-### removeEvent
+#### removeEvent
 
 Remove event from element/s
 
@@ -399,7 +399,7 @@ $('div').first().removeEvent('click');
 
 ## String
 
-### toCamelCase
+#### toCamelCase
 
 Return camel case string
 
@@ -409,7 +409,7 @@ Return camel case string
 // return LoremIpsum
 ```
 
-### firstUpper
+#### firstUpper
 
 Return string with first letter in upper case format
 
@@ -421,7 +421,7 @@ Return string with first letter in upper case format
 
 ## Type
 
-### isArray
+#### isArray
 
 Check if argument is an array and return true. In oposite case return false.
 
@@ -441,7 +441,7 @@ $.isArray(b);
 // Return false
 ```
 
-### (function) typeOf
+#### (function) typeOf
 
 Return type of argument.
 
