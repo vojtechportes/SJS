@@ -2,8 +2,10 @@
 
 Simple javascript library
 
-- [s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 12kb
-- [s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 7kb
+** [s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js) ~ 12kb **
+** [s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js) ~ 7kb **
+
+--------------------------------------------------------------------------------------
 
 - [Core](#core)
 	- [Dollar selector](#dollar-selector)
@@ -19,7 +21,8 @@ Simple javascript library
 - [Type](#type)
 - [String](#string)
 
-## Core
+Core
+----
 
 #### extend
 
@@ -67,7 +70,8 @@ document.addEvent('ready', function(){
 });
 ```
 
-## Each
+Each
+----
 
 #### each
 
@@ -87,7 +91,8 @@ $('div').each(function(value, key){
 });
 ```
 
-## Element
+Element
+-------
 
 #### Element constructor
 
@@ -228,7 +233,8 @@ $('body div.wrapper').inject('div', {
 	}, 'after');
 ```
 
-## Element Class
+Element Class
+-------------
 
 #### addClass
 
@@ -278,7 +284,8 @@ Arguments:
 $('div').toggleClass('active');
 ```
 
-## Element Style
+Element Style
+-------------
 
 #### setStyle
 
@@ -328,7 +335,8 @@ Remove style from element or return files in case element has no such style
 $('div').removeStyle('color');
 ```
 
-## Element Event
+Element Event
+-------------
 
 All events are stored on window object. They are accesible on window.eventCache.
 
@@ -405,7 +413,8 @@ Arguments:
 $('div').first().removeEvent('click');
 ```
 
-## String
+String
+------
 
 #### toCamelCase
 
@@ -427,7 +436,8 @@ Return string with first letter in upper case format
 // return Lorem ipsum
 ```
 
-## Type
+Type
+----
 
 #### isArray
 
