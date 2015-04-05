@@ -19,7 +19,7 @@ Simple javascript library for **modern browsers**.
 	<tr>
 		<td width="20">9+</td>
 		<td width="20" background="green">8+</td>
-		<td width="20" background="green">ALL</td>
+		<td width="20" background="green">13+</td>
 		<td width="20" background="green">ALL</td>
 	</tr>
 </table>
@@ -270,11 +270,28 @@ Arguments:
 * object - see Element constructor
 * where - before, after, inside (default)
 
+or 
+
+* element - Node
+* where - before, after, inside (default)
+
 ```javascript
 $('body div.wrapper').inject('div', {
 	'class': 'inner',
 	'text': 'lorem ipsum dolor sit amet...'
 }, 'after');
+```
+
+#### cloneElement
+
+Return cloned element without events
+
+```javascript
+var element = $('div').first().cloneElement();
+
+// Return element
+
+$('div').first().inject($('div').first());
 ```
 
 Element Class

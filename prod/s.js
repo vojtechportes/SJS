@@ -279,24 +279,48 @@
 		return item.querySelectorAll(selector);
 	});	
 
-	[NodeList, Node].invoke('inject', function(tag, object, where){
-		var element = new Element(tag, object), parent;
+	[NodeList, Node].invoke('inject', function(){
+		var tag, object, element, parent, where = 'inside';
+
+		if (typeof arguments[0] === 'string') {
+			tag = arguments[0];
+		} else if (arguments[0] instanceof Node) {
+			element = arguments[0];
+		}
+
+		console.log(element);
+
+		if (arguments[1] instanceof Object) {
+			object = arguments[1]
+		} else if (typeof arguments[1] === 'string') {
+			where = arguments[1]
+		}
+
+		if (typeof arguments[2] === 'string')
+			where = arguments[2];
+		
+		if (tag && object && where) {
+			element = new Element(tag, object);
+		}
+
+		console.log(tag);
+		console.log(typeof element);
+
 		if (this instanceof NodeList) {
 			parent = this.first();
 		} else {
 			parent = this;
 		}
 
-
 		switch (where) {
 			case 'inside':
 				parent.appendChild(element);
 				break;
 			case 'before':
-				parent.insertBefore(element);
+				//parent.insertBefore(element, parent.getParent());
 				break;
 			case 'after':
-				parent.getParent().insertBefore(element);
+				//parent.insertBefore(element);
 				break;
 		}
 	});			
@@ -304,12 +328,20 @@
 	[NodeList, Node].invoke('removeElement', function(){
 		var item;
 		if (this instanceof NodeList) {
-			this.remove();		
-		} else {
 			this.each(function(item){
 				item.remove();
-			});	
+			});		
+		} else {
+			this.remove();	
 		}
+	});
+
+	[NodeList, Node].invoke('cloneElement', function(){
+		if (this instanceof NodeList) {
+			return this.first().cloneNode(true);
+		} else {
+			return this.cloneNode(true);			
+		}	
 	});
 
 	[NodeList, Node].invoke('addClass', function(name) {
