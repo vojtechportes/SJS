@@ -90,7 +90,7 @@ Arguments:
 $('body div');
 ```
 
-If selector contains only id of element, getElementById is used instead of queryStringAll and Node is returned instead of NodeList
+If selector contains only id of element, getElementById is used instead of querySelectorAll and Node is returned instead of NodeList
 
 ```javascript
 $('#body-inner');
