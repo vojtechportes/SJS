@@ -1,4 +1,5 @@
 # SJS
+<small>version 1.0.34</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -81,8 +82,18 @@ Implement new prototype extensions to type Object
 
 Dollar selector is an funciton which returns html collection
 
+Arguments:
+
+* selector
+
 ```javascript
 $('body div');
+```
+
+If selector contains only id of element, getElementById is used instead of queryStringAll and Node is returned instead of NodeList
+
+```javascript
+$('#body-inner');
 ```
 
 #### DOM Ready
