@@ -135,7 +135,7 @@ arguments:
 * tag
 * object
 
-Argument object can contain multiple key types: attribute (eg. class, id, href), data, text, html, styles and events. html can be an array with another element constructor or html.
+Argument object can contain multiple key types: attribute (eg. class, id, href), data, text, html, styles and events. html can be an array with another element/s constructor or html.
 
 ```javascript
 new Element('div', {
@@ -154,12 +154,13 @@ new Element('div', {
 			console.log('click');
 		}
 	},
-	'html': ['div', {
+	'html': [['div', {
 		'class': 'inner',
 		'text': 'lorem ipsum dolor sit amet...'
-	}]
+	}], [...]]
 });
 ``` 
+
 #### first
 
 Select first element from html collection
