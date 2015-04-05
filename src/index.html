@@ -15,12 +15,15 @@
 			$('div').get('class');
 	
 			$('div').each(function(item, key){
+				console.log(this);
 				item.addClass('newClass');
 			});
 	
 			$.each({"a": "b", "c": "d"}, function(val, key){
-	
+				console.log(val);
 			});
+
+
 	
 			$('body').inject('div', {
 				"class": "lorem ipsum",
@@ -33,7 +36,7 @@
 				"events": {
 					"click": function () {
 						console.log('click');
-						event.preventDefault();	
+						event.stopPropagation();	
 					}
 				},
 				"styles": {
@@ -43,7 +46,16 @@
 				},
 				"html": ["div", {
 					"class": "abc",
-					"text": "abc"
+					"text": "Lorem ipsum",
+					"html": [
+						['h1', {
+							"text": "LOREM IPSUM"
+						}],
+						['p', {
+							"class": "cde",
+							"text": "Dolor sit amet"
+						}]
+					]
 				}, "inside"]
 			}, 'inside');
 		});

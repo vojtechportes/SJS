@@ -46,10 +46,25 @@
 		delete window.eventCache[this.el][this.eventID];
 	});
 
-	[Node, NodeList].invoke('addEvent', function(type, callback, capture){
+	[Node, NodeList].invoke('addEvent', function(){
+		var type, callback, capture = false, e = false;
+
+		if (typeof arguments[0] === 'string') {
+			type = arguments[0];
+		} else if (arguments[0] instanceof Object) {
+			e = arguments[0];
+		}
+		if (arguments[1] instanceof Function)
+			callback = arguments[1];
+		if (arguments[2] instanceof Boolean)
+			capture = arguments[2];
+
+		if (e !== false) {
+			type = e.type;
+			callback = e.fce;
+		}
+
 		type = translateEvent(type);
-		if (typeof capture === 'undefined')
-			capture = false;
 
 		if (this instanceof NodeList) {
 				var item, events;			
@@ -65,24 +80,45 @@
 
 	[Node, NodeList].invoke('removeEvent', function(type, callback, capture){
 		var elEvent;
+
 		type = translateEvent(type);
 		
 		if (typeof capture === 'undefined')
 			capture = false;
 
 		if (this instanceof NodeList) {
-				this.each(function(item) {
-					elEvent = window.getEventCache(item, type);
-					item.removeEventListener(type, elEvent.fce, capture);
-					var e = new Event({'el': item, 'eid': elEvent.eid});
-					e.unregister();
-				}); 
-			} else {
-				elEvent = window.getEventCache(this, type);
-				this.removeEventListener(type, elEvent.fce, capture);
-				var e = new Event({'el': this, 'eid': elEvent.eid});
+			this.each(function(item) {
+				elEvent = window.getEventCache(item, type);
+				item.removeEventListener(type, elEvent.fce, capture);
+				var e = new Event({'el': item, 'eid': elEvent.eid});
 				e.unregister();
-			}
+			}); 
+		} else {
+			elEvent = window.getEventCache(this, type);
+			this.removeEventListener(type, elEvent.fce, capture);
+			var e = new Event({'el': this, 'eid': elEvent.eid});
+			e.unregister();
+		}
+	});
+
+	[Node, NodeList].invoke('cloneEvent', function() {
+		var type = arguments[0], element = false;
+		if (typeof arguments[1] !== 'undefined')
+			element = arguments[1]
+
+		if (this instanceof NodeList) {
+			item = this.first();
+		} else {
+			item = this;
+		}
+
+		var e = window.getEventCache(item, type);
+
+		if (element) {
+			element.addEvent(type, e.fce);
+		} else {
+			return e;
+		}
 	});
 
 	[Node, NodeList].invoke('fireEvent', function(type){

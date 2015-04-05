@@ -20,7 +20,7 @@ Simple javascript library for **modern browsers**.
 		<td width="20">9+</td>
 		<td width="20" background="green">8+</td>
 		<td width="20" background="green">13+</td>
-		<td width="20" background="green">ALL</td>
+		<td width="20" background="green">ALL (?)</td>
 	</tr>
 </table>
 
@@ -39,7 +39,7 @@ Simple javascript library for **modern browsers**.
 - [Element Style](#element-style)
 - [Element Event](#element-event)
 	- [ ] fireEvent
-	- [ ] cloneEvent
+	- [x] cloneEvent
 - [Type](#type)
 - [Array](#array)
 - [String](#string)
@@ -461,11 +461,20 @@ Arguments:
 * callback
 * capture - true or false (default)
 
+or 
+
+* cache event object
+
 ```javascript
 $('div').first().addEvent('click', function(){
 	event.stopPropagation();
 	console.log('click');
 });
+```
+
+```javascript
+var e = $('div').first().cloneEvent('click');
+$('p').addEvent(e);
 ```
 
 #### removeEvent
@@ -479,6 +488,27 @@ Arguments:
 
 ```javascript
 $('div').first().removeEvent('click');
+```
+
+#### cloneEvent
+
+Return event cache object of element
+
+Arguments
+
+* type - eg. click, scroll etc.
+* element - element/s on which will be event cloned (optional)
+
+```javscript
+$('div').first().cloneEvent('click');
+
+// return eg.: {'type': 'click', 'fce': function(){ console.log('click') }, 'eid': 'e_78354214568'}
+```
+
+```javascript
+$('div').first().cloneEvent('click', $('p'));
+
+// clone click event from first div element in DOM and apply it to all paragraph elements in DOM
 ```
 
 String

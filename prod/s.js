@@ -57,14 +57,15 @@
 			callback = arguments[1];
 		}
 
-		if (this instanceof Object) {
+		if (this instanceof NodeList === false) {
 			for (var key in data) {
-				if (data.hasOwnProperty(key) && key !== 'length')
-					callback(data[key], key);
+				if (data.hasOwnProperty(key) && key !== 'length') {
+					callback.call(null, data[key], key);
+				}
 			}
 		} else {
 			for (var i = 0; item = data[i++];) {
-				callback(item, i - 1);
+				callback.call(item, item, i - 1);
 			}
 		}
 	});
@@ -93,10 +94,15 @@
 					break;
 				case 'html':
 					if (value instanceof Array) {
-						if (typeof value[2] === 'undefined')
-							value[2] = 'inside';
-						
-						element.inject(value[0], value[1], value[2]);
+						if (value[0] instanceof Array) {
+							$.each(value, function(value, key){
+								if (typeof value[2] === 'undefined') value[2] = 'inside';							
+								element.inject(new Element(value[0], value[1]), value[2]);
+							});
+						} else {
+							if (typeof value[2] === 'undefined') value[2] = 'inside';							
+							element.inject(new Element(value[0], value[1]), value[2]);
+						}
 					} else {
 						element.set(key, value);
 					}
@@ -288,8 +294,6 @@
 			element = arguments[0];
 		}
 
-		console.log(element);
-
 		if (arguments[1] instanceof Object) {
 			object = arguments[1]
 		} else if (typeof arguments[1] === 'string') {
@@ -302,9 +306,6 @@
 		if (tag && object && where) {
 			element = new Element(tag, object);
 		}
-
-		console.log(tag);
-		console.log(typeof element);
 
 		if (this instanceof NodeList) {
 			parent = this.first();
@@ -522,10 +523,25 @@
 		delete window.eventCache[this.el][this.eventID];
 	});
 
-	[Node, NodeList].invoke('addEvent', function(type, callback, capture){
+	[Node, NodeList].invoke('addEvent', function(){
+		var type, callback, capture = false, e = false;
+
+		if (typeof arguments[0] === 'string') {
+			type = arguments[0];
+		} else if (arguments[0] instanceof Object) {
+			e = arguments[0];
+		}
+		if (arguments[1] instanceof Function)
+			callback = arguments[1];
+		if (arguments[2] instanceof Boolean)
+			capture = arguments[2];
+
+		if (e !== false) {
+			type = e.type;
+			callback = e.fce;
+		}
+
 		type = translateEvent(type);
-		if (typeof capture === 'undefined')
-			capture = false;
 
 		if (this instanceof NodeList) {
 				var item, events;			
@@ -541,24 +557,45 @@
 
 	[Node, NodeList].invoke('removeEvent', function(type, callback, capture){
 		var elEvent;
+
 		type = translateEvent(type);
 		
 		if (typeof capture === 'undefined')
 			capture = false;
 
 		if (this instanceof NodeList) {
-				this.each(function(item) {
-					elEvent = window.getEventCache(item, type);
-					item.removeEventListener(type, elEvent.fce, capture);
-					var e = new Event({'el': item, 'eid': elEvent.eid});
-					e.unregister();
-				}); 
-			} else {
-				elEvent = window.getEventCache(this, type);
-				this.removeEventListener(type, elEvent.fce, capture);
-				var e = new Event({'el': this, 'eid': elEvent.eid});
+			this.each(function(item) {
+				elEvent = window.getEventCache(item, type);
+				item.removeEventListener(type, elEvent.fce, capture);
+				var e = new Event({'el': item, 'eid': elEvent.eid});
 				e.unregister();
-			}
+			}); 
+		} else {
+			elEvent = window.getEventCache(this, type);
+			this.removeEventListener(type, elEvent.fce, capture);
+			var e = new Event({'el': this, 'eid': elEvent.eid});
+			e.unregister();
+		}
+	});
+
+	[Node, NodeList].invoke('cloneEvent', function() {
+		var type = arguments[0], element = false;
+		if (typeof arguments[1] !== 'undefined')
+			element = arguments[1]
+
+		if (this instanceof NodeList) {
+			item = this.first();
+		} else {
+			item = this;
+		}
+
+		var e = window.getEventCache(item, type);
+
+		if (element) {
+			element.addEvent(type, e.fce);
+		} else {
+			return e;
+		}
 	});
 
 	[Node, NodeList].invoke('fireEvent', function(type){

@@ -22,10 +22,15 @@
 					break;
 				case 'html':
 					if (value instanceof Array) {
-						if (typeof value[2] === 'undefined')
-							value[2] = 'inside';
-						
-						element.inject(value[0], value[1], value[2]);
+						if (value[0] instanceof Array) {
+							$.each(value, function(value, key){
+								if (typeof value[2] === 'undefined') value[2] = 'inside';							
+								element.inject(new Element(value[0], value[1]), value[2]);
+							});
+						} else {
+							if (typeof value[2] === 'undefined') value[2] = 'inside';							
+							element.inject(new Element(value[0], value[1]), value[2]);
+						}
 					} else {
 						element.set(key, value);
 					}
@@ -217,8 +222,6 @@
 			element = arguments[0];
 		}
 
-		console.log(element);
-
 		if (arguments[1] instanceof Object) {
 			object = arguments[1]
 		} else if (typeof arguments[1] === 'string') {
@@ -231,9 +234,6 @@
 		if (tag && object && where) {
 			element = new Element(tag, object);
 		}
-
-		console.log(tag);
-		console.log(typeof element);
 
 		if (this instanceof NodeList) {
 			parent = this.first();
