@@ -32,6 +32,9 @@ Simple javascript library for **modern browsers**.
 - [Each](#each)
 - [Element](#element)
 	- [x] cloneElement
+	- [x] inject
+		- [ ] inject before
+		- [ ] inject after 
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
