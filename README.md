@@ -562,7 +562,7 @@ Array
 
 #### clear
 
-Clear duplicited in array
+Clear duplicites in array
 
 ```javascript
 ['a', 'b', 'a'].clear();
