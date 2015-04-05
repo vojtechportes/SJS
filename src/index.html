@@ -6,46 +6,46 @@
 		<script>
 		document.addEvent('ready', function(){
 
-		$('div').last();
-
-		$('div').addClass('newClassMulti');
-
-		$('body').getElements('.row').setStyles({'background-color': 'yellow'});
-
-		$('div').get('class');
-
-		$('div').each(function(item, key){
-			item.addClass('newClass');
-		});
-
-		$.each({"a": "b", "c": "d"}, function(val, key){
-
-		});
-
-		$('body').inject('div', {
-			"class": "lorem ipsum",
-			"id": "LoremIpsum",
-			"text": "ABCD",
-			"data": {
-				"lorem": [1, 2, 3],
-				"ipsum": "b"
-			},
-			"events": {
-				"click": function () {
-					console.log('click');
-					event.preventDefault();	
-				}
-			},
-			"styles": {
-				"background-color": "red",
-				"font-size": "24px",
-				"font-family": "Arial"
-			},
-			"html": ["div", {
-				"class": "abc",
-				"text": "abc"
-			}, "inside"]
-		}, 'inside');
+			$('div').last();
+	
+			$('div').addClass('newClassMulti');
+	
+			$('body').getElements('.row').setStyles({'background-color': 'yellow'});
+	
+			$('div').get('class');
+	
+			$('div').each(function(item, key){
+				item.addClass('newClass');
+			});
+	
+			$.each({"a": "b", "c": "d"}, function(val, key){
+	
+			});
+	
+			$('body').inject('div', {
+				"class": "lorem ipsum",
+				"id": "LoremIpsum",
+				"text": "ABCD",
+				"data": {
+					"lorem": [1, 2, 3],
+					"ipsum": "b"
+				},
+				"events": {
+					"click": function () {
+						console.log('click');
+						event.preventDefault();	
+					}
+				},
+				"styles": {
+					"background-color": "red",
+					"font-size": "24px",
+					"font-family": "Arial"
+				},
+				"html": ["div", {
+					"class": "abc",
+					"text": "abc"
+				}, "inside"]
+			}, 'inside');
 		});
 		</script>
 	</head>
