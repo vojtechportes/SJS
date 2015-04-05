@@ -31,7 +31,7 @@ Simple javascript library for **modern browsers**.
 	- [DOM Ready](#dom-ready)
 - [Each](#each)
 - [Element](#element)
-	- [ ] cloneElement
+	- [x] cloneElement
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
@@ -269,6 +269,9 @@ Arguments:
 * tag
 * object - see Element constructor
 * where - before, after, inside (default)
+
+- [ ] inject before
+- [ ] inject after
 
 or 
 
