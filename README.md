@@ -3,8 +3,10 @@
 
 Simple javascript library for **modern browsers**.
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 12.7kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 7.7kb</strong>
+## Download
+
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 15.3kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 9.3kb</strong>
 
 --------------------------------------------------------------------------------------
 
@@ -27,6 +29,8 @@ Simple javascript library for **modern browsers**.
 
 --------------------------------------------------------------------------------------
 
+- [Download](#download)
+- [Browser support](#browser-support)
 - [Core](#core)
 	- [Dollar selector](#dollar-selector)
 	- [DOM Ready](#dom-ready)
