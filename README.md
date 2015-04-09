@@ -33,9 +33,14 @@ Simple javascript library for **modern browsers**.
 - [Each](#each)
 - [Element](#element)
 	- [x] cloneElement
+	- [x] getNext
+	- [x] getPrevious
+	- [x] getFirstChild
+	- [x] getLastChild
+	- [x] getSiblings
 	- [x] inject
-		- [ ] inject before
-		- [ ] inject after 
+		- [x] inject before
+		- [x] inject after 
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
@@ -263,6 +268,46 @@ Arguments:
 $('body div.wrapper').getElements('div')
 ```
 
+#### getNext
+
+Return next element or null
+
+```javascript
+$('body div.first').getNext();
+```
+
+#### getPrevious
+
+Return previous element or null
+
+```javascript
+$('body div.first').getPrevious();
+```
+
+#### getFirstChild
+
+Return first child element or null
+
+```javascript
+$('body div.wrapper').getFirstChild();
+```
+
+#### getLastChild
+
+Return last child element or null
+
+```javascript
+$('body div.wrapper').getLastChild();
+```
+
+#### getSiblings
+
+Return collection of element's siblings
+
+```javascript
+$('body div.wrapper div').getSiblings();
+```
+
 #### removeElement
 
 Remove html element or collection of elements
@@ -285,8 +330,8 @@ Arguments:
 * object - see Element constructor
 * where - before, after, inside (default)
 
-- [ ] inject before
-- [ ] inject after
+- [x] inject before
+- [x] inject after
 
 or 
 

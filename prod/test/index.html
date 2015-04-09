@@ -23,7 +23,9 @@
 				console.log(val);
 			});
 
-
+			$('body').inject('div', {
+				'text': 'BEFORE'
+			}, 'before');
 	
 			$('body').inject('div', {
 				"class": "lorem ipsum",

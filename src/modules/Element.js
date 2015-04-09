@@ -211,7 +211,97 @@
 		}
 
 		return item.querySelectorAll(selector);
+	});
+
+	[NodeList, Node].invoke('getNext', function(){
+		var element, _element;
+		if (this instanceof NodeList) {
+			element = this.first();
+		} else {
+			element = this;
+		}
+
+		element = element.nextSibling
+
+		while(element && element.nodeType !== 1) {
+			element = element.nextSibling;
+		} 
+
+		return element;
 	});	
+
+	[NodeList, Node].invoke('getPrevious', function(){
+		var element, _element;
+		if (this instanceof NodeList) {
+			element = this.first();
+		} else {
+			element = this;
+		}
+
+		element = element.previousSibling;
+
+		while(element && element.nodeType !== 1) {
+			element = element.previousSibling;
+		} 
+
+		return element;
+	});	
+
+	[NodeList, Node].invoke('getFirstChild', function(){
+		var first, element;
+		if (this instanceof NodeList) {
+			element = this.first();
+		} else {
+			element = this;
+		}
+
+		first = element.firstChild;
+
+		while(first.nodeType !== 1) {
+			first = first.getNext();
+		} 
+
+		return first;
+	});
+
+	[NodeList, Node].invoke('getLastChild', function(){
+		var last, element;Pre
+		if (this instanceof NodeList) {
+			element = this.first();
+		} else {
+			element = this;
+		}
+
+		last = element.lastChild;
+
+		while(last.nodeType !== 1) {
+			last = last.getPrevious();
+		} 
+
+		return last;
+	});
+
+	[NodeList, Node].invoke('getSiblings', function(){
+		var elements = [], element, node;
+		if (this instanceof NodeList) {
+			element = this.first();
+		} else {
+			element = this;
+		}
+
+	    node = element.getParent().getFirstChild();
+
+	    console.log(node);
+
+	    while(node) {
+	    	if (node !== element) {
+	    		elements.push(node);
+	    	}
+	    	node = node.getNext();
+	    }
+
+	    return elements;
+	});
 
 	[NodeList, Node].invoke('inject', function(){
 		var tag, object, element, parent, where = 'inside';
@@ -246,10 +336,10 @@
 				parent.appendChild(element);
 				break;
 			case 'before':
-				//parent.insertBefore(element, parent.getParent());
+				parent.getParent().insertBefore(element, parent.previousSibling);
 				break;
 			case 'after':
-				//parent.insertBefore(element);
+				parent.getParent().insertBefore(element, parent.nextSibling);
 				break;
 		}
 	});			
