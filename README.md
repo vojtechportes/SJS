@@ -38,14 +38,10 @@ Simple javascript library for **modern browsers**.
 	- [x] getFirstChild
 	- [x] getLastChild
 	- [x] getSiblings
-	- [x] inject
-		- [x] inject before
-		- [x] inject after 
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
 	- [ ] fireEvent
-	- [x] cloneEvent
 - [Type](#type)
 - [Array](#array)
 - [String](#string)
@@ -627,3 +623,9 @@ Clear duplicites in array
 // return ['a', 'b']
 ```
 
+Request
+-------
+
+#### Request constructor
+
+TBD

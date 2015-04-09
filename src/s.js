@@ -15,3 +15,5 @@
 <%- include('modules/Element.Style.js'); %>
 
 <%- include('modules/Element.Event.js'); %>
+
+<%- include('modules/Request.js'); %>
