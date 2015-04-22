@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.0.34</small>
+<small>version 1.0.41</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -308,16 +308,36 @@ Return collection of element's siblings
 $('body div.wrapper div').getSiblings();
 ```
 
+#### isChildOf
+
+Return true if element is child of parent or return false
+
+Arguments:
+
+* parent
+
+```javascript
+$('div.feature').isChildOf('.features');
+```
+
 #### removeElement
 
-Remove html element or collection of elements
+Remove html element or collection of elements or child elements
 
 Arguments:
 
 * selector
 
 ```javascript
-$('body div.wrapper').removeElement('div')
+// remove all div.wrapper elements
+
+$('body div.wrapper').removeElement();
+```
+
+```javascript
+// remove all divs inside div.wrapper
+
+$('body div.wrapper').removeElement('div');
 ```
 
 #### inject

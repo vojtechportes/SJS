@@ -416,16 +416,49 @@
 				parent.getParent().insertBefore(element, parent.nextSibling);
 				break;
 		}
-	});			
+	});
 
-	[NodeList, Node].invoke('removeElement', function(){
-		var item;
+	[NodeList, Node].invoke('isChildOf', function(parent){
+	     if (parent instanceof NodeList)
+	     	parent = parent.first();
+
+	     var node = this.getParent();
+	     while (node != null) {
+	         if (node == parent) {
+	             return true;
+	         }
+	         node = node.getParent();
+	     }
+	     return false;
+	});		
+
+	[NodeList, Node].invoke('removeElement', function(selector){
+		var item, child, inside = false, children;
+		if (typeof selector !== 'undefined') {
+
+			inside = true;
+		}
+
 		if (this instanceof NodeList) {
 			this.each(function(item){
-				item.remove();
+				if (inside) {
+					children = item.getElements(selector);
+					children.each(function(child){
+						child.remove();
+					});
+				} else {
+					item.remove();
+				}
 			});		
 		} else {
-			this.remove();	
+			if (inside) {
+				children = this.getElements(selector);
+				children.each(function(child){
+					child.remove();
+				});
+			} else {
+				this.remove();		
+			}
 		}
 	});
 
@@ -699,3 +732,4 @@
 		} else {
 		}
 	});
+
