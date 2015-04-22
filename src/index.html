@@ -5,6 +5,12 @@
 		<script src="../s.js"></script>
 		<script>
 		document.addEvent('ready', function(){
+			console.log($('#body-inner').isChildOf('body'));
+
+			$('#remove').addEvent('click', function(){
+				console.log(this);
+				this.getParent().removeElement('div');
+			});
 
 			$('div').last();
 	
@@ -61,7 +67,7 @@
 				}, "inside"]
 			}, 'inside');
 		});
-		</script>
+		</script>				
 	</head>
 	<body class="us us-en js">
 		<div class="inner" id="body-inner">
@@ -74,5 +80,11 @@
 				</div>
 			</div>
 		</div>
+		<div id="removable">
+			<a href="#" id="remove">remove</a>
+			<div>a</div>
+			<div>b</div>
+		</div>
+
 	</body>
 </html>

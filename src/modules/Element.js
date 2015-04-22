@@ -345,8 +345,16 @@
 	});
 
 	[NodeList, Node].invoke('isChildOf', function(parent){
+	     var item, parent = $(parent);
+
 	     if (parent instanceof NodeList)
 	     	parent = parent.first();
+
+	     if (this instanceof NodeList) {
+	     	item = this.first();
+	     } else {
+	     	item = this;
+	     }
 
 	     var node = this.getParent();
 	     while (node != null) {

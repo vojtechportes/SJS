@@ -419,8 +419,16 @@
 	});
 
 	[NodeList, Node].invoke('isChildOf', function(parent){
+	     var item, parent = $(parent);
+
 	     if (parent instanceof NodeList)
 	     	parent = parent.first();
+
+	     if (this instanceof NodeList) {
+	     	item = this.first();
+	     } else {
+	     	item = this;
+	     }
 
 	     var node = this.getParent();
 	     while (node != null) {
@@ -669,16 +677,16 @@
 		type = translateEvent(type);
 
 		if (this instanceof NodeList) {
-				var item, events;			
-				this.each(function(item) {
-					var e = new Event({'el': item, 'type': type, 'fce': callback});
-					item.addEventListener(type, e.register(), capture);
-				}); 
-			} else {	
-				var e = new Event({'el': this, 'type': type, 'fce': callback});
-				this.addEventListener(type, e.register(), capture);
-			}
-	});
+			var item, events;			
+			this.each(function(item) {
+				var e = new Event({'el': item, 'type': type, 'fce': callback});
+				item.addEventListener(type, e.register(), capture);
+			}); 
+		} else {	
+			var e = new Event({'el': this, 'type': type, 'fce': callback});
+			this.addEventListener(type, e.register(), capture);
+		}
+});
 
 	[Node, NodeList].invoke('removeEvent', function(type, callback, capture){
 		var elEvent;
