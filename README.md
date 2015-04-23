@@ -45,7 +45,7 @@ Simple javascript library for **modern browsers**.
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
-	- [ ] fireEvent
+	- [x] fireEvent
 - [Type](#type)
 - [Array](#array)
 - [String](#string)
@@ -510,6 +510,10 @@ new Event(object)
 
 Add event to cache
 
+Arguments:
+
+* event
+
 ```javascript
 var e = new Event({
 	'el': $('div').first(),
@@ -517,7 +521,7 @@ var e = new Event({
 	'fce': function(){
 		console.log('click');
 	}});
-e.register();
+e.register(event);
 ```
 
 ##### unregister
@@ -571,7 +575,7 @@ $('div').first().removeEvent('click');
 
 Return event cache object of element
 
-Arguments
+Arguments:
 
 * type - eg. click, scroll etc.
 * element - element/s on which will be event cloned (optional)
@@ -586,6 +590,26 @@ $('div').first().cloneEvent('click');
 $('div').first().cloneEvent('click', $('p'));
 
 // clone click event from first div element in DOM and apply it to all paragraph elements in DOM
+```
+
+#### fireEvent
+
+Fire event on element/s
+
+Arguments:
+
+* type - eg. click, scroll etc.
+
+```javascript
+// Fire click event on all div elements
+
+$('div').fireEvent('click');
+```
+
+```javascript
+// Fire click event on div element
+
+$('div').first().fireEvent('click');
 ```
 
 String

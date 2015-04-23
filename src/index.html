@@ -7,10 +7,11 @@
 		document.addEvent('ready', function(){
 			console.log($('#body-inner').isChildOf('body'));
 
-			$('#remove').addEvent('click', function(){
-				console.log(this);
+			$('#remove').addEvent('click', function(event){
 				this.getParent().removeElement('div');
 			});
+
+
 
 			$('div').last();
 	
@@ -42,7 +43,7 @@
 					"ipsum": "b"
 				},
 				"events": {
-					"click": function () {
+					"click": function (event) {
 						console.log('click');
 						event.stopPropagation();	
 					}
