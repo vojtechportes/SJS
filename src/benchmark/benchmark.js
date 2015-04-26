@@ -13,7 +13,7 @@ document.addEvent('ready', function(){
 				_times = times;
 				start = new Date;
 				while(_times--) {
-					$('#inner').inject(new Element('div', {'text': 'test', 'class': 'injected'}));
+					$(parent).inject(new Element('div', {'text': 'test', 'class': 'injected'}));
 				}
 				console.log('Injecting ' + times + ' elements took ' + (new Date - start) + 'ms');
 				break;
@@ -29,7 +29,7 @@ document.addEvent('ready', function(){
 				break;
 			case 'removeElement':
 				start = new Date;
-				$('.injected').removeEvent();
+				$('.injected').removeEvent('click');
 				$('.injected').removeElement();
 				console.log('Removing events from ' + times + ' elements and removing ' + times + ' elements took ' + (new Date - start) + 'ms');
 				break;

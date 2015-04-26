@@ -14,7 +14,7 @@ gulp.task('sjs', function() {
 });
 
 gulp.task('html', function(){
-    gulp.src('./src/*.html')
+    gulp.src('./src/index.html')
     .pipe(gulp.dest('./prod/test/'));
 });
 

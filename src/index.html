@@ -5,13 +5,17 @@
 		<script src="../s.js"></script>
 		<script>
 		document.addEvent('ready', function(){
+			var element = '.us';
+
+			console.log($(element));
+
+			$(element).inject(new Element('div'));
+
 			console.log($('#body-inner').isChildOf('body'));
 
 			$('#remove').addEvent('click', function(event){
 				this.getParent().removeElement('div');
 			});
-
-
 
 			$('div').last();
 	
