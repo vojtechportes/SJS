@@ -486,7 +486,7 @@ Element Event
 
 All events are stored on window object. They are accesible on window.eventCache.
 
-To trigger custom event use method customEvent. To listen custom event, use addEvent method.
+To trigger custom event use method fireEvent. To listen custom event, use addEvent method.
 
 #### getEventCache
 
