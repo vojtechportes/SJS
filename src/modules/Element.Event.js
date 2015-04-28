@@ -119,17 +119,25 @@ SEvent.implement('unregister', function(){
 });
 
 [Node, NodeList].invoke('fireEvent', function(type){
-	var item;
+	var item, name = "on" + type;
 
 	if (this instanceof NodeList) {
 		this.each(function(item) {
 			var e = window.getEventCache(item, type);
-			if (e)
+			if (e && name in window) {
 				e.fce.call(item, e.event);
+			} else {
+				var e = new Event(type);
+				item.dispatchEvent(e);
+			}
 		});
 	} else {
 		var e = window.getEventCache(this, type);
-		if(e)
+		if (e && name in window) {
 			e.fce.call(this, e.event);
+		} else {
+			var e = new Event(type);
+			this.dispatchEvent(e);			
+		}
 	}
 });

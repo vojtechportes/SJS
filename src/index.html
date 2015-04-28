@@ -71,6 +71,12 @@
 					]
 				}, "inside"]
 			}, 'inside');
+
+			setTimeout(function(){ document.fireEvent('custom'); }, 1000);
+			
+			document.addEvent('custom', function(){
+				console.log('custom event');
+			});
 		});
 		</script>				
 	</head>

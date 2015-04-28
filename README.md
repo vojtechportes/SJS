@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.0.49</small>
+<small>version 1.0.50</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -486,6 +486,8 @@ Element Event
 
 All events are stored on window object. They are accesible on window.eventCache.
 
+To trigger custom event use method customEvent. To listen custom event, use addEvent method.
+
 #### getEventCache
 
 Return all informations about element event from window object
@@ -595,7 +597,7 @@ $('div').first().cloneEvent('click', $('p'));
 
 #### fireEvent
 
-Fire event on element/s
+Fire event on element/s.
 
 Arguments:
 
