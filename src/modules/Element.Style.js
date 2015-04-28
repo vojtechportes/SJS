@@ -24,24 +24,16 @@
 });
 
 [NodeList, Node].invoke('getStyle', function(key) {
-	var item;
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {	
-		item = this;
-	}
+	var item = this.getNode();
+
 	if (typeof item.style[key] !== 'undefined')
 		return item.style[key];
 	return false;
 });
 
 [NodeList, Node].invoke('removeStyle', function(key) {
-	var item;
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {
-		item = this;
-	}
+	var item = this.getNode();
+	
 	if (typeof item.style[key] !== 'undefined')
 		item.style[key] = null;
 	return false;

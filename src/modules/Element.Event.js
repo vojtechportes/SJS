@@ -27,7 +27,7 @@ Object.implement('getEventCache', function(element, type) {
 	}
 });
 
-var Event = function (object) {
+var SEvent = function (object) {
 	this.eventID = object.eid || 'e_' + new Date().getTime();
 	this.el = object.el || null;
 	this.type = object.type || null;
@@ -35,7 +35,7 @@ var Event = function (object) {
 	this.event = object.event || null;
 }
 
-Event.implement('register', function(event){
+SEvent.implement('register', function(event){
 	if (typeof event !== 'undefined')
 		this.event = event;
 	if (typeof window.eventCache[this.el] === 'undefined')
@@ -45,7 +45,7 @@ Event.implement('register', function(event){
 	return window.eventCache[this.el][this.eventID].fce;
 });
 
-Event.implement('unregister', function(){
+SEvent.implement('unregister', function(){
 	delete window.eventCache[this.el][this.eventID];
 });
 
@@ -72,11 +72,11 @@ Event.implement('unregister', function(){
 	if (this instanceof NodeList) {
 		var item, events;			
 		this.each(function(item) {
-			var e = new Event({'el': item, 'type': type, 'fce': callback});
+			var e = new SEvent({'el': item, 'type': type, 'fce': callback});
 			item.addEventListener(type, e.register(event), capture);
 		}); 
 	} else {	
-		var e = new Event({'el': this, 'type': type, 'fce': callback});
+		var e = new SEvent({'el': this, 'type': type, 'fce': callback});
 		this.addEventListener(type, e.register(event), capture);
 	}
 });
@@ -93,27 +93,21 @@ Event.implement('unregister', function(){
 		this.each(function(item) {
 			elEvent = window.getEventCache(item, type);
 			item.removeEventListener(type, elEvent.fce, capture);
-			var e = new Event({'el': item, 'eid': elEvent.eid});
+			var e = new SEvent({'el': item, 'eid': elEvent.eid});
 			e.unregister();
 		}); 
 	} else {
 		elEvent = window.getEventCache(this, type);
 		this.removeEventListener(type, elEvent.fce, capture);
-		var e = new Event({'el': this, 'eid': elEvent.eid});
+		var e = new SEvent({'el': this, 'eid': elEvent.eid});
 		e.unregister();
 	}
 });
 
 [Node, NodeList].invoke('cloneEvent', function() {
-	var type = arguments[0], element = false;
+	var type = arguments[0], element = false, item = this.getNode();
 	if (typeof arguments[1] !== 'undefined')
 		element = arguments[1]
-
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {
-		item = this;
-	}
 
 	var e = window.getEventCache(item, type);
 

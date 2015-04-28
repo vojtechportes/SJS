@@ -116,20 +116,22 @@ var Element = function (tag, object) {
 	return element;
 };
 
+[Node, NodeList].invoke('getNode', function(){
+	if (this instanceof NodeList)
+		return this.first();
+	return this;
+});
+
 Node.implement('setData', function(key, val){
-	if (this.dataset !== undefined) {
+	if (this.dataset !== undefined)
 		this.dataset[key] = val;
-	} else {
-		this.setAttribute('data-' + key, val);
-	}
+	this.setAttribute('data-' + key, val);
 });
 
 Node.implement('getData', function(key, val){
-	if (this.dataset !== undefined) {
+	if (this.dataset !== undefined)
 		return this.dataset[key];
-	} else {
-		return this.getAttribute('data-' + key);
-	}
+	return this.getAttribute('data-' + key);
 });
 
 NodeList.implement('first', function() {
@@ -141,61 +143,44 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('set', function(name, value, type) {
+	var item;
+
+	function set (item, name, value, type) {
+		if (type == 'data') {
+			if (item instanceof Object) {
+				item.setData(name, JSON.stringify(value));
+			} else {
+				item.setData(name, value);
+			}
+		} else {
+			switch (name) {
+				case 'html':
+					item.innerHTML = value;
+					break;
+				case 'text':
+					item.innerText = value;
+					break;
+				default:
+					item.setAttribute(name, value);
+					break;
+			}
+		}		
+	}
+
 	if (typeof type === 'undefined')
 		type = 'attr';
 
-	if (this instanceof NodeList) {
-		var item;
-		for (var i = 0; item = this[i++];) {
-			if (type == 'data') {
-				if (item instanceof Object) {
-					item.setData(name, JSON.stringify(value));
-				} else {
-					item.setData(name, value);
-				}
-			} else {
-				switch (name) {
-					case 'html':
-						item.innerHTML = value;
-						break;
-					case 'text':
-						item.innerText = value;
-						break;
-					default:
-						item.setAttribute(name, value);
-						break;
-				}
-			}
-		} 
+	if (this instanceof NodeList) {		
+		this.each(function(item){
+			set(item, name, value, type);
+		});
 	} else {
-		if (type == 'data') {
-			if (this instanceof Object) {
-				this.setData(name, JSON.stringify(value));
-			} else {
-				this.setData(name, value);
-			}
-		} else {			
-			switch (name) {
-				case 'html':
-					this.innerHTML = value;
-					break;
-				case 'text':
-					this.innerText = value;
-					break;
-				default:
-					this.setAttribute(name, value);
-					break;
-			}
-		}
+		set(this, name, value, type);
 	}
 });	
 
 [NodeList, Node].invoke('get', function(name, type) {
-	if (typeof type === 'undefined')
-		type = 'attr';
-
-	if (this instanceof NodeList) {
-		var item = this.first();
+	function get (item, name, type) {
 		if (type == 'data') {
 			var data = item.getData(name);
 			if (typeof data !== 'undefined') {
@@ -220,137 +205,47 @@ NodeList.implement('last', function() {
 					break;
 			}
 			
-		}
-	} else {
-		if (type == 'data') {
-			var data = this.getData(name);
-			if (typeof data !== 'undefined') {
-				try {
-					return JSON.parse(data);
-				} catch(e) {
-					return data;
-				}
-			} else {
-				return false;
-			}	
-		} else {
-			switch (name) {
-				case 'html':
-					return this.innerHTML;
-					break;
-				case 'text':
-					return this.innerText;
-					break;
-				default:
-					return this.getAttribute(name);
-					break;
-			}
-		}
+		}		
 	}
+
+	if (typeof type === 'undefined')
+		type = 'attr';
+
+	return get(this.getNode(), name, type);
 });
 
 [NodeList, Node].invoke('getParent', function(){
-	var item = this;
-
-	if (this instanceof NodeList)
-		item = this.first();
-	return item.parentNode;
+	return this.getNode().parentNode;
 });
 
 [NodeList, Node].invoke('getElement', function(selector){
-	var item = this;
-
-	if (this instanceof NodeList)
-		item = this.first();
-	return item.querySelectorAll(selector).first();
+	return this.getNode().querySelectorAll(selector).first();
 });
 
 [NodeList, Node].invoke('getElements', function(selector){
-	var item;
-
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {
-		item = this;
-	}
-
-	return item.querySelectorAll(selector);
+	return this.getNode().querySelectorAll(selector);
 });
 
 [NodeList, Node].invoke('getNext', function(){
-	var element, _element;
-	if (this instanceof NodeList) {
-		element = this.first();
-	} else {
-		element = this;
-	}
-
-	element = element.nextSibling
-
-	while(element && element.nodeType !== 1) {
-		element = element.nextSibling;
-	} 
-
-	return element;
+	return this.getNode().nextElementSibling;
 });	
 
 [NodeList, Node].invoke('getPrevious', function(){
-	var element, _element;
-	if (this instanceof NodeList) {
-		element = this.first();
-	} else {
-		element = this;
-	}
-
-	element = element.previousSibling;
-
-	while(element && element.nodeType !== 1) {
-		element = element.previousSibling;
-	} 
-
-	return element;
+	return this.getNode().previousElementSibling;
 });	
 
 [NodeList, Node].invoke('getFirstChild', function(){
-	var first, element;
-	if (this instanceof NodeList) {
-		element = this.first();
-	} else {
-		element = this;
-	}
-
-	first = element.firstChild;
-
-	while(first.nodeType !== 1) {
-		first = first.getNext();
-	} 
-
-	return first;
+	return this.getNode().firstElementChild;
 });
 
 [NodeList, Node].invoke('getLastChild', function(){
-	var last, element;Pre
-	if (this instanceof NodeList) {
-		element = this.first();
-	} else {
-		element = this;
-	}
-
-	last = element.lastChild;
-
-	while(last.nodeType !== 1) {
-		last = last.getPrevious();
-	} 
-
-	return last;
+	return this.getNode().lastElementChild;
 });
 
 [NodeList, Node].invoke('getSiblings', function(){
-	var elements = [], element = this, node;
-	
-	if (this instanceof NodeList)
-		element = this.first();
-    node = element.getParent().getFirstChild();
+	var elements = [], node;
+
+    node = this.getNode().getParent().getFirstChild();
 
     while(node) {
     	if (node !== element)
@@ -362,7 +257,7 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('inject', function(){
-	var tag, object, element, parent = this, where = 'inside';
+	var tag, object, element, where = 'inside';
 
 	if (typeof arguments[0] === 'string') {
 		tag = arguments[0];
@@ -382,8 +277,7 @@ NodeList.implement('last', function() {
 	if (tag && object && where)
 		element = new Element(tag, object);
 
-	if (this instanceof NodeList)
-		parent = this.first();
+	parent = this.getNode();
 
 	switch (where) {
 		case 'inside':
@@ -399,15 +293,10 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('isChildOf', function(parent){
-     var item = this, parent = $(parent);
+     var item = this.getNode(), node, parent = $(parent).getNode();
 
-     if (parent instanceof NodeList)
-     	parent = parent.first();
+     node = this.getParent();
 
-     if (this instanceof NodeList)
-     	item = this.first();
-
-     var node = this.getParent();
      while (node != null) {
          if (node == parent) {
              return true;
@@ -419,38 +308,32 @@ NodeList.implement('last', function() {
 
 [NodeList, Node].invoke('removeElement', function(selector){
 	var item, child, inside = false, children;
+
+	function remove (item, selector) {
+		if (inside) {
+			children = item.getElements(selector);
+			children.each(function(child){
+				child.remove();
+			});
+		} else {
+			item.remove();
+		}
+	}
+
 	if (typeof selector !== 'undefined')
 		inside = true;
 
 	if (this instanceof NodeList) {
 		this.each(function(item){
-			if (inside) {
-				children = item.getElements(selector);
-				children.each(function(child){
-					child.remove();
-				});
-			} else {
-				item.remove();
-			}
+			remove(item, selector);
 		});		
 	} else {
-		if (inside) {
-			children = this.getElements(selector);
-			children.each(function(child){
-				child.remove();
-			});
-		} else {
-			this.remove();		
-		}
+		remove(this, selector);
 	}
 });
 
 [NodeList, Node].invoke('cloneElement', function(){
-	if (this instanceof NodeList) {
-		return this.first().cloneNode(true);
-	} else {
-		return this.cloneNode(true);			
-	}	
+	return this.getNode().cloneNode(true);
 });
 
 [NodeList, Node].invoke('addClass', function(name) {
@@ -520,13 +403,8 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('toggleClass', function(name) {
-	var item;
-	if (this instanceof NodeList) {
-		item = this.first();					
-	} else {
-		item = this;
-	}
-
+	var item = this.getNode();
+	
 	if (item.hasClass(name)) {
 		item.removeClass(name);
 	} else {
@@ -560,24 +438,16 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('getStyle', function(key) {
-	var item;
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {	
-		item = this;
-	}
+	var item = this.getNode();
+
 	if (typeof item.style[key] !== 'undefined')
 		return item.style[key];
 	return false;
 });
 
 [NodeList, Node].invoke('removeStyle', function(key) {
-	var item;
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {
-		item = this;
-	}
+	var item = this.getNode();
+	
 	if (typeof item.style[key] !== 'undefined')
 		item.style[key] = null;
 	return false;
@@ -612,7 +482,7 @@ Object.implement('getEventCache', function(element, type) {
 	}
 });
 
-var Event = function (object) {
+var SEvent = function (object) {
 	this.eventID = object.eid || 'e_' + new Date().getTime();
 	this.el = object.el || null;
 	this.type = object.type || null;
@@ -620,7 +490,7 @@ var Event = function (object) {
 	this.event = object.event || null;
 }
 
-Event.implement('register', function(event){
+SEvent.implement('register', function(event){
 	if (typeof event !== 'undefined')
 		this.event = event;
 	if (typeof window.eventCache[this.el] === 'undefined')
@@ -630,7 +500,7 @@ Event.implement('register', function(event){
 	return window.eventCache[this.el][this.eventID].fce;
 });
 
-Event.implement('unregister', function(){
+SEvent.implement('unregister', function(){
 	delete window.eventCache[this.el][this.eventID];
 });
 
@@ -657,11 +527,11 @@ Event.implement('unregister', function(){
 	if (this instanceof NodeList) {
 		var item, events;			
 		this.each(function(item) {
-			var e = new Event({'el': item, 'type': type, 'fce': callback});
+			var e = new SEvent({'el': item, 'type': type, 'fce': callback});
 			item.addEventListener(type, e.register(event), capture);
 		}); 
 	} else {	
-		var e = new Event({'el': this, 'type': type, 'fce': callback});
+		var e = new SEvent({'el': this, 'type': type, 'fce': callback});
 		this.addEventListener(type, e.register(event), capture);
 	}
 });
@@ -678,27 +548,21 @@ Event.implement('unregister', function(){
 		this.each(function(item) {
 			elEvent = window.getEventCache(item, type);
 			item.removeEventListener(type, elEvent.fce, capture);
-			var e = new Event({'el': item, 'eid': elEvent.eid});
+			var e = new SEvent({'el': item, 'eid': elEvent.eid});
 			e.unregister();
 		}); 
 	} else {
 		elEvent = window.getEventCache(this, type);
 		this.removeEventListener(type, elEvent.fce, capture);
-		var e = new Event({'el': this, 'eid': elEvent.eid});
+		var e = new SEvent({'el': this, 'eid': elEvent.eid});
 		e.unregister();
 	}
 });
 
 [Node, NodeList].invoke('cloneEvent', function() {
-	var type = arguments[0], element = false;
+	var type = arguments[0], element = false, item = this.getNode();
 	if (typeof arguments[1] !== 'undefined')
 		element = arguments[1]
-
-	if (this instanceof NodeList) {
-		item = this.first();
-	} else {
-		item = this;
-	}
 
 	var e = window.getEventCache(item, type);
 

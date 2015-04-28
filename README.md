@@ -166,6 +166,14 @@ new Element('div', {
 });
 ``` 
 
+#### getNode
+
+Return first element from NodeList or Node
+
+```javascript
+$('div').getNode();
+```
+
 #### first
 
 Select first element from html collection
@@ -503,7 +511,7 @@ window.getEventCache($('div').first(), 'click');
 #### Event constructor (cache)
 
 ```javascript
-new Event(object)
+new SEvent(object)
 ```
 
 ##### register
@@ -515,7 +523,7 @@ Arguments:
 * event
 
 ```javascript
-var e = new Event({
+var e = new SEvent({
 	'el': $('div').first(),
 	'type': 'click',
 	'fce': function(){
@@ -529,7 +537,7 @@ e.register(event);
 Remove event from cache
 
 ```javascript
-var e - new Event({'el': $('div').first(), 'eid': 'e_78354214568'});
+var e - new SEvent({'el': $('div').first(), 'eid': 'e_78354214568'});
 ```
 
 #### addEvent

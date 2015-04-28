@@ -65,13 +65,8 @@
 });
 
 [NodeList, Node].invoke('toggleClass', function(name) {
-	var item;
-	if (this instanceof NodeList) {
-		item = this.first();					
-	} else {
-		item = this;
-	}
-
+	var item = this.getNode();
+	
 	if (item.hasClass(name)) {
 		item.removeClass(name);
 	} else {
