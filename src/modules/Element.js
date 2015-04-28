@@ -171,7 +171,7 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('getSiblings', function(){
-	var elements = [], node;
+	var elements = [], node, element = this.getNode();
 
     node = this.getNode().getParent().getFirstChild();
 
