@@ -14,7 +14,7 @@ gulp.task('sjs', function() {
 });
 
 gulp.task('html', function(){
-    gulp.src('./src/index.html')
+    gulp.src(['./src/index.html', './src/ajax.*'])
     .pipe(gulp.dest('./prod/test/'));
 });
 
@@ -30,11 +30,17 @@ gulp.task('compress', ['sjs'], function() {
     .pipe(gulp.dest('./prod/'));
 });
 
+gulp.task('move', ['compress'], function() {
+  gulp.src('./prod/**/*')
+    .pipe(gulp.dest('C:/xampp/htdocs/sjs/'));
+});
+
 gulp.task('watch', function() {   
     gulp.watch(['./src/*.js', './src/modules/**'], ['sjs', 'compress']);
     gulp.watch('./src/index.html', ['html']);
     gulp.watch('./src/benchmark/*', ['benchmark']);
+    gulp.watch('./src/**/*', ['move']);
 });
 
-gulp.task('default', ['watch', 'sjs', 'compress', 'html', 'benchmark'], function() {});
+gulp.task('default', ['watch', 'sjs', 'compress', 'html', 'benchmark', 'move'], function() {});
 

@@ -117,9 +117,11 @@ var Element = function (tag, object) {
 };
 
 [Node, NodeList].invoke('getNode', function(){
-	if (this instanceof NodeList)
+	if (this instanceof NodeList) {
 		return this.first();
-	return this;
+	} else {
+		return this;
+	}
 });
 
 Node.implement('setData', function(key, val){
@@ -158,7 +160,11 @@ NodeList.implement('last', function() {
 					item.innerHTML = value;
 					break;
 				case 'text':
-					item.innerText = value;
+					if (item.innerText) {
+						item.innerText = value;
+					} else {
+						item.textContent = value;
+					}
 					break;
 				default:
 					item.setAttribute(name, value);
@@ -198,7 +204,9 @@ NodeList.implement('last', function() {
 					return item.innerHTML;
 					break;
 				case 'text':
-					return item.innerText;
+					if (item.innerText)
+						return item.innerText;
+					return item.textContent;
 					break;
 				default:
 					return item.getAttribute(name);
@@ -257,7 +265,7 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('inject', function(){
-	var tag, object, element, where = 'inside';
+	var tag, object, element, where = 'inside', parent;
 
 	if (typeof arguments[0] === 'string') {
 		tag = arguments[0];
@@ -278,6 +286,8 @@ NodeList.implement('last', function() {
 		element = new Element(tag, object);
 
 	parent = this.getNode();
+
+	console.log(parent);
 
 	switch (where) {
 		case 'inside':
@@ -453,6 +463,21 @@ NodeList.implement('last', function() {
 	return false;
 });
 
+if (!window.CustomEvent) {
+	(function () {
+		function CustomEvent ( event, params ) {
+		params = params || { bubbles: false, cancelable: false, detail: undefined };
+		var evt = document.createEvent( 'CustomEvent' );
+		evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+		return evt;
+		};
+
+		CustomEvent.prototype = window.Event.prototype;
+
+		window.CustomEvent = CustomEvent;
+	})();
+}
+
 window.extend('eventCache', {});
 
 var translateEvent = function (event) {
@@ -528,11 +553,11 @@ SEvent.implement('unregister', function(){
 		var item, events;			
 		this.each(function(item) {
 			var e = new SEvent({'el': item, 'type': type, 'fce': callback});
-			item.addEventListener(type, e.register(event), capture);
+			item.addEventListener(type, e.register(window.event), capture);
 		}); 
 	} else {	
 		var e = new SEvent({'el': this, 'type': type, 'fce': callback});
-		this.addEventListener(type, e.register(event), capture);
+		this.addEventListener(type, e.register(window.event), capture);
 	}
 });
 
@@ -576,24 +601,144 @@ SEvent.implement('unregister', function(){
 [Node, NodeList].invoke('fireEvent', function(type){
 	var item, name = "on" + type;
 
+	function fire (item, type) {
+		var e = window.getEventCache(item, type);
+		if (e && name in window) {
+			e.fce.call(item, e.event);
+		} else {
+			e = document.createEvent("Event");
+			e.initEvent(type, true, true); 
+			item.dispatchEvent(e);
+		}		
+	}
+
 	if (this instanceof NodeList) {
 		this.each(function(item) {
-			var e = window.getEventCache(item, type);
-			if (e && name in window) {
-				e.fce.call(item, e.event);
-			} else {
-				var e = new Event(type);
-				item.dispatchEvent(e);
-			}
+			fire(item, type);
 		});
 	} else {
-		var e = window.getEventCache(this, type);
-		if (e && name in window) {
-			e.fce.call(this, e.event);
-		} else {
-			var e = new Event(type);
-			this.dispatchEvent(e);			
-		}
+		fire(this, type);
 	}
 });
 
+function Request (object) {
+	this.canSend = true,
+	this.documentSupport = true;
+	if (typeof object.method === 'undefined') {
+		this.method = 'POST';
+	} else {
+		this.method = object.method;
+	}
+
+	if (typeof object.type !== 'undefined') {
+		this.type = object.type;
+	} else {
+		this.type = 'default';
+	}
+
+	if (typeof object.async === 'undefined') {
+		this.async = true;	
+	} else {
+		this.async = object.async;
+	}
+
+	if (typeof object.url === 'undefined') {
+		this.canSend = false;
+	} else {
+		this.url = object.url;
+
+		if (this.url.indexOf(' ') > 0) {
+			this.selector = this.url.substr(this.url.indexOf(' ') +1);
+			this.url = this.url.substr(0, this.url.indexOf(' '));
+		}
+	}
+
+	if (typeof object.events === 'undefined' || !('complete' in object.events)) {
+		this.canSend = false;
+	} else {
+		this.events = object.events;
+	}
+}
+
+Request.implement('send', function(query){
+	var response, request = this, doc, root;
+
+	if (typeof query === 'undefined')
+		var query = '';
+
+	if (this.canSend) {
+		try {
+			var xhr = new XMLHttpRequest();
+			if (typeof this.type !== 'undefined') {
+				try {
+					xhr.responseType = this.type;
+				} catch (e) {
+					request.documentSupport = false;	
+				}
+			}
+
+			console.log(request.documentSupport);
+			xhr.onreadystatechange = function() {
+			  if (xhr.readyState == 4 && xhr.status == 200) {
+			  	if (request.type === 'document') {
+			  		if (request.documentSupport) {
+			  			response = xhr.responseXML;
+			  		} else {
+			  			response = xhr.responseText;
+			  			doc = document.implementation.createHTMLDocument('');
+			  			root = doc.documentElement;
+			  			root.innerHTML = response;
+			  			response = root;
+			  			//doc.removeElement();
+			  		}
+			  		if (typeof request.selector !== 'undefined') {
+			  			if (response)
+			  				response = response.getElement(request.selector);
+			  		}
+			  		request.events.complete.call(this, response);
+			  	} else {
+			  		response = xhr.responseText;
+			  		request.events.complete.call(this, response);	
+			  	}
+			  } else if (xhr.readyState == 3) {
+			  	if ('loading' in request.events)
+			  		request.events.loading();
+			  } else if (xhr.status >= 400) {
+			  	if ('error' in request.events)
+			  		request.events.error();	  	
+			  }
+			}
+
+			xhr.open(this.method, this.url, this.async);
+			xhr.send(query);
+		} catch (err) {
+
+		}
+	} else {
+		console.error('No url or events defined.');
+	}
+});
+
+[NodeList, Node].invoke('load', function(url, type){
+	var node = this.getNode();
+
+	if (typeof type === 'undefined')
+		var type = 'default';
+
+	new Request({
+		'method': 'GET',
+		'type': type,
+		'url': url,
+		'async': true,
+		'events': {
+			'complete': function(response) {
+				if (type === 'document') {
+					console.log(response);
+					node.inject(response);	
+				} else {
+					node.set('text', response);
+				}
+			}
+		}
+	}).send();
+});

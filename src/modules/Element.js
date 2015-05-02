@@ -45,9 +45,11 @@ var Element = function (tag, object) {
 };
 
 [Node, NodeList].invoke('getNode', function(){
-	if (this instanceof NodeList)
+	if (this instanceof NodeList) {
 		return this.first();
-	return this;
+	} else {
+		return this;
+	}
 });
 
 Node.implement('setData', function(key, val){
@@ -86,7 +88,11 @@ NodeList.implement('last', function() {
 					item.innerHTML = value;
 					break;
 				case 'text':
-					item.innerText = value;
+					if (item.innerText) {
+						item.innerText = value;
+					} else {
+						item.textContent = value;
+					}
 					break;
 				default:
 					item.setAttribute(name, value);
@@ -126,7 +132,9 @@ NodeList.implement('last', function() {
 					return item.innerHTML;
 					break;
 				case 'text':
-					return item.innerText;
+					if (item.innerText)
+						return item.innerText;
+					return item.textContent;
 					break;
 				default:
 					return item.getAttribute(name);
@@ -185,7 +193,7 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('inject', function(){
-	var tag, object, element, where = 'inside';
+	var tag, object, element, where = 'inside', parent;
 
 	if (typeof arguments[0] === 'string') {
 		tag = arguments[0];
@@ -206,6 +214,8 @@ NodeList.implement('last', function() {
 		element = new Element(tag, object);
 
 	parent = this.getNode();
+
+	console.log(parent);
 
 	switch (where) {
 		case 'inside':

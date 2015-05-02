@@ -77,6 +77,41 @@
 			document.addEvent('custom', function(){
 				console.log('custom event');
 			});
+
+			new Request({
+				"method": "GET",
+				"url": "ajax.txt",
+				"events": {
+					"complete": function (response) {
+						console.log(response);
+					},
+					"loading": function () {
+						console.log('loading...');
+					},
+					"error": function () {
+						console.log('error');
+					}
+				}
+			}).send();
+
+			new Request({
+				"method": "GET",
+				"url": "ajax.html #inner",
+				"type": "document",
+				"events": {
+					"complete": function (response) {
+						console.log(response);
+					},
+					"loading": function () {
+						console.log('loading...');
+					},
+					"error": function () {
+						console.log('error');
+					}
+				}
+			}).send();
+
+			$('#content').load('ajax.html #inner p', 'document');
 		});
 		</script>				
 	</head>
@@ -96,6 +131,6 @@
 			<div>a</div>
 			<div>b</div>
 		</div>
-
+		<div id="content"></div>
 	</body>
 </html>

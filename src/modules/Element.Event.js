@@ -1,3 +1,18 @@
+if (!window.CustomEvent) {
+	(function () {
+		function CustomEvent ( event, params ) {
+		params = params || { bubbles: false, cancelable: false, detail: undefined };
+		var evt = document.createEvent( 'CustomEvent' );
+		evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+		return evt;
+		};
+
+		CustomEvent.prototype = window.Event.prototype;
+
+		window.CustomEvent = CustomEvent;
+	})();
+}
+
 window.extend('eventCache', {});
 
 var translateEvent = function (event) {
@@ -73,11 +88,11 @@ SEvent.implement('unregister', function(){
 		var item, events;			
 		this.each(function(item) {
 			var e = new SEvent({'el': item, 'type': type, 'fce': callback});
-			item.addEventListener(type, e.register(event), capture);
+			item.addEventListener(type, e.register(window.event), capture);
 		}); 
 	} else {	
 		var e = new SEvent({'el': this, 'type': type, 'fce': callback});
-		this.addEventListener(type, e.register(event), capture);
+		this.addEventListener(type, e.register(window.event), capture);
 	}
 });
 
@@ -121,23 +136,22 @@ SEvent.implement('unregister', function(){
 [Node, NodeList].invoke('fireEvent', function(type){
 	var item, name = "on" + type;
 
+	function fire (item, type) {
+		var e = window.getEventCache(item, type);
+		if (e && name in window) {
+			e.fce.call(item, e.event);
+		} else {
+			e = document.createEvent("Event");
+			e.initEvent(type, true, true); 
+			item.dispatchEvent(e);
+		}		
+	}
+
 	if (this instanceof NodeList) {
 		this.each(function(item) {
-			var e = window.getEventCache(item, type);
-			if (e && name in window) {
-				e.fce.call(item, e.event);
-			} else {
-				var e = new Event(type);
-				item.dispatchEvent(e);
-			}
+			fire(item, type);
 		});
 	} else {
-		var e = window.getEventCache(this, type);
-		if (e && name in window) {
-			e.fce.call(this, e.event);
-		} else {
-			var e = new Event(type);
-			this.dispatchEvent(e);			
-		}
+		fire(this, type);
 	}
 });

@@ -42,6 +42,7 @@ Simple javascript library for **modern browsers**.
 - [Type](#type)
 - [Array](#array)
 - [String](#string)
+- [Request (AJAX)](#request)
 
 Core
 ----
@@ -679,4 +680,71 @@ Request
 
 #### Request constructor
 
-TBD
+Request constructor creates an request object settings
+
+Arguments:
+
+* object
+* object.method - POST (default) or GET
+* object.type - document or default (default)
+* object.async - true (default) or false
+* object.url - url can contain selector in format "url(space)selector"
+* object.events - loading, error, complete (complete event is mandatory)
+* object.events.loading
+* object.events.error
+* object.events.complete
+
+```javascript
+new Request({
+	'type': 'GET',
+	'url': 'ajax.html #inner',
+	'type': 'document',
+	'events': {
+		'complete': function(response) {
+			console.log(response);
+		},
+		'error': function() {
+			console.warn('something bad happend');
+		}
+	}
+});
+```
+
+#### send
+
+Send method is method of Request object.
+
+Arguments:
+
+* query - Query string in case POST method is used in Request constructor
+
+```javascript
+var r = new Request({
+	'type': 'GET',
+	'url': 'ajax.html #inner',
+	'type': 'document',
+	'events': {
+		'complete': function(response) {
+			console.log(response);
+		},
+		'error': function() {
+			console.warn('something bad happend');
+		}
+	}
+});
+
+r.send();
+```
+
+#### load
+
+Load is method of Node, NodeList. Return responseXML or responseText. Returned value is "loaded" into element on which is method used by injecting or seting text content. If method is called on NodeList, content is loaded to first element of NodeList.
+
+Arguments:
+
+* url
+* type - docuemnt or default (default)
+
+```javascript
+$('#content').load('ajax.html #inner p', 'document');
+```
