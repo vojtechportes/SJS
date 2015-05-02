@@ -136,6 +136,8 @@ arguments:
 
 Argument object can contain multiple key types: attribute (eg. class, id, href), data, text, html, styles and events. html can be an array with another element/s constructor or html.
 
+Return Node.
+
 ```javascript
 new Element('div', {
 	'class': 'item first',
