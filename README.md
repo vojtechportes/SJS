@@ -698,7 +698,7 @@ Arguments:
 
 ```javascript
 new Request({
-	'type': 'GET',
+	'method': 'GET',
 	'url': 'ajax.html #inner',
 	'type': 'document',
 	'events': {
@@ -722,7 +722,7 @@ Arguments:
 
 ```javascript
 var r = new Request({
-	'type': 'GET',
+	'method': 'GET',
 	'url': 'ajax.html #inner',
 	'type': 'document',
 	'events': {
