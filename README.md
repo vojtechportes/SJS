@@ -354,9 +354,6 @@ Arguments:
 * object - see Element constructor
 * where - before, after, inside (default)
 
-- [x] inject before
-- [x] inject after
-
 or 
 
 * element - Node
