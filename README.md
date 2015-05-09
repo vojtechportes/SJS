@@ -726,6 +726,9 @@ var r = new Request({
 		'complete': function(response) {
 			console.log(response);
 		},
+		'loading': function(){
+			console.log('loading...');
+		},
 		'error': function() {
 			console.warn('something bad happend');
 		}
