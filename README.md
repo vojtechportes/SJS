@@ -511,7 +511,7 @@ new SEvent(object)
 
 ##### register
 
-Add event to cache
+Add event listener to cache
 
 Arguments:
 
@@ -529,7 +529,7 @@ e.register(event);
 
 ##### unregister
 
-Remove event from cache
+Remove event listener from cache
 
 ```javascript
 var e - new SEvent({'el': $('div').first(), 'eid': 'e_78354214568'});
@@ -537,7 +537,7 @@ var e - new SEvent({'el': $('div').first(), 'eid': 'e_78354214568'});
 
 #### addEvent
 
-Add event to element/s
+Add event listener to element/s
 
 Arguments:
 
@@ -547,7 +547,7 @@ Arguments:
 
 or 
 
-* cache event object
+* cache event listener object
 
 ```javascript
 $('div').first().addEvent('click', function(){
@@ -563,7 +563,7 @@ $('p').addEvent(e);
 
 #### removeEvent
 
-Remove event from element/s
+Remove event listener from element/s
 
 Arguments:
 
@@ -576,7 +576,7 @@ $('div').first().removeEvent('click');
 
 #### cloneEvent
 
-Return event cache object of element
+Return event listener cache object of element
 
 Arguments:
 
@@ -592,7 +592,7 @@ $('div').first().cloneEvent('click');
 ```javascript
 $('div').first().cloneEvent('click', $('p'));
 
-// clone click event from first div element in DOM and apply it to all paragraph elements in DOM
+// clone click event listener from first div element in DOM and apply it to all paragraph elements in DOM
 ```
 
 #### fireEvent
