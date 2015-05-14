@@ -214,9 +214,7 @@ NodeList.implement('last', function() {
 		element = new Element(tag, object);
 
 	parent = this.getNode();
-
-	console.log(parent);
-
+	
 	switch (where) {
 		case 'inside':
 			parent.appendChild(element);
