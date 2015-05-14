@@ -265,11 +265,11 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('inject', function(){
-	var tag, object, element, where = 'inside', parent;
+	var tag, object, elements, element, where = 'inside', parent;
 
 	if (typeof arguments[0] === 'string') {
 		tag = arguments[0];
-	} else if (arguments[0] instanceof Node) {
+	} else if (arguments[0] instanceof Node || arguments[0] instanceof Array) {
 		element = arguments[0];
 	}
 
@@ -287,17 +287,24 @@ NodeList.implement('last', function() {
 
 	parent = this.getNode();
 	
-	switch (where) {
-		case 'inside':
-			parent.appendChild(element);
-			break;
-		case 'before':
-			parent.getParent().insertBefore(element, parent.previousSibling);
-			break;
-		case 'after':
-			parent.getParent().insertBefore(element, parent.nextSibling);
-			break;
+	elements = element;
+	if (element instanceof Node) {
+		elements = [element];
 	}
+
+	$.each(elements, function(element, key){
+		switch (where) {
+			case 'inside':
+				parent.appendChild(element);
+				break;
+			case 'before':
+				parent.getParent().insertBefore(element, parent.previousSibling);
+				break;
+			case 'after':
+				parent.getParent().insertBefore(element, parent.nextSibling);
+				break;
+		}
+	});
 });
 
 [NodeList, Node].invoke('isChildOf', function(parent){
@@ -660,9 +667,8 @@ Request.implement('send', function(query){
 				}
 			}
 
-			console.log(request.documentSupport);
 			xhr.onreadystatechange = function() {
-			  if (xhr.readyState == 4 && xhr.status == 200) {
+			  if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
 			  	if (request.type === 'document') {
 			  		if (request.documentSupport) {
 			  			response = xhr.responseXML;
@@ -681,6 +687,13 @@ Request.implement('send', function(query){
 			  		request.events.complete.call(this, response);
 			  	} else {
 			  		response = xhr.responseText;
+
+			  		try {
+			  			response = JSON.parse(response);
+			  		} catch (e) {
+
+			  		}
+
 			  		request.events.complete.call(this, response);	
 			  	}
 			  } else if (xhr.readyState == 3) {
@@ -694,7 +707,7 @@ Request.implement('send', function(query){
 
 			xhr.open(this.method, this.url, this.async);
 			xhr.send(query);
-		} catch (err) {
+		} catch (e) {
 
 		}
 	} else {
@@ -725,3 +738,34 @@ Request.implement('send', function(query){
 		}
 	}).send();
 });
+
+function Require (paths, callback) {
+	var length, i = 0;
+
+	if (typeof paths === 'string') {
+		paths = [paths];
+	}
+
+	length = paths.length;
+
+	$.each(paths, function(path, key){
+		var script = new Element('script', {
+			"src": path,
+			"data": {
+				"require": ""
+			},
+			"type": "text/javascript"
+		});
+
+		$('head').inject(script);
+
+		script.addEvent("load", function(){ 
+			i++;
+			if (i === length) {
+				callback();
+			}
+		});
+	});
+
+
+};

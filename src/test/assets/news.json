@@ -1,0 +1,27 @@
+{"news": [
+	["div", {"html": [
+		["h3", {"html": "Lorem ipsum dolor sit amet"}],
+		["p", {"html": "1. Aenean dictum, justo et tempor eleifend, massa ipsum pulvinar nibh, id vulputate dolor orci vitae nulla. In congue nisl turpis, eu fringilla dui facilisis et..."}],
+		["a", {"text": "Read more", "href": "#more"}]
+	]}],
+	["div", {"html": [
+		["h3", {"html": "Lorem ipsum dolor sit amet"}],
+		["p", {"html": "2. Aenean dictum, justo et tempor eleifend, massa ipsum pulvinar nibh, id vulputate dolor orci vitae nulla. In congue nisl turpis, eu fringilla dui facilisis et..."}],
+		["a", {"text": "Read more", "href": "#more"}]
+	]}],
+	["div", {"html": [
+		["h3", {"html": "Lorem ipsum dolor sit amet"}],
+		["p", {"html": "3. Aenean dictum, justo et tempor eleifend, massa ipsum pulvinar nibh, id vulputate dolor orci vitae nulla. In congue nisl turpis, eu fringilla dui facilisis et..."}],
+		["a", {"text": "Read more", "href": "#more"}]
+	]}],
+	["div", {"html": [
+		["h3", {"html": "Lorem ipsum dolor sit amet"}],
+		["p", {"html": "4. Aenean dictum, justo et tempor eleifend, massa ipsum pulvinar nibh, id vulputate dolor orci vitae nulla. In congue nisl turpis, eu fringilla dui facilisis et..."}],
+		["a", {"text": "Read more", "href": "#more"}]
+	]}],
+	["div", {"html": [
+		["h3", {"html": "Lorem ipsum dolor sit amet"}],
+		["p", {"html": "5. Aenean dictum, justo et tempor eleifend, massa ipsum pulvinar nibh, id vulputate dolor orci vitae nulla. In congue nisl turpis, eu fringilla dui facilisis et..."}],
+		["a", {"text": "Read more", "href": "#more"}]
+	]}]				
+]}

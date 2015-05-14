@@ -356,7 +356,7 @@ Arguments:
 
 or 
 
-* element - Node
+* element/s - Node, NodeList
 * where - before, after, inside (default)
 
 ```javascript
@@ -364,6 +364,11 @@ $('body div.wrapper').inject('div', {
 	'class': 'inner',
 	'text': 'lorem ipsum dolor sit amet...'
 }, 'after');
+
+$('body div.wrapper').inject([
+	new Element('div'),
+	new Element('p')
+]);
 ```
 
 #### cloneElement
@@ -679,7 +684,7 @@ Request
 
 #### Request constructor
 
-Request constructor creates an request object settings
+Request constructor creates an request object settings. If content of file is in valid JSON format, JSON is returned as response.
 
 Arguments:
 
@@ -753,3 +758,19 @@ Arguments:
 ```javascript
 $('#content').load('ajax.html #inner p', 'document');
 ```
+
+#### Require
+
+Require is an function loading JavaScript files.
+
+Arguments:
+
+* path/s - single path or array of paths to files
+* callback - callback is called when all files are loaded
+
+```javascript
+Require(['script1.js', 'script2.js', 'script3.js'], function(){
+	console.log('all scripts are loaded.');
+});
+```
+

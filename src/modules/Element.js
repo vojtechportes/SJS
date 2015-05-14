@@ -193,11 +193,11 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].invoke('inject', function(){
-	var tag, object, element, where = 'inside', parent;
+	var tag, object, elements, element, where = 'inside', parent;
 
 	if (typeof arguments[0] === 'string') {
 		tag = arguments[0];
-	} else if (arguments[0] instanceof Node) {
+	} else if (arguments[0] instanceof Node || arguments[0] instanceof Array) {
 		element = arguments[0];
 	}
 
@@ -215,17 +215,24 @@ NodeList.implement('last', function() {
 
 	parent = this.getNode();
 	
-	switch (where) {
-		case 'inside':
-			parent.appendChild(element);
-			break;
-		case 'before':
-			parent.getParent().insertBefore(element, parent.previousSibling);
-			break;
-		case 'after':
-			parent.getParent().insertBefore(element, parent.nextSibling);
-			break;
+	elements = element;
+	if (element instanceof Node) {
+		elements = [element];
 	}
+
+	$.each(elements, function(element, key){
+		switch (where) {
+			case 'inside':
+				parent.appendChild(element);
+				break;
+			case 'before':
+				parent.getParent().insertBefore(element, parent.previousSibling);
+				break;
+			case 'after':
+				parent.getParent().insertBefore(element, parent.nextSibling);
+				break;
+		}
+	});
 });
 
 [NodeList, Node].invoke('isChildOf', function(parent){
