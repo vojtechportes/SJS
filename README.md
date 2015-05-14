@@ -42,7 +42,7 @@ Simple javascript library for **modern browsers**.
 - [Type](#type)
 - [Array](#array)
 - [String](#string)
-- [Request (AJAX)](#request)
+- [Request (AJAX + Require)](#request)
 
 Core
 ----
