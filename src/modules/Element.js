@@ -6,9 +6,9 @@ var Element = function (tag, object) {
 			case 'data':
 				$.each(value, function(data, k){
 					if (data instanceof Object) {
-						element.setData(k, JSON.stringify(data));
+						element.set(k, JSON.stringify(data), 'data');
 					} else {
-						element.setData(k, data);
+						element.set(k, data, 'data');
 					}
 				});
 				break;
@@ -77,7 +77,7 @@ NodeList.implement('last', function() {
 
 	function set (item, name, value, type) {
 		if (type == 'data') {
-			if (item instanceof Object) {
+			if (value instanceof Object) {
 				item.setData(name, JSON.stringify(value));
 			} else {
 				item.setData(name, value);

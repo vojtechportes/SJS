@@ -8,4 +8,6 @@ document.addEvent('ready', function(){
 		$('#footer').inject(markup.footer);
 		content.content.left.news();
 	});
+
+	Require('assets/modules/navigation.js');
 });

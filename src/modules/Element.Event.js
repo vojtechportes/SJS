@@ -1,5 +1,7 @@
 window.extend('eventCache', {});
 
+window.extend('hasReadyPassed', false);
+
 var translateEvent = function (event) {
 	switch (event) {
 		case 'ready':
@@ -52,6 +54,11 @@ SEvent.implement('unregister', function(){
 [Node, NodeList].invoke('addEvent', function(){
 	var type, callback, capture = false, e = false;
 
+	function add (item, type, callback, capture) {
+		var e = new SEvent({'el': item, 'type': type, 'fce': callback});
+		item.addEventListener(type, e.register(window.event), capture);		
+	}
+
 	if (typeof arguments[0] === 'string') {
 		type = arguments[0];
 	} else if (arguments[0] instanceof Object) {
@@ -72,17 +79,31 @@ SEvent.implement('unregister', function(){
 	if (this instanceof NodeList) {
 		var item, events;			
 		this.each(function(item) {
-			var e = new SEvent({'el': item, 'type': type, 'fce': callback});
-			item.addEventListener(type, e.register(window.event), capture);
+			add(item, type, callback, capture);
 		}); 
 	} else {	
-		var e = new SEvent({'el': this, 'type': type, 'fce': callback});
-		this.addEventListener(type, e.register(window.event), capture);
+		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === true) {
+			callback();
+			return;
+		}
+
+		add(this, type, callback, capture);
+
+		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === false) {
+			window.extend('hasReadyPassed', true);
+		}
 	}
 });
 
 [Node, NodeList].invoke('removeEvent', function(type, callback, capture){
 	var elEvent;
+
+	function remove (item, type) {
+		elEvent = window.getEventCache(item, type);
+		item.removeEventListener(type, elEvent.fce, capture);
+		var e = new SEvent({'el': item, 'eid': elEvent.eid});
+		e.unregister();		
+	}
 
 	type = translateEvent(type);
 	
@@ -91,16 +112,10 @@ SEvent.implement('unregister', function(){
 
 	if (this instanceof NodeList) {
 		this.each(function(item) {
-			elEvent = window.getEventCache(item, type);
-			item.removeEventListener(type, elEvent.fce, capture);
-			var e = new SEvent({'el': item, 'eid': elEvent.eid});
-			e.unregister();
+			remove(item, type);
 		}); 
 	} else {
-		elEvent = window.getEventCache(this, type);
-		this.removeEventListener(type, elEvent.fce, capture);
-		var e = new SEvent({'el': this, 'eid': elEvent.eid});
-		e.unregister();
+		remove(this, type);
 	}
 });
 

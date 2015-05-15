@@ -146,12 +146,14 @@ function Require (paths, callback) {
 
 		$('head').inject(script);
 
-		script.addEvent("load", function(){ 
-			i++;
-			if (i === length) {
-				callback();
-			}
-		});
+		if (typeof callback !== 'undefined') {
+			script.addEvent("load", function(){ 
+				i++;
+				if (i === length) {
+					callback();
+				}
+			});
+		}
 	});
 
 

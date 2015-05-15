@@ -82,7 +82,12 @@ var markup = {
 	"layout": new Element('div', {
 		"id": "body-inner",
 		"html": [
-			["nav", {"id": "navigation"}],
+			["nav", {
+				"id": "navigation",
+				"data": {
+					"navigation": ""
+				}
+			}],
 			["section", {
 				"id": "content",
 				"html": [
