@@ -14,9 +14,8 @@ Object.prototype.invoke = function (key, val) {
 }
 
 if (window.$ == null) window.extend('$', function(elements) {
-	if (!/\s/.test(elements) && elements.charAt(0) === '#') {
+	if (!/\s/.test(elements) && elements.charAt(0) === '#')
 		return document.getElementById(elements.substr(1));
-	}
 	return document.querySelectorAll(elements);
 });
 
@@ -79,9 +78,9 @@ var Element = function (tag, object) {
 			case 'data':
 				$.each(value, function(data, k){
 					if (data instanceof Object) {
-						element.set(k, JSON.stringify(data), 'data');
+						element.setData(k, JSON.stringify(data));
 					} else {
-						element.set(k, data, 'data');
+						element.setData(k, data);
 					}
 				});
 				break;
@@ -118,11 +117,9 @@ var Element = function (tag, object) {
 };
 
 [Node, NodeList].invoke('getNode', function(){
-	if (this instanceof NodeList) {
+	if (this instanceof NodeList)
 		return this.first();
-	} else {
-		return this;
-	}
+	return this;
 });
 
 Node.implement('setData', function(key, val){
@@ -161,11 +158,7 @@ NodeList.implement('last', function() {
 					item.innerHTML = value;
 					break;
 				case 'text':
-					if (item.innerText) {
-						item.innerText = value;
-					} else {
-						item.textContent = value;
-					}
+					item.textContent = value;
 					break;
 				default:
 					item.setAttribute(name, value);
@@ -268,6 +261,20 @@ NodeList.implement('last', function() {
 [NodeList, Node].invoke('inject', function(){
 	var tag, object, elements, element, where = 'inside', parent;
 
+	function inject (element, parent, where) {
+		switch (where) {
+			case 'inside':
+				parent.appendChild(element);
+				break;
+			case 'before':
+				parent.getParent().insertBefore(element, parent.previousSibling);
+				break;
+			case 'after':
+				parent.getParent().insertBefore(element, parent.nextSibling);
+				break;
+		}		
+	}
+
 	if (typeof arguments[0] === 'string') {
 		tag = arguments[0];
 	} else if (arguments[0] instanceof Node || arguments[0] instanceof Array) {
@@ -287,25 +294,15 @@ NodeList.implement('last', function() {
 		element = new Element(tag, object);
 
 	parent = this.getNode();
-	
-	elements = element;
-	if (element instanceof Node) {
-		elements = [element];
-	}
 
-	$.each(elements, function(element, key){
-		switch (where) {
-			case 'inside':
-				parent.appendChild(element);
-				break;
-			case 'before':
-				parent.getParent().insertBefore(element, parent.previousSibling);
-				break;
-			case 'after':
-				parent.getParent().insertBefore(element, parent.nextSibling);
-				break;
-		}
-	});
+	if (element instanceof Array) {
+		elements = element;
+		$.each(elements, function(element, key){
+			inject(element, parent, where);
+		});
+	} else {
+		inject(element, parent, where);		
+	}
 });
 
 [NodeList, Node].invoke('isChildOf', function(parent){

@@ -14,8 +14,7 @@ Object.prototype.invoke = function (key, val) {
 }
 
 if (window.$ == null) window.extend('$', function(elements) {
-	if (!/\s/.test(elements) && elements.charAt(0) === '#') {
+	if (!/\s/.test(elements) && elements.charAt(0) === '#')
 		return document.getElementById(elements.substr(1));
-	}
 	return document.querySelectorAll(elements);
 });

@@ -13,7 +13,8 @@ document.addEvent('ready', function(){
 				_times = times;
 				start = new Date;
 				while(_times--) {
-					$(parent).inject(new Element('div', {'text': 'test', 'class': 'injected'}));
+					//console.info(new Date - start);
+					$('#inner').inject(new Element('div', {'text': 'test', 'class': 'injected'}));
 				}
 				console.log('Injecting ' + times + ' elements took ' + (new Date - start) + 'ms');
 				break;
