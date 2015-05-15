@@ -1,12 +1,12 @@
 # SJS
-<small>version 1.0.65</small>
+<small>version 1.0.68</small>
 
 Simple javascript library for **modern browsers**.
 
 ## Download
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 17.27kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 10.87kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 17.56kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 10.99kb</strong>
 
 --------------------------------------------------------------------------------------
 

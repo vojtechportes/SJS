@@ -554,8 +554,7 @@ SEvent.implement('unregister', function(){
 		}); 
 	} else {	
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === true) {
-			callback();
-			return;
+			callback(); return;
 		}
 
 		add(this, type, callback, capture);
