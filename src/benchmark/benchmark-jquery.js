@@ -4,7 +4,7 @@ $(document).ready(function(){
 		_times,
 		start,
 		parent = '#inner',
-		actions = ['inject', 'addClass', 'addEvent'/*, 'removeElement'*/];
+		actions = ['inject', 'addClass', 'addEvent', 'removeElement'];
 
 	$.each(actions, function(key, el){
 		console.log(el);

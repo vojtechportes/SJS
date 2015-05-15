@@ -525,9 +525,13 @@ SEvent.implement('unregister', function(){
 [Node, NodeList].invoke('addEvent', function(){
 	var type, callback, capture = false, e = false;
 
-	function add (item, type, callback, capture) {
+	function add (item, type, callback, capture, add) {
 		var e = new SEvent({'el': item, 'type': type, 'fce': callback});
-		item.addEventListener(type, e.register(window.event), capture);		
+		if (add) {
+			item.addEventListener(type, e.register(window.event), capture);	
+		} else {
+			e.register(window.event);
+		}	
 	}
 
 	if (typeof arguments[0] === 'string') {
@@ -550,14 +554,14 @@ SEvent.implement('unregister', function(){
 	if (this instanceof NodeList) {
 		var item, events;			
 		this.each(function(item) {
-			add(item, type, callback, capture);
+			add(item, type, callback, capture, true);
 		}); 
 	} else {	
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === true) {
-			callback(); return;
+			add(this, type, callback, capture, false); callback(); return;
 		}
 
-		add(this, type, callback, capture);
+		add(this, type, callback, capture, true);
 
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === false) {
 			window.extend('hasReadyPassed', true);

@@ -4,42 +4,38 @@
 	}
 
 	Navigation.implement('toggle', function(){
-		console.log('click nav');
+		var nav = this.element.getElement('[data-navigationtoggle]');
+		$('body').toggleClass('nav-open');
+		if ($('body').hasClass('nav-open')) {
+			nav.set('text', 'Close navigation');
+		} else {
+			nav.set('text', 'Open navigation');			
+		}
 	});
 
 	Navigation.implement('init', function(){
+		var $this = this;
+
 		this.element.inject(new Element('a', {
 			"href": "#toggle",
-			"text": "Toggle navigation",
+			"text": "Open navigation",
 			"data": {
-				"navigationToggle": "a"
+				"navigationtoggle": ""
+			},
+			"events": {
+				"click": function (event) {
+					$this.toggle();
+				}
 			}
 		}))
 	});
 
-
 	function Plugin (action) {
 		var nav = new Navigation(this);
-		switch (action) {
-			case 'init':
-				nav.init();
-				break;
-			case 'toggle':
-				nav.toggle();
-				break;
-		}
+		nav.init();
 	}
 
 	document.addEvent('ready', function(){
-		console.log('ready nav');
-		Plugin.call($('[data-navigation]'), 'init');
+		Plugin.call($('[data-navigation]'));
 	});
-
-
-	$('[data-navigation-toggle]').addEvent('click', function(){
-		Plugin.call(this, 'toggle');
-	});
-
-
-	console.log('test');
 })();
