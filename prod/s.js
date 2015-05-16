@@ -471,12 +471,13 @@ window.extend('eventCache', {});
 window.extend('hasReadyPassed', false);
 
 var translateEvent = function (event) {
-	switch (event) {
+	var name = event.split('.')[0];
+	switch (name) {
 		case 'ready':
-			return 'DOMContentLoaded';
+			return [event, 'DOMContentLoaded'];
 			break;
 		default:
-			return event;
+			return [event, name];
 			break;
 	}
 };
@@ -523,9 +524,9 @@ SEvent.implement('unregister', function(){
 	var type, callback, capture = false, e = false;
 
 	function add (item, type, callback, capture, add) {
-		var e = new SEvent({'el': item, 'type': type, 'fce': callback});
+		var e = new SEvent({'el': item, 'type': type[0], 'fce': callback});
 		if (add) {
-			item.addEventListener(type, e.register(window.event), capture);	
+			item.addEventListener(type[1], e.register(window.event), capture);	
 		} else {
 			e.register(window.event);
 		}	
@@ -536,6 +537,7 @@ SEvent.implement('unregister', function(){
 	} else if (arguments[0] instanceof Object) {
 		e = arguments[0];
 	}
+
 	if (arguments[1] instanceof Function)
 		callback = arguments[1];
 	if (arguments[2] instanceof Boolean)
@@ -547,7 +549,6 @@ SEvent.implement('unregister', function(){
 	}
 
 	type = translateEvent(type);
-
 	if (this instanceof NodeList) {
 		var item, events;			
 		this.each(function(item) {
@@ -570,8 +571,8 @@ SEvent.implement('unregister', function(){
 	var elEvent;
 
 	function remove (item, type) {
-		elEvent = window.getEventCache(item, type);
-		item.removeEventListener(type, elEvent.fce, capture);
+		elEvent = window.getEventCache(item, type[0]);
+		item.removeEventListener(type[1], elEvent.fce, capture);
 		var e = new SEvent({'el': item, 'eid': elEvent.eid});
 		e.unregister();		
 	}
@@ -608,15 +609,17 @@ SEvent.implement('unregister', function(){
 	var item, name = "on" + type;
 
 	function fire (item, type) {
-		var e = window.getEventCache(item, type);
+		var e = window.getEventCache(item, type[0]);
 		if (e && name in window) {
 			e.fce.call(item, e.event);
 		} else {
 			e = document.createEvent("Event");
-			e.initEvent(type, true, true); 
+			e.initEvent(type[1], true, true); 
 			item.dispatchEvent(e);
 		}		
 	}
+
+	type = translateEvent(type);
 
 	if (this instanceof NodeList) {
 		this.each(function(item) {

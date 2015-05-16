@@ -25,6 +25,7 @@
 			"events": {
 				"click": function (event) {
 					$this.toggle();
+					console.log(event);
 				}
 			}
 		}))

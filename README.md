@@ -493,6 +493,8 @@ All events are stored on window object. They are accesible on window.eventCache.
 
 To trigger custom event use method fireEvent. To listen custom event, use addEvent method.
 
+Events can be namespaced in format eventname.namespace[.namespace,...]
+
 #### getEventCache
 
 Return all informations about element event from window object
