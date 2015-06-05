@@ -2,36 +2,44 @@ var gulp = require('gulp'),
     ejs = require('gulp-ejs'),
     rename = require('gulp-rename'),
     gutil = require('gulp-util'),
+    beautify = require('gulp-beautify')
     uglify = require('gulp-uglify');
 
-var projectName = 'lessejs';
+var settings = require('./settings.js');
 
 gulp.task('sjs', function() {
-    gulp.src('./src/s.js')
-        .pipe(ejs({}, {ext: '.js'}))
-        .pipe(rename('s.js'))
-        .pipe(gulp.dest('./prod/'));
+    return Object.keys(settings.browserSupport).forEach(function(key) {
+        console.log(key);
+
+        gulp.src('./src/s.js')
+            .pipe(ejs({"settings": settings.browserSupport[key], "modules": settings.modules}, {ext: '.js'}))
+            .pipe(beautify())
+            .pipe(rename(key + '.js'))
+            .pipe(gulp.dest('./prod/'));
+    });
 });
 
 gulp.task('html', function(){
-    gulp.src(['./src/test/**'])
+    return gulp.src(['./src/test/**'])
     .pipe(gulp.dest('./prod/test/'));
 });
 
 gulp.task('benchmark', function(){
-    gulp.src('./src/benchmark/**')
+    return gulp.src('./src/benchmark/**')
     .pipe(gulp.dest('./prod/benchmark/'));
 });
  
 gulp.task('compress', ['sjs'], function() {
-  gulp.src('./prod/s.js')
-    .pipe(uglify())
-    .pipe(rename('s.min.js'))
-    .pipe(gulp.dest('./prod/'));
+    return Object.keys(settings.browserSupport).forEach(function(key) {
+        gulp.src('./prod/' + key + '.js')
+            .pipe(uglify())
+            .pipe(rename(key + '.min.js'))
+            .pipe(gulp.dest('./prod/'));
+    });   
 });
 
 gulp.task('move', ['compress'], function() {
-  gulp.src('./prod/**/*')
+  return gulp.src('./prod/**/*')
     .pipe(gulp.dest('C:/xampp/htdocs/sjs/'));
 });
 
@@ -42,5 +50,5 @@ gulp.task('watch', function() {
     gulp.watch('./src/**/*', ['move']);
 });
 
-gulp.task('default', ['watch', 'sjs', 'compress', 'html', 'benchmark', 'move'], function() {});
+gulp.task('default', ['watch', 'compress', 'html', 'benchmark', 'move'], function() {});
 
