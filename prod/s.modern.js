@@ -124,16 +124,6 @@ var Element = function (tag, object) {
 });
 
 
-Node.implement('setData', function (key, val) {
-    if (this.dataset !== undefined) this.dataset[key] = val;
-    this.setAttribute('data-' + key, val);
-});
-
-Node.implement('getData', function (key, val) {
-    if (this.dataset !== undefined) return this.dataset[key];
-    return this.getAttribute('data-' + key);
-});
-
 
 NodeList.implement('first', function () {
     return this.item(0);
@@ -150,9 +140,9 @@ NodeList.implement('last', function () {
         if (type == 'data') {
 
             if (value instanceof Object) {
-                item.setData(name, JSON.stringify(value));
+                item.dataset[name] = JSON.stringify(value);
             } else {
-                item.setData(name, value);
+                item.dataset[name] = value;
             }
 
         } else {
@@ -185,7 +175,7 @@ NodeList.implement('last', function () {
     function get(item, name, type) {
         if (type == 'data') {
 
-            var data = item.getData(name);
+            var data = item.dataset[name];
 
             if (typeof data !== 'undefined') {
                 try {
@@ -354,12 +344,7 @@ NodeList.implement('last', function () {
 [NodeList, Node].implement('addClass', function (name) {
     function add(item, name) {
 
-        if (typeof SJS.tokenlist !== 'undefined') {
-            DOMTokenList.prototype.add.apply(item.classList, name);
-        } else {
-            var classes = item.className.split(/\s/) || [];
-            item.className = classes.concat(name).clear().join(' ');
-        }
+        DOMTokenList.prototype.add.apply(item.classList, name);
 
     }
 
@@ -378,11 +363,7 @@ NodeList.implement('last', function () {
 [NodeList, Node].implement('hasClass', function (name) {
     function has(item, name) {
 
-        if (typeof SJS.tokenlist !== 'undefined') {
-            return item.first().classList.contains(name);
-        } else {
-            return (item.first().className.split(/\s/).indexOf(name)) ? true : false;
-        }
+        return item.first().classList.contains(name);
 
     }
 
@@ -396,15 +377,7 @@ NodeList.implement('last', function () {
 [NodeList, Node].implement('removeClass', function (name) {
     function remove(item, name) {
 
-        if (typeof SJS.tokenlist !== 'undefined') {
-            item.classList.remove(name);
-        } else {
-            var classes = item.className.split(/\s/);
-            if (classes.indexOf(name)) {
-                delete classes[classes.indexOf(name)];
-                item.className = classes.join(' ');
-            }
-        }
+        item.classList.remove(name);
 
     }
 

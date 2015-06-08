@@ -1,70 +1,77 @@
-[NodeList, Node].invoke('addClass', function(name) {
+[NodeList, Node].implement('addClass', function(name) {
+	function add (item, name) {	
+		<% if (settings.indexOf('ie') >= 0) { %>	
+		if (typeof SJS.tokenlist !== 'undefined') {
+			DOMTokenList.prototype.add.apply(item.classList, name);
+		} else {
+			var classes = item.className.split(/\s/) || [];
+			item.className = classes.concat(name).clear().join(' ');
+		}		
+		<% } else { %>
+		DOMTokenList.prototype.add.apply(item.classList, name);
+		<% } %>	
+	}
+
 	if (name.indexOf(' '))
 		name = name.split(/\s/)
 
 	if (this instanceof NodeList) {
 		var item;
 		this.each(function(item, key) {
-			if (typeof DOMTokenList !== 'undefined') {
-				DOMTokenList.prototype.add.apply(item.classList, name);
-			} else {
-				var classes = item.className.split(/\s/) || [];
-				item.className = classes.concat(name).clear().join(' ');
-			}
+			add(item, name);
 		}); 
 	} else {
-		if (typeof DOMTokenList !== 'undefined') {
-			DOMTokenList.prototype.add.apply(this.classList, name);
-		} else {
-			var classes = this.className.split(/\s/) || [];
-			this.className = classes.concat(name).clear().join(' ');
-		}
+		add(this, name);
 	}
 });
 
-[NodeList, Node].invoke('hasClass', function(name){
+[NodeList, Node].implement('hasClass', function(name){
+	function has (item, name) {		
+		<% if (settings.indexOf('ie') >= 0) { %>
+		if (typeof SJS.tokenlist !== 'undefined') {
+			return item.first().classList.contains(name);
+		} else {
+			return (item.first().className.split(/\s/).indexOf(name)) ? true : false;
+		}		
+		<% } else { %>
+		return item.first().classList.contains(name);
+		<% } %>
+	}
+
 	if (this instanceof NodeList) {
-		if (typeof DOMTokenList !== 'undefined') {
-			return this.first().classList.contains(name);
-		} else {
-			return (this.first().className.split(/\s/).indexOf(name)) ? true : false;
-		}
+		has(this, name);
 	} else {
-		if (typeof DOMTokenList !== 'undefined') {
-			return this.classList.contains(name);
-		} else {
-			return (this.className.split(/\s/).indexOf(name)) ? true : false;
-		}
+		has(this, name);
 	}
 });
 
-[NodeList, Node].invoke('removeClass', function(name) {
-	if (this instanceof NodeList) {
-		this.each(function(item) {
-			if (typeof DOMTokenList !== 'undefined') {
-				item.classList.remove(name);
-			} else {
-				var classes = item.className.split(/\s/);
-				if (classes.indexOf(name)) {
-					delete classes[classes.indexOf(name)];
-					item.className = classes.join(' ');
-				}
-			}
-		}); 
-	} else {
-		if (typeof DOMTokenList !== 'undefined') {
-			this.classList.remove(name);
+[NodeList, Node].implement('removeClass', function(name) {
+	function remove (item, name) {		
+		<% if (settings.indexOf('ie') >= 0) { %>
+		if (typeof SJS.tokenlist !== 'undefined') {
+			item.classList.remove(name);
 		} else {
-			var classes = this.className.split(/\s/);
+			var classes = item.className.split(/\s/);
 			if (classes.indexOf(name)) {
 				delete classes[classes.indexOf(name)];
-				this.className = classes.join(' ');
+				item.className = classes.join(' ');
 			}
 		}
+		<% } else { %>
+		item.classList.remove(name);
+		<% } %>
+	}
+
+	if (this instanceof NodeList) {
+		this.each(function(item) {
+			remove(item, name);
+		}); 
+	} else {
+		remove(itme, name);
 	}
 });
 
-[NodeList, Node].invoke('toggleClass', function(name) {
+[NodeList, Node].implement('toggleClass', function(name) {
 	var item = this.getNode();
 	
 	if (item.hasClass(name)) {

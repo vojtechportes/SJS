@@ -1,4 +1,4 @@
-[Object, NodeList].invoke('each', function() {
+[Object, NodeList].implement('each', function() {
 	var data, callback, item;
 
 	if (arguments.length == 1) {

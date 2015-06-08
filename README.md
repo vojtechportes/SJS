@@ -1,12 +1,19 @@
 # SJS
-<small>version 1.0.68</small>
+<small>version 1.0.75</small>
 
 Simple javascript library for **modern browsers**.
 
 ## Download
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 17.56kb</strong><br>
+SJS with IE9 support
+
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 21.70kb</strong><br>
 <strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 10.99kb</strong>
+
+SJS without IE9 support
+
+<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 19.60kb</strong><br>
+<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 10.32kb</strong>
 
 --------------------------------------------------------------------------------------
 
@@ -63,16 +70,6 @@ Implement new prototype extension to type Object
 
 ```javascript
 Node.implement('method', function(){
-	// Some code
-});
-```
-
-#### invoke
-
-Implement new prototype extensions to type Object
-
-```javascript
-[Node, NodeList].invoke('method', function(){
 	// Some code
 });
 ```
@@ -187,6 +184,8 @@ $('div').last();
 ```
 #### setData
 
+(this method is available in SJS with IE9 support only!)
+
 Node.dataset wrapper
 
 Arguments:
@@ -199,6 +198,8 @@ $('div').first().setData('content', ['a', 'b']);
 ```
 
 #### getData
+
+(this method is available in SJS with IE9 support only!)
 
 Node.dataset wrapper
 

@@ -1,4 +1,4 @@
-[NodeList, Node].invoke('setStyle', function(key, val){
+[NodeList, Node].implement('setStyle', function(key, val){
 	if (this instanceof NodeList) {
 		this.each(function(item) {
 			item.style[key] = val;
@@ -8,7 +8,7 @@
 	}
 });
 
-[NodeList, Node].invoke('setStyles', function(object){
+[NodeList, Node].implement('setStyles', function(object){
 	if (this instanceof NodeList) {
 		this.each(function(item) {
 			$.each(object, function(val, key){
@@ -23,7 +23,7 @@
 	}
 });
 
-[NodeList, Node].invoke('getStyle', function(key) {
+[NodeList, Node].implement('getStyle', function(key) {
 	var item = this.getNode();
 
 	if (typeof item.style[key] !== 'undefined')
@@ -31,7 +31,7 @@
 	return false;
 });
 
-[NodeList, Node].invoke('removeStyle', function(key) {
+[NodeList, Node].implement('removeStyle', function(key) {
 	var item = this.getNode();
 	
 	if (typeof item.style[key] !== 'undefined')

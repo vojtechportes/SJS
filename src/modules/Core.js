@@ -3,13 +3,13 @@ Object.prototype.extend = function (key, val) {
 }
 
 Object.prototype.implement = function (key, val) {
-	this.prototype[key] = val;
-}
-
-Object.prototype.invoke = function (key, val) {
-	var items = this, item;
-	for (var i = 0; item = items[i++];) {
-		item.prototype[key] = val;
+	if (this instanceof Array) {
+		var items = this, item;
+		for (var i = 0; item = items[i++];) {
+			item.prototype[key] = val;
+		}
+	} else {
+		this.prototype[key] = val;	
 	}
 }
 
@@ -18,3 +18,7 @@ if (window.$ == null) window.extend('$', function(elements) {
 		return document.getElementById(elements.substr(1));
 	return document.querySelectorAll(elements);
 });
+
+window.SJS = {
+	"tokenlist": typeof DOMTokenList
+}

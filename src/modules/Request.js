@@ -102,7 +102,7 @@ Request.implement('send', function(query){
 	}
 });
 
-[NodeList, Node].invoke('load', function(url, type){
+[NodeList, Node].implement('load', function(url, type){
 	var node = this.getNode();
 
 	if (typeof type === 'undefined')
@@ -129,10 +129,8 @@ Request.implement('send', function(query){
 function Require (paths, callback) {
 	var length, i = 0;
 
-	if (typeof paths === 'string') {
+	if (typeof paths === 'string')
 		paths = [paths];
-	}
-
 	length = paths.length;
 
 	$.each(paths, function(path, key){
