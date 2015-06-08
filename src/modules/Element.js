@@ -6,9 +6,9 @@ var Element = function (tag, object) {
 			case 'data':
 				$.each(value, function(data, k){
 					if (data instanceof Object) {
-						element.setData(k, JSON.stringify(data));
+						element.set(k, JSON.stringify(data), 'data');
 					} else {
-						element.setData(k, data);
+						element.set(k, data, 'data');
 					}
 				});
 				break;
@@ -50,6 +50,7 @@ var Element = function (tag, object) {
 	return this;
 });
 
+<% if (settings.indexOf('ie') >= 0) { %>
 Node.implement('setData', function(key, val){
 	if (this.dataset !== undefined)
 		this.dataset[key] = val;
@@ -61,6 +62,7 @@ Node.implement('getData', function(key, val){
 		return this.dataset[key];
 	return this.getAttribute('data-' + key);
 });
+<% } %>
 
 NodeList.implement('first', function() {
 	return this.item(0);
@@ -75,11 +77,19 @@ NodeList.implement('last', function() {
 
 	function set (item, name, value, type) {
 		if (type == 'data') {
+			<% if (settings.indexOf('ie') >= 0) { %>
 			if (value instanceof Object) {
 				item.setData(name, JSON.stringify(value));
 			} else {
 				item.setData(name, value);
 			}
+			<% } else { %>
+			if (value instanceof Object) {
+				item.dataset[name] = JSON.stringify(value);
+			} else {
+				item.dataset[name] = value;
+			}
+			<% } %>
 		} else {
 			switch (name) {
 				case 'html':
@@ -110,7 +120,11 @@ NodeList.implement('last', function() {
 [NodeList, Node].implement('get', function(name, type) {
 	function get (item, name, type) {
 		if (type == 'data') {
+			<% if (settings.indexOf('ie') >= 0) { %>
 			var data = item.getData(name);
+			<% } else { %>
+			var data = item.dataset[name];
+			<% } %>
 			if (typeof data !== 'undefined') {
 				try {
 					return JSON.parse(data);
