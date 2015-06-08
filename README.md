@@ -67,16 +67,6 @@ Node.implement('method', function(){
 });
 ```
 
-#### invoke
-
-Implement new prototype extensions to type Object
-
-```javascript
-[Node, NodeList].invoke('method', function(){
-	// Some code
-});
-```
-
 #### Dollar selector
 
 Dollar selector is an funciton which returns html collection
