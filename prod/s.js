@@ -3,14 +3,14 @@ Object.prototype.extend = function (key, val) {
 }
 
 Object.prototype.implement = function (key, val) {
-    this.prototype[key] = val;
-}
-
-Object.prototype.invoke = function (key, val) {
-    var items = this,
-        item;
-    for (var i = 0; item = items[i++];) {
-        item.prototype[key] = val;
+    if (this instanceof Array) {
+        var items = this,
+            item;
+        for (var i = 0; item = items[i++];) {
+            item.prototype[key] = val;
+        }
+    } else {
+        this.prototype[key] = val;
     }
 }
 
@@ -18,6 +18,10 @@ if (window.$ == null) window.extend('$', function (elements) {
     if (!/\s/.test(elements) && elements.charAt(0) === '#') return document.getElementById(elements.substr(1));
     return document.querySelectorAll(elements);
 });
+
+window.SJS = {
+    "tokenlist": typeof DOMTokenList
+}
 
 Array.implement('clear', function () {
     var dups = {};
@@ -44,7 +48,7 @@ String.implement('firstUpper', function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 });
 
-[Object, NodeList].invoke('each', function () {
+[Object, NodeList].implement('each', function () {
     var data, callback, item;
 
     if (arguments.length == 1) {
@@ -114,7 +118,7 @@ var Element = function (tag, object) {
     return element;
 };
 
-[Node, NodeList].invoke('getNode', function () {
+[Node, NodeList].implement('getNode', function () {
     if (this instanceof NodeList) return this.first();
     return this;
 });
@@ -137,7 +141,7 @@ NodeList.implement('last', function () {
     return this.item(this.length - 1);
 });
 
-[NodeList, Node].invoke('set', function (name, value, type) {
+[NodeList, Node].implement('set', function (name, value, type) {
     var item;
 
     function set(item, name, value, type) {
@@ -173,7 +177,7 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].invoke('get', function (name, type) {
+[NodeList, Node].implement('get', function (name, type) {
     function get(item, name, type) {
         if (type == 'data') {
             var data = item.getData(name);
@@ -208,35 +212,35 @@ NodeList.implement('last', function () {
     return get(this.getNode(), name, type);
 });
 
-[NodeList, Node].invoke('getParent', function () {
+[NodeList, Node].implement('getParent', function () {
     return this.getNode().parentNode;
 });
 
-[NodeList, Node].invoke('getElement', function (selector) {
+[NodeList, Node].implement('getElement', function (selector) {
     return this.getNode().querySelectorAll(selector).first();
 });
 
-[NodeList, Node].invoke('getElements', function (selector) {
+[NodeList, Node].implement('getElements', function (selector) {
     return this.getNode().querySelectorAll(selector);
 });
 
-[NodeList, Node].invoke('getNext', function () {
+[NodeList, Node].implement('getNext', function () {
     return this.getNode().nextElementSibling;
 });
 
-[NodeList, Node].invoke('getPrevious', function () {
+[NodeList, Node].implement('getPrevious', function () {
     return this.getNode().previousElementSibling;
 });
 
-[NodeList, Node].invoke('getFirstChild', function () {
+[NodeList, Node].implement('getFirstChild', function () {
     return this.getNode().firstElementChild;
 });
 
-[NodeList, Node].invoke('getLastChild', function () {
+[NodeList, Node].implement('getLastChild', function () {
     return this.getNode().lastElementChild;
 });
 
-[NodeList, Node].invoke('getSiblings', function () {
+[NodeList, Node].implement('getSiblings', function () {
     var elements = [],
         node, element = this.getNode();
 
@@ -250,7 +254,7 @@ NodeList.implement('last', function () {
     return elements;
 });
 
-[NodeList, Node].invoke('inject', function () {
+[NodeList, Node].implement('inject', function () {
     var tag, object, elements, element, where = 'inside',
         parent;
 
@@ -296,7 +300,7 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].invoke('isChildOf', function (parent) {
+[NodeList, Node].implement('isChildOf', function (parent) {
     var item = this.getNode(),
         node, parent = $(parent).getNode();
 
@@ -311,7 +315,7 @@ NodeList.implement('last', function () {
     return false;
 });
 
-[NodeList, Node].invoke('removeElement', function (selector) {
+[NodeList, Node].implement('removeElement', function (selector) {
     var item, child, inside = false,
         children;
 
@@ -337,76 +341,77 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].invoke('cloneElement', function () {
+[NodeList, Node].implement('cloneElement', function () {
     return this.getNode().cloneNode(true);
 });
 
-[NodeList, Node].invoke('addClass', function (name) {
+[NodeList, Node].implement('addClass', function (name) {
+    function add(item, name) {
+
+        if (typeof SJS.tokenlist !== 'undefined') {
+            DOMTokenList.prototype.add.apply(item.classList, name);
+        } else {
+            var classes = item.className.split(/\s/) || [];
+            item.className = classes.concat(name).clear().join(' ');
+        }
+
+    }
+
     if (name.indexOf(' ')) name = name.split(/\s/)
 
     if (this instanceof NodeList) {
         var item;
         this.each(function (item, key) {
-            if (typeof DOMTokenList !== 'undefined') {
-                DOMTokenList.prototype.add.apply(item.classList, name);
-            } else {
-                var classes = item.className.split(/\s/) || [];
-                item.className = classes.concat(name).clear().join(' ');
-            }
+            add(item, name);
         });
     } else {
-        if (typeof DOMTokenList !== 'undefined') {
-            DOMTokenList.prototype.add.apply(this.classList, name);
-        } else {
-            var classes = this.className.split(/\s/) || [];
-            this.className = classes.concat(name).clear().join(' ');
-        }
+        add(this, name);
     }
 });
 
-[NodeList, Node].invoke('hasClass', function (name) {
+[NodeList, Node].implement('hasClass', function (name) {
+    function has(item, name) {
+
+        if (typeof SJS.tokenlist !== 'undefined') {
+            return item.first().classList.contains(name);
+        } else {
+            return (item.first().className.split(/\s/).indexOf(name)) ? true : false;
+        }
+
+    }
+
     if (this instanceof NodeList) {
-        if (typeof DOMTokenList !== 'undefined') {
-            return this.first().classList.contains(name);
-        } else {
-            return (this.first().className.split(/\s/).indexOf(name)) ? true : false;
-        }
+        has(this, name);
     } else {
-        if (typeof DOMTokenList !== 'undefined') {
-            return this.classList.contains(name);
-        } else {
-            return (this.className.split(/\s/).indexOf(name)) ? true : false;
-        }
+        has(this, name);
     }
 });
 
-[NodeList, Node].invoke('removeClass', function (name) {
-    if (this instanceof NodeList) {
-        this.each(function (item) {
-            if (typeof DOMTokenList !== 'undefined') {
-                item.classList.remove(name);
-            } else {
-                var classes = item.className.split(/\s/);
-                if (classes.indexOf(name)) {
-                    delete classes[classes.indexOf(name)];
-                    item.className = classes.join(' ');
-                }
-            }
-        });
-    } else {
-        if (typeof DOMTokenList !== 'undefined') {
-            this.classList.remove(name);
+[NodeList, Node].implement('removeClass', function (name) {
+    function remove(item, name) {
+
+        if (typeof SJS.tokenlist !== 'undefined') {
+            item.classList.remove(name);
         } else {
-            var classes = this.className.split(/\s/);
+            var classes = item.className.split(/\s/);
             if (classes.indexOf(name)) {
                 delete classes[classes.indexOf(name)];
-                this.className = classes.join(' ');
+                item.className = classes.join(' ');
             }
         }
+
+    }
+
+    if (this instanceof NodeList) {
+        this.each(function (item) {
+            remove(item, name);
+        });
+    } else {
+        remove(itme, name);
     }
 });
 
-[NodeList, Node].invoke('toggleClass', function (name) {
+[NodeList, Node].implement('toggleClass', function (name) {
     var item = this.getNode();
 
     if (item.hasClass(name)) {
@@ -416,7 +421,7 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].invoke('setStyle', function (key, val) {
+[NodeList, Node].implement('setStyle', function (key, val) {
     if (this instanceof NodeList) {
         this.each(function (item) {
             item.style[key] = val;
@@ -426,7 +431,7 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].invoke('setStyles', function (object) {
+[NodeList, Node].implement('setStyles', function (object) {
     if (this instanceof NodeList) {
         this.each(function (item) {
             $.each(object, function (val, key) {
@@ -441,14 +446,14 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].invoke('getStyle', function (key) {
+[NodeList, Node].implement('getStyle', function (key) {
     var item = this.getNode();
 
     if (typeof item.style[key] !== 'undefined') return item.style[key];
     return false;
 });
 
-[NodeList, Node].invoke('removeStyle', function (key) {
+[NodeList, Node].implement('removeStyle', function (key) {
     var item = this.getNode();
 
     if (typeof item.style[key] !== 'undefined') item.style[key] = null;
@@ -512,7 +517,7 @@ SEvent.implement('unregister', function () {
     delete window.eventCache[this.el][this.eventID];
 });
 
-[Node, NodeList].invoke('addEvent', function () {
+[Node, NodeList].implement('addEvent', function () {
     var type, callback, capture = false,
         e = false;
 
@@ -564,7 +569,7 @@ SEvent.implement('unregister', function () {
     }
 });
 
-[Node, NodeList].invoke('removeEvent', function (type, callback, capture) {
+[Node, NodeList].implement('removeEvent', function (type, callback, capture) {
     var elEvent;
 
     function remove(item, type) {
@@ -590,7 +595,7 @@ SEvent.implement('unregister', function () {
     }
 });
 
-[Node, NodeList].invoke('cloneEvent', function () {
+[Node, NodeList].implement('cloneEvent', function () {
     var type = arguments[0],
         element = false,
         item = this.getNode();
@@ -605,7 +610,7 @@ SEvent.implement('unregister', function () {
     }
 });
 
-[Node, NodeList].invoke('fireEvent', function (type) {
+[Node, NodeList].implement('fireEvent', function (type) {
     var item, name = "on" + type;
 
     function fire(item, type) {
@@ -730,7 +735,7 @@ Request.implement('send', function (query) {
     }
 });
 
-[NodeList, Node].invoke('load', function (url, type) {
+[NodeList, Node].implement('load', function (url, type) {
     var node = this.getNode();
 
     if (typeof type === 'undefined') var type = 'default';

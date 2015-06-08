@@ -102,7 +102,7 @@ Request.implement('send', function(query){
 	}
 });
 
-[NodeList, Node].invoke('load', function(url, type){
+[NodeList, Node].implement('load', function(url, type){
 	var node = this.getNode();
 
 	if (typeof type === 'undefined')

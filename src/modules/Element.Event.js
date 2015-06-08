@@ -52,7 +52,7 @@ SEvent.implement('unregister', function(){
 	delete window.eventCache[this.el][this.eventID];
 });
 
-[Node, NodeList].invoke('addEvent', function(){
+[Node, NodeList].implement('addEvent', function(){
 	var type, callback, capture = false, e = false;
 
 	function add (item, type, callback, capture, add) {
@@ -99,7 +99,7 @@ SEvent.implement('unregister', function(){
 	}
 });
 
-[Node, NodeList].invoke('removeEvent', function(type, callback, capture){
+[Node, NodeList].implement('removeEvent', function(type, callback, capture){
 	var elEvent;
 
 	function remove (item, type) {
@@ -123,7 +123,7 @@ SEvent.implement('unregister', function(){
 	}
 });
 
-[Node, NodeList].invoke('cloneEvent', function() {
+[Node, NodeList].implement('cloneEvent', function() {
 	var type = arguments[0], element = false, item = this.getNode();
 	if (typeof arguments[1] !== 'undefined')
 		element = arguments[1]
@@ -137,7 +137,7 @@ SEvent.implement('unregister', function(){
 	}
 });
 
-[Node, NodeList].invoke('fireEvent', function(type){
+[Node, NodeList].implement('fireEvent', function(type){
 	var item, name = "on" + type;
 
 	function fire (item, type) {

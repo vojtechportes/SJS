@@ -16,6 +16,7 @@
     "gulp-rename": "latest",
     "gulp-util": "latest",
     "gulp-ejs": "latest",
-    "gulp-uglify": "latest"
+    "gulp-uglify": "latest",
+    "gulp-beautify": "latest"
   }
 }
