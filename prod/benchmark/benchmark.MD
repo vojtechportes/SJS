@@ -1,7 +1,7 @@
 # Benchmarks
 
-## s.modern.js
-
+| s.modern.js |
+| ----------- |
 | Injecting 1000 elements took 23ms |
 | Adding class to 1000 elements took 3ms |
 | Adding event to 1000 elements took 11ms |
