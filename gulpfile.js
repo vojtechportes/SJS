@@ -19,12 +19,12 @@ gulp.task('sjs', function() {
     });
 });
 
-gulp.task('html', ['sjs'], function(){
+gulp.task('html', function(){
     return gulp.src(['./src/test/**'])
     .pipe(gulp.dest('./prod/test/'));
 });
 
-gulp.task('benchmark', ['sjs'], function(){
+gulp.task('benchmark', function(){
     return gulp.src('./src/benchmark/**')
     .pipe(gulp.dest('./prod/benchmark/'));
 });
@@ -43,7 +43,7 @@ gulp.task('compress', ['sjs'], function() {
     });   
 });
 
-gulp.task('move', ['compress'], function() {
+gulp.task('move', ['sjs', 'compress','html', 'benchmark', 'unittests'], function() {
   return gulp.src('./prod/**/*')
     .pipe(gulp.dest('C:/xampp/htdocs/sjs/'));
 });
@@ -56,5 +56,5 @@ gulp.task('watch', function() {
     gulp.watch('./src/**/*', ['sjs', 'compress', 'move']);
 });
 
-gulp.task('default', ['watch', 'compress'], function() {});
+gulp.task('default', ['watch', 'sjs','compress', 'html', 'unittests', 'move'], function() {});
 

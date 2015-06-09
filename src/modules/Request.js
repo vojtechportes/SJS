@@ -93,6 +93,8 @@ Request.implement('send', function(query){
 			}
 
 			xhr.open(this.method, this.url, this.async);
+			if (this.method === 'POST')
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");			
 			xhr.send(query);
 		} catch (e) {
 
