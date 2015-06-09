@@ -693,7 +693,7 @@ Arguments:
 
 * object
 * object.method - POST (default) or GET
-* object.type - document or default (default)
+* object.type - document or none (empty string) (default)
 * object.async - true (default) or false
 * object.url - url can contain selector in format "url(space)selector"
 * object.events - loading, error, complete (complete event is mandatory)

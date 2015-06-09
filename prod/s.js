@@ -708,7 +708,7 @@ function Request(object) {
     if (typeof object.type !== 'undefined') {
         this.type = object.type;
     } else {
-        this.type = 'default';
+        this.type = '';
     }
 
     if (typeof object.async === 'undefined') {
@@ -811,7 +811,6 @@ Request.implement('send', function (query) {
         'events': {
             'complete': function (response) {
                 if (type === 'document') {
-                    console.log(response);
                     node.inject(response);
                 } else {
                     node.set('text', response);
