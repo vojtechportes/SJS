@@ -39,9 +39,12 @@ Object.implement('isArray', function (data) {
 });
 
 String.implement('toCamelCase', function () {
-    return this.replace(/-\D/g, function (match) {
-        return match.charAt(1).toUpperCase();
+    var reg = new RegExp(/([^\_\-\s]+)/g),
+        res, str = '';
+    $.each(this.match(reg), function (res) {
+        str += res.charAt(0).toUpperCase() + res.slice(1);
     });
+    return str;
 });
 
 String.implement('firstUpper', function () {
@@ -376,33 +379,86 @@ NodeList.implement('last', function () {
 });
 
 [NodeList, Node].implement('hasClass', function (name) {
-    function has(item, name) {
+    if (name) {
+        function has(item, name) {
+            var passed = true,
+                multiple = false;
 
-        if (typeof SJS.tokenlist !== 'undefined') {
-            return item.first().classList.contains(name);
-        } else {
-            return (item.first().className.split(/\s/).indexOf(name)) ? true : false;
+            if (/\s/.test(name)) multiple = true;
+
+
+
+            if (typeof SJS.tokenlist !== 'undefined') {
+                if (multiple) {
+                    var names = name.split(/\s/),
+                        i = 0;
+                    while (names[i] && passed) {
+                        if (!item.classList.contains(names[i])) passed = false;
+                        i++;
+                    }
+                    return passed;
+                } else {
+                    return item.classList.contains(name);
+                }
+            } else {
+                var classes = item.className.split(/\s/);
+                if (multiple) {
+                    var names = name.split(/\s/),
+                        i = 0;
+                    while (names[i] && passed) {
+                        if (classes.indexOf(name) === -1) passed = false;
+                        i++;
+                    }
+                    return passed;
+                } else {
+                    return (classes.indexOf(name) >= 0) ? true : false;
+                }
+            }
+
         }
 
-    }
-
-    if (this instanceof NodeList) {
-        has(this, name);
+        if (this instanceof NodeList) {
+            return has(this.first(), name);
+        } else {
+            return has(this, name);
+        }
     } else {
-        has(this, name);
+        return false;
     }
 });
 
 [NodeList, Node].implement('removeClass', function (name) {
     function remove(item, name) {
+        var multiple = false;
+
+        if (/\s/.test(name)) multiple = true;
+
 
         if (typeof SJS.tokenlist !== 'undefined') {
-            item.classList.remove(name);
+            if (multiple) {
+                var names = name.split(/\s/);
+                $.each(names, function (name) {
+                    item.classList.remove(name);
+                });
+            } else {
+                item.classList.remove(name);
+            }
         } else {
-            var classes = item.className.split(/\s/);
-            if (classes.indexOf(name)) {
-                delete classes[classes.indexOf(name)];
-                item.className = classes.join(' ');
+            function removeCN(item, name) {
+                var classes = item.className.split(/\s/);
+                if (classes.indexOf(name)) {
+                    delete classes[classes.indexOf(name)];
+                    item.className = classes.join(' ');
+                }
+            }
+
+            if (multiple) {
+                var names = name.split(/\s/);
+                $.each(names, function (name) {
+                    removeCN(item, name);
+                });
+            } else {
+                removeCN(item, name);
             }
         }
 
@@ -413,7 +469,7 @@ NodeList.implement('last', function () {
             remove(item, name);
         });
     } else {
-        remove(itme, name);
+        remove(this, name);
     }
 });
 

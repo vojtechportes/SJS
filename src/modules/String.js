@@ -1,7 +1,9 @@
 String.implement('toCamelCase', function() {
-    return this.replace(/-\D/g, function(match){
-		return match.charAt(1).toUpperCase();
-	});
+   	var reg = new RegExp(/([^\_\-\s]+)/g), res, str = '';
+   	$.each(this.match(reg), function (res) {
+   		str += res.charAt(0).toUpperCase() + res.slice(1);
+   	});
+   	return str;
 });
 
 String.implement('firstUpper', function() {
