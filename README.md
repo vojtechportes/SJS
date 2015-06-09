@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.0.75</small>
+<small>version 1.0.81</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -7,13 +7,13 @@ Simple javascript library for **modern browsers**.
 
 SJS with IE9 support
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 21.70kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 10.99kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 22.82kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 11.37kb</strong>
 
 SJS without IE9 support
 
-<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 19.60kb</strong><br>
-<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 10.32kb</strong>
+<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 20.99kb</strong><br>
+<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 10.63kb</strong>
 
 --------------------------------------------------------------------------------------
 
@@ -405,7 +405,7 @@ Returns true or false
 
 Arguments:
 
-* name - class name
+* name - class name/s
 
 ```javascript
 $('div').hasClass('item');
@@ -417,7 +417,7 @@ Remove class from element/s
 
 Arguments:
 
-* name - class name
+* name - class name/s
 
 ```javascript
 $('div').removeClass('item');
@@ -429,7 +429,7 @@ Toggle class on element
 
 Arguments:
 
-* name - class name
+* name - class name/s
 
 ```javascript
 $('div').toggleClass('active');
