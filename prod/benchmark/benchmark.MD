@@ -18,4 +18,4 @@
 | Posting request 1000 times take ca 11s |
 | Get request 1000 times take ca 11s |
 
-* Get and post requests are in async modes. In case of SJS, page is displayed in ca 120 - 250ms, in case of JQuery in 450 to 2000ms
+* Get and post requests are in async modes. In case of SJS, page is displayed in ca 120 - 500ms, in case of JQuery in 450 to 2000ms
