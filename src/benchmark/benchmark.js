@@ -40,6 +40,7 @@ document.addEvent('ready', function(){
 				while(_times--) {
 					new Request({
 						"method": "POST",
+						"async": true,
 						"url": "../test/assets/response.php",
 						"events": {
 							"complete": function (response) {}
@@ -54,6 +55,7 @@ document.addEvent('ready', function(){
 				while(_times--) {
 					new Request({
 						"method": "GET",
+						"async": true,
 						"url": "../test/assets/news.json",
 						"events": {
 							"complete": function (response) {}
