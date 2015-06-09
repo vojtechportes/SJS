@@ -3,6 +3,10 @@
 
 Simple javascript library for **modern browsers**.
 
+## Benchmark
+
+<strong>[results](https://github.com/vojtechportes/SJS/blob/master/prod/benchmark/benchmark.MD)</strong>
+
 ## Download
 
 SJS with IE9 support
