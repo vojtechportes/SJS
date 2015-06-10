@@ -54,7 +54,6 @@ SJS without IE9 support
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
-<del>- [Type](#type)</del>
 - [Array](#array)
 - [String](#string)
 - [Request (AJAX + Require)](#request)
