@@ -7,3 +7,7 @@ Array.implement('clear', function () {
         return !isDup;
     });
 });
+
+Object.implement('merge', function(){
+		
+});

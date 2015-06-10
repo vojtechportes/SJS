@@ -107,11 +107,6 @@ QUnit.test('String', function(assert){
 	assert.equal('lorem ipsum'.toCamelCase(), 'LoremIpsum', 'toCamelCase method test');	
 });
 
-QUnit.test('Type', function(assert){
-	assert.equal($.isArray(['a']), true, 'isArray method test, true expected');	
-	assert.equal($.isArray('a'), false, 'isArray method test, false expected');	
-});
-
 QUnit.test('Array', function(assert){
 	var data = ['a', 'b', 'a'];
 	assert.equal(data.clear().length, 2, 'array clear method test, 2 excepted');	

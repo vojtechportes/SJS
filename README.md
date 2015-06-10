@@ -654,29 +654,6 @@ Return string with first letter in upper case format
 // return Lorem ipsum
 ```
 
-Type
-----
-
-#### isArray
-
-Check if argument is an array and return true. In oposite case return false.
-
-Arguments:
-
-* data
-
-```javascript
-var a = [1, 2, 3];
-$.isArray(a);
-
-// Return true
-
-var b = 'lorem ipsum';
-$.isArray(b);
-
-// Return false
-```
-
 Array
 -----
 

@@ -33,9 +33,8 @@ Array.implement('clear', function () {
     });
 });
 
-Object.implement('isArray', function (data) {
-    if (Object.prototype.toString.call(data) == '[object Array]') return true;
-    return false;
+Object.implement('merge', function () {
+
 });
 
 String.implement('toCamelCase', function () {
