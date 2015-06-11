@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.0.81</small>
+<small>version 1.0.95</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -15,13 +15,13 @@ Simple javascript library for **modern browsers**.
 
 SJS with IE9 support
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 22.82kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 11.37kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 24.69kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 12.39kb</strong>
 
 SJS without IE9 support
 
-<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 20.99kb</strong><br>
-<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 10.63kb</strong>
+<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 22.87kb</strong><br>
+<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 11.62kb</strong>
 
 --------------------------------------------------------------------------------------
 
