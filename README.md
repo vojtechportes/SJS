@@ -174,6 +174,44 @@ Return first element from NodeList or Node
 $('div').getNode();
 ```
 
+#### offset
+
+Return offset of element as object
+
+```javascript
+$('div').offset();
+
+// return {'top': 8, 'bottom': 8, 'left': 8, 'right': 28}
+```
+
+#### offsetParent
+
+Return offset of parent element as object
+
+```javascript
+$('div').parentOffset();
+
+// return {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
+```
+
+#### size
+
+Return size of element or window as object
+
+Arguments:
+
+* outer - true / false (default) 
+
+```javascript
+$('div').size();
+
+// return {'x': 800, 'y': 200}
+
+window.size();
+
+// return {'x': 1920, 'y': 1200}
+```
+
 #### first
 
 Select first element from html collection
@@ -222,6 +260,12 @@ $('div').first().getData('content');
 
 Set attribute or data attribute to element
 
+Special attributes:
+
+html - set inner html,
+text - set text content,
+tag - set tag name
+
 Arguments:
 
 * name - name of attribute
@@ -235,6 +279,12 @@ $('div').set('href', 'http://www.domain.tld');
 #### get
 
 Get attribute or data attribute from element
+
+Special attributes:
+
+html - return inner html,
+text - return text content,
+tag - return tag name
 
 Arguments:
 

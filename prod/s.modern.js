@@ -147,55 +147,92 @@ String.implement('firstUpper', function () {
 var Element = function (tag, object) {
     var element = document.createElement(tag);
 
-    $.each(object, function (value, key) {
-        switch (key) {
-        case 'data':
-            $.each(value, function (data, k) {
-                if (data instanceof Object) {
-                    element.set(k, JSON.stringify(data), 'data');
-                } else {
-                    element.set(k, data, 'data');
-                }
-            });
-            break;
-        case 'events':
-            $.each(value, function (data, k) {
-                element.addEvent(k, data);
-            });
-            break;
-        case 'styles':
-            element.setStyles(value);
-            break;
-        case 'html':
-            if (value instanceof Array) {
-                if (value[0] instanceof Array) {
-                    $.each(value, function (value, key) {
+    if (object) {
+        $.each(object, function (value, key) {
+            switch (key) {
+            case 'data':
+                $.each(value, function (data, k) {
+                    if (data instanceof Object) {
+                        element.set(k, JSON.stringify(data), 'data');
+                    } else {
+                        element.set(k, data, 'data');
+                    }
+                });
+                break;
+            case 'events':
+                $.each(value, function (data, k) {
+                    element.addEvent(k, data);
+                });
+                break;
+            case 'styles':
+                element.setStyles(value);
+                break;
+            case 'html':
+                if (value instanceof Array) {
+                    if (value[0] instanceof Array) {
+                        $.each(value, function (value, key) {
+                            if (typeof value[2] === 'undefined') value[2] = 'inside';
+                            element.inject(new Element(value[0], value[1]), value[2]);
+                        });
+                    } else {
                         if (typeof value[2] === 'undefined') value[2] = 'inside';
                         element.inject(new Element(value[0], value[1]), value[2]);
-                    });
+                    }
                 } else {
-                    if (typeof value[2] === 'undefined') value[2] = 'inside';
-                    element.inject(new Element(value[0], value[1]), value[2]);
+                    element.set(key, value);
                 }
-            } else {
+                break;
+            default:
                 element.set(key, value);
+                break;
             }
-            break;
-        default:
-            element.set(key, value);
-            break;
-        }
-    });
+        });
+    }
 
     return element;
 };
 
-[Node, NodeList].implement('getNode', function () {
+[Node, NodeList, Object].implement('getNode', function () {
     if (this instanceof NodeList) return this.first();
     return this;
 });
 
 
+
+[NodeList, Node, Object].implement('size', function (outer) {
+    var item = this.getNode();
+
+    if (typeof outer === 'undefined') outer = false;
+
+    if (item.self == window) {
+        var obj = {
+            'x': (outer) ? item.outerWidth : item.innerWidth,
+            'y': (outer) ? item.outerHeight : item.innerHeight
+        }
+    } else {
+        var obj = {
+            'x': (outer) ? item.offsetWidth : item.clientWidth,
+            'y': (outer) ? item.offsetHeight : item.clientHeight
+        }
+    }
+
+    return obj;
+});
+
+[NodeList, Node].implement('offset', function () {
+    var item = this.getNode();
+
+    return {
+        'top': item.offsetTop,
+        'bottom': $('html').size(true).y - (item.offsetTop + item.size(true).y),
+        'left': item.offsetLeft,
+        'right': window.size(true).x - (item.offsetLeft + item.size(true).x)
+    };
+});
+
+[NodeList, Node].implement('offsetParent', function () {
+    return this.getNode().offsetParent.offset();
+});
 
 NodeList.implement('first', function () {
     return this.item(0);
@@ -260,11 +297,12 @@ NodeList.implement('last', function () {
             }
         } else {
             switch (name) {
+            case 'tag':
+                return item.nodeName;
             case 'html':
                 return item.innerHTML;
                 break;
             case 'text':
-                if (item.innerText) return item.innerText;
                 return item.textContent;
                 break;
             default:
@@ -285,7 +323,7 @@ NodeList.implement('last', function () {
 });
 
 [NodeList, Node].implement('getElement', function (selector) {
-    return this.getNode().querySelectorAll(selector).first();
+    return this.getNode().querySelector(selector);
 });
 
 [NodeList, Node].implement('getElements', function (selector) {
@@ -338,6 +376,7 @@ NodeList.implement('last', function () {
             parent.getParent().insertBefore(element, parent.nextSibling);
             break;
         }
+        return element;
     }
 
     if (typeof arguments[0] === 'string') {
@@ -345,6 +384,8 @@ NodeList.implement('last', function () {
     } else if (arguments[0] instanceof Node || arguments[0] instanceof Array) {
         element = arguments[0];
     }
+
+    if (typeof arguments[1] === 'undefined') object = {};
 
     if (arguments[1] instanceof Object) {
         object = arguments[1]
@@ -359,12 +400,13 @@ NodeList.implement('last', function () {
     parent = this.getNode();
 
     if (element instanceof Array) {
-        elements = element;
+        elements = element, arr = [];
         $.each(elements, function (element, key) {
-            inject(element, parent, where);
+            arr.push(inject(element, parent, where));
         });
+        return arr;
     } else {
-        inject(element, parent, where);
+        return inject(element, parent, where);
     }
 });
 
