@@ -33,6 +33,29 @@ Array.implement('clear', function () {
     });
 });
 
+function getType(item) {
+    if (item instanceof Object && !(item instanceof Array)) {
+        return 'object';
+    } else if (item instanceof Array) {
+        return 'array';
+    }
+    return false;
+}
+
+function isSameType(items) {
+    var type = getType(items[0]),
+        i = 0,
+        passed = true;
+    while (items[i] && passed) {
+        var _type = getType(items[i]);
+        if (items.hasOwnProperty(i)) {
+            if (_type !== type || ['object', 'array'].indexOf(_type) < 0) passed = false;
+            i++;
+        }
+    }
+    return passed;
+}
+
 function mergeCopy(a, b, deep) {
     var diff = -1;
 
@@ -49,7 +72,7 @@ function mergeCopy(a, b, deep) {
     }
 
     $.each(b, function (item, key) {
-        if (item instanceof Object && a[key] instanceof Object) {
+        if (item instanceof Object && a[key] instanceof Object && isSameType([item, a[key]]) && deep) {
             return mergeCopy(a[key], item, deep);
         } else if (typeof item !== 'undefined') {
             a[key] = item;
@@ -60,54 +83,26 @@ function mergeCopy(a, b, deep) {
 }
 
 Object.implement('merge', function (items, deep) {
-
-    function getType(item) {
-        if (item instanceof Object && !(item instanceof Array)) {
-            return 'object';
-        } else if (item instanceof Array) {
-            return 'array';
-        }
-        return false;
-    }
-
-    function isSameType(items) {
-        var type = getType(items[0]),
-            i = 0,
-            passed = true;
-        while (items[i] && passed) {
-            if (items.hasOwnProperty(i)) {
-                if (getType(items[i]) !== type) passed = false;
-                i++;
-            }
-        }
-        return passed;
-    }
+    if (typeof deep === 'undefined') deep = false;
 
     if (items.length >= 2 && isSameType(items)) {
         var type = getType(items[0]);
 
-        switch (type) {
-        case 'array':
-            console.log(type + ':');
+        if (['object', 'array'].indexOf(type) >= 0) {
             $.each(items, function (item, key) {
-                if (typeof items[key + 1] !== 'undefined') items[key + 1] = mergeCopy(item, items[key + 1], true);
+                if (typeof items[key + 1] !== 'undefined') items[key + 1] = mergeCopy(item, items[key + 1], deep);
             });
 
             return items[items.length - 1];
-            break;
-        case 'object':
-            console.log(type + ':');
-            $.each(items, function (item, key) {
-                if (typeof items[key + 1] !== 'undefined') items[key + 1] = mergeCopy(item, items[key + 1], true);
-            });
-            return items[items.length - 1];
-            break;
-        default:
-            console.error('not object or array');
-            break;
+        } else {
+            console.error('Array or object expected as argument, "' + typeof items[0] + '" given instead.');
         }
     } else {
-        console.error('not same type or requested length');
+        if (items.length === 1 && items[0] instanceof Object) {
+            return items[0];
+        } else {
+            console.error('No relevant arguments given');
+        }
     }
 });
 

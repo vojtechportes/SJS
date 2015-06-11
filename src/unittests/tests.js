@@ -109,5 +109,6 @@ QUnit.test('String', function(assert){
 
 QUnit.test('Array', function(assert){
 	var data = ['a', 'b', 'a'];
+
 	assert.equal(data.clear().length, 2, 'array clear method test, 2 excepted');	
 });

@@ -54,7 +54,7 @@ SJS without IE9 support
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
-- [Array](#array)
+- [Array / Object](#array-object)
 - [String](#string)
 - [Request (AJAX + Require)](#request)
 
@@ -653,8 +653,8 @@ Return string with first letter in upper case format
 // return Lorem ipsum
 ```
 
-Array
------
+Array / Object
+--------------
 
 #### clear
 
@@ -664,6 +664,29 @@ Clear duplicites in array
 ['a', 'b', 'a'].clear();
 
 // return ['a', 'b']
+```
+
+#### merge
+
+Merge the contents of two or more objects (object, or array) into first object
+
+Arguments:
+
+* objects - array, array of arrays or objects
+* deep - true / false (default), if true merge will becomes recursive
+
+```javascript
+$.merge([[1,2,3], [4]]);
+
+// ^- will output [4,2,3]
+
+$.merge([1,[1,2],3], [1,[3]]);
+
+// ^- will output [1,[3],3]
+
+$.merge([1,[1,2],3], [1,[3]], true);
+
+// ^- will output [1,[1,3],3]
 ```
 
 Request
