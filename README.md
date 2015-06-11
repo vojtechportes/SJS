@@ -54,8 +54,8 @@ SJS without IE9 support
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
-- [Array / Object](#array-object)
 - [String](#string)
+- [Array / Object](#array--object)
 - [Request (AJAX + Require)](#request)
 
 Core
