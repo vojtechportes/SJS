@@ -55,6 +55,7 @@ SJS without IE9 support
 - [Element Style](#element-style)
 - [Element Event](#element-event)
 - [String](#string)
+- [Dimension](#dimension)
 - [Array / Object](#array--object)
 - [Request (AJAX + Require)](#request)
 
@@ -172,44 +173,6 @@ Return first element from NodeList or Node
 
 ```javascript
 $('div').getNode();
-```
-
-#### offset
-
-Return offset of element as object
-
-```javascript
-$('div').offset();
-
-// return {'top': 8, 'bottom': 8, 'left': 8, 'right': 28}
-```
-
-#### offsetParent
-
-Return offset of parent element as object
-
-```javascript
-$('div').parentOffset();
-
-// return {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
-```
-
-#### size
-
-Return size of element or window as object
-
-Arguments:
-
-* outer - true / false (default) 
-
-```javascript
-$('div').size();
-
-// return {'x': 800, 'y': 200}
-
-window.size();
-
-// return {'x': 1920, 'y': 1200}
 ```
 
 #### first
@@ -701,6 +664,47 @@ Return string with first letter in upper case format
 'lorem ipsum'.firstUpper();
 
 // return Lorem ipsum
+```
+
+Dimension
+---------
+
+#### offset
+
+Return offset of element as object
+
+```javascript
+$('div').offset();
+
+// return {'top': 8, 'bottom': 8, 'left': 8, 'right': 28}
+```
+
+#### offsetParent
+
+Return offset of parent element as object
+
+```javascript
+$('div').parentOffset();
+
+// return {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
+```
+
+#### size
+
+Return size of element or window as object
+
+Arguments:
+
+* outer - true / false (default) 
+
+```javascript
+$('div').size();
+
+// return {'x': 800, 'y': 200}
+
+window.size();
+
+// return {'x': 1920, 'y': 1200}
 ```
 
 Array / Object
