@@ -727,7 +727,7 @@ Merge the contents of two or more objects (object, or array) into first object
 Arguments:
 
 * objects - array, array of arrays or objects
-* deep - true / false (default), if true merge will becomes recursive
+* deep - true / false (default), if true merge will become recursive
 
 ```javascript
 $.merge([[1,2,3], [4]]);
@@ -817,7 +817,7 @@ Load is method of Node, NodeList. Return responseXML or responseText. Returned v
 Arguments:
 
 * url
-* type - docuemnt or default (default)
+* type - document or default (default)
 
 ```javascript
 $('#content').load('ajax.html #inner p', 'document');
