@@ -13,14 +13,18 @@ var Element = function (tag, object) {
 						}
 					});
 					break;
+        <% if (typeof modules['Element.Event'] !== 'undefined') { %>  
 				case 'events':
 					$.each(value, function(data, k){
 						element.addEvent(k, data);
 					});
 					break;
+        <% } %>
+        <% if (typeof modules['Element.Style'] !== 'undefined') { %>
 				case 'styles':
 					element.setStyles(value);
 					break;
+        <% } %>
 				case 'html':
 					if (value instanceof Array) {
 						if (value[0] instanceof Array) {
@@ -65,10 +69,6 @@ Node.implement('getData', function(key, val){
 	return this.getAttribute('data-' + key);
 });
 <% } %>
-
-[NodeList, Node].implement('offsetParent', function() {
-	return this.getNode().offsetParent.offset();
-});
 
 NodeList.implement('first', function() {
 	return this.item(0);

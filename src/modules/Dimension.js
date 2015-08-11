@@ -29,3 +29,7 @@
 		'right': window.size(true).x - (item.offsetLeft + item.size(true).x)
 	};
 });
+
+[NodeList, Node].implement('offsetParent', function() {
+	return this.getNode().offsetParent.offset();
+});

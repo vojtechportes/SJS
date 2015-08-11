@@ -9,10 +9,11 @@ var settings = require('./settings.js');
 
 gulp.task('sjs', function() {
     return Object.keys(settings.browserSupport).forEach(function(key) {
-        console.log(settings.browserSupport[key]);
+        console.log(key);
+        
 
         gulp.src('./src/s.js')
-            .pipe(ejs({"settings": settings.browserSupport[key], "modules": settings.modules}, {ext: '.js', 'rmWhitespace': true}))
+            .pipe(ejs({"settings": settings.browserSupport[key], "name": key, "modules": settings.modules}, {ext: '.js', 'rmWhitespace': true}))
             .pipe(beautify())
             .pipe(rename(key + '.js'))
             .pipe(gulp.dest('./prod/'));
