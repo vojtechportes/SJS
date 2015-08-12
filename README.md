@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.1.0</small>
+<small>version 1.1.10</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -516,6 +516,8 @@ To trigger custom event use method fireEvent. To listen custom event, use addEve
 
 Events can be namespaced in format eventname.namespace[.namespace,...]
 
+Events can be also removed, cloned, fired or retrieved from cache by its namespace.
+
 #### getEventCache
 
 Return all informations about element event from window object
@@ -561,6 +563,7 @@ Remove event listener from cache
 
 ```javascript
 var e - new SEvent({'el': $('div').first(), 'eid': 'e_78354214568'});
+e.unregister();
 ```
 
 #### addEvent
@@ -602,6 +605,12 @@ Arguments:
 $('div').first().removeEvent('click');
 ```
 
+```javascript
+$('div').first().removeEvent('.myNamespace');
+
+// all events with namespace "myNamespace" from first div in collection
+```
+
 #### cloneEvent
 
 Return event listener cache object of element
@@ -623,6 +632,12 @@ $('div').first().cloneEvent('click', $('p'));
 // clone click event listener from first div element in DOM and apply it to all paragraph elements in DOM
 ```
 
+```javascript
+$('div').first().cloneEvent('.myNamespace', $('p'));
+
+// clone all event listeners with namespace "myNamespace" from first div element in DOM and apply it to all paragraph elements in DOM
+```
+
 #### fireEvent
 
 Fire event on element/s.
@@ -641,6 +656,12 @@ $('div').fireEvent('click');
 // Fire click event on div element
 
 $('div').first().fireEvent('click');
+```
+
+```javascript
+// Fire all events with namespace "myNamespace" on div element
+
+$('div').first().fireEvent('.myNamespace');
 ```
 
 String
@@ -664,6 +685,16 @@ Return string with first letter in upper case format
 'lorem ipsum'.firstUpper();
 
 // return Lorem ipsum
+```
+
+#### escapeRegex
+
+Return escaped string that can be used in regex pattern
+
+```javascript
+'lorem.ipsum(dolor)'.escapeRegex();
+
+// return lorem\.ipsum\(dolor\)
 ```
 
 Dimension

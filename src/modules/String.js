@@ -9,3 +9,7 @@ String.implement('toCamelCase', function() {
 String.implement('firstUpper', function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 });
+
+String.implement('escapeRegex', function() {
+    return this.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+});
