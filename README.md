@@ -270,6 +270,21 @@ $('div').get('content', 'data');
 
 // return {"heading": "lorem ipsum", "text": "dolor sit amet"}
 ```
+
+#### removeData
+
+Remove data from window.dataCache object
+
+Arguments:
+
+* name - name of data attribute
+
+```javascript
+$('div').removeData('content');
+
+// remove data "content" from all div elements
+```
+
 #### getParent
 
 Get parent of element

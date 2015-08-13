@@ -185,6 +185,28 @@ NodeList.implement('last', function() {
 	return get(this.getNode(), name, type);
 });
 
+[NodeList, Node].implement('removeData', function(name) {
+  if (window.SJS.data.object) {
+    function remove (element, name) {  
+      var cache = window.dataCache, index;
+      if (typeof cache[element] !== 'undefined') {
+        index = cache[element].indexOf(name);
+        if (index > -1)
+          return cache[element].splice(index, 1);
+        return false;
+      } 
+    }
+    
+  	if (this instanceof NodeList) {		
+  		this.each(function(item){
+  			remove(this, name);
+  		});
+  	} else {
+  		remove(this.getNode(), name);
+  	}
+  }
+});
+
 [NodeList, Node].implement('getParent', function(){
 	return this.getNode().parentNode;
 });
