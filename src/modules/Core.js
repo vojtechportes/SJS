@@ -20,5 +20,8 @@ if (window.$ == null) window.extend('$', function(elements) {
 });
 
 window.SJS = {
-	"tokenlist": typeof DOMTokenList
+	"tokenlist": typeof DOMTokenList,
+  "data": {
+    "object": false
+  }
 }

@@ -1,3 +1,5 @@
+window.extend('dataCache', {});
+
 var Element = function (tag, object) {
 	var element = document.createElement(tag);
 
@@ -83,19 +85,28 @@ NodeList.implement('last', function() {
 
 	function set (item, name, value, type) {
 		if (type == 'data') {
-			<% if (settings.indexOf('ie') >= 0) { %>
-			if (value instanceof Object) {
-				item.setData(name, JSON.stringify(value));
-			} else {
-				item.setData(name, value);
-			}
-			<% } else { %>
-			if (value instanceof Object) {
-				item.dataset[name] = JSON.stringify(value);
-			} else {
-				item.dataset[name] = value;
-			}
-			<% } %>
+      if (window.SJS.data.object) {
+        if (typeof window.dataCache[item] === 'undefined') {
+          window.dataCache[item] = {};
+          window.dataCache[item][name] = value;              
+        } else {
+          window.dataCache[item][name] = value;     
+        }
+      } else {
+  			<% if (settings.indexOf('ie') >= 0) { %>
+  			if (value instanceof Object) {
+  				item.setData(name, JSON.stringify(value));
+  			} else {
+  				item.setData(name, value);
+  			}
+  			<% } else { %>
+  			if (value instanceof Object) {
+  				item.dataset[name] = JSON.stringify(value);
+  			} else {
+  				item.dataset[name] = value;
+  			}
+  			<% } %>
+      }
 		} else {
 			switch (name) {
 				case 'html':
@@ -124,8 +135,7 @@ NodeList.implement('last', function() {
 });	
 
 [NodeList, Node].implement('get', function(name, type) {
-	function get (item, name, type) {
-		if (type == 'data') {
+	function getData (item, name) {
 			<% if (settings.indexOf('ie') >= 0) { %>
 			var data = item.getData(name);
 			<% } else { %>
@@ -139,7 +149,18 @@ NodeList.implement('last', function() {
 				}
 			} else {
 				return false;
-			}		
+			}  
+  }
+  
+  function get (item, name, type) {
+		if (type == 'data') {
+      if (window.SJS.data.object) {
+        if (typeof window.dataCache[item][name] === 'undefined')        
+          return getData(item, name);
+        return window.dataCache[item][name];
+      } else {
+  			return getData(item, name);	
+      }
 		} else {
 			switch (name) {
 				case 'tag':

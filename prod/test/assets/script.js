@@ -1,4 +1,6 @@
 document.addEvent('ready', function(){
+  window.SJS.data.object = true;
+
 	var language = navigator.language || navigator.userLanguage; 		
 	$('body').addClass(language);
 
