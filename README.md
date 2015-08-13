@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.1.10</small>
+<small>version 1.1.11</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -25,6 +25,12 @@ SJS without IE9 support
 
 --------------------------------------------------------------------------------------
 
+## Plugins
+
+[SJS-Cookie](https://github.com/vojtechportes/SJS-Cookie)
+
+--------------------------------------------------------------------------------------
+
 ## Browser support
 
 <table width="100">
@@ -45,6 +51,7 @@ SJS without IE9 support
 --------------------------------------------------------------------------------------
 
 - [Download](#download)
+- [Plugins](#plugins)
 - [Browser support](#browser-support)
 - [Core](#core)
 	- [Dollar selector](#dollar-selector)
@@ -131,6 +138,8 @@ $('div').each(function(value, key){
 
 Element
 -------
+
+By setting window.SJS.data.object to true (by overriding or changing value in src/modules/Core.js or prod/s.*.js), behavior of set get methods will be changed  while setting or getting data. Istead of to element, data will be stored in dataCache on window object.
 
 #### Element constructor
 
