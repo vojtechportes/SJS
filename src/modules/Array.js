@@ -8,6 +8,16 @@ Array.implement('clear', function () {
     });
 });
 
+Array.implement('clean', function() {
+  for (var i = 0; i < this.length; i++) {
+    if (typeof this[i] === 'undefined' || (typeof this[i] === 'string' && this[i].length === 0)) {         
+      this.splice(i, 1);
+      i--;
+    }
+  }
+  return this;
+});
+
 function getType (item) {
 	if (item instanceof Object && !(item instanceof Array)) {
 		return 'object';
@@ -56,7 +66,8 @@ function mergeCopy (a, b, deep) {
 }
 
 Object.implement('merge', function (items, deep) {
-	if (typeof deep === 'undefined')
+ 
+  if (typeof deep === 'undefined')
 		deep = false;
 
 	if (items.length >= 2 && isSameType(items)) {
@@ -65,10 +76,10 @@ Object.implement('merge', function (items, deep) {
 		if (['object', 'array'].indexOf(type) >= 0) {
 			$.each(items, function(item, key){
 				if (typeof items[key + 1] !== 'undefined')
-					items[key + 1] = mergeCopy(item, items[key + 1], deep);
+				 items[key + 1] = mergeCopy(item, items[key + 1], deep);
 			});
 			
-			return items[items.length - 1];
+			return items.clean()[items.length - 1];
 		} else {
 			console.error('Array or object expected as argument, "' + typeof items[0] + '" given instead.');
 		}

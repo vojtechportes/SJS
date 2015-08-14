@@ -94,6 +94,8 @@ SEvent.implement('unregister', function(){
 		this.each(function(item) {
 			add(item, type, callback, capture, true);
 		}); 
+    
+    return this;
 	} else {	
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === true) {
 			add(this, type, callback, capture, false); callback(); return;
@@ -104,6 +106,8 @@ SEvent.implement('unregister', function(){
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === false) {
 			window.extend('hasReadyPassed', true);
 		}
+    
+    return this;
 	}
 });
 
@@ -128,8 +132,10 @@ SEvent.implement('unregister', function(){
 		this.each(function(item) {
 			remove(item, type);
 		}); 
+    return this;
 	} else {
 		remove(this, type);
+    return this;
 	}
 });
 
@@ -156,7 +162,6 @@ SEvent.implement('unregister', function(){
 		var e = window.getEventCache(item, type);
     $.each(e, function(evt){
       type = translateEvent(evt.type);
-      console.log(type);
       name = "on" + type[1];
   		if (evt && name in window) {
   			evt.fce.call(item, evt.event);

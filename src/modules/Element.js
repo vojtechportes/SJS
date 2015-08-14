@@ -52,6 +52,12 @@ var Element = function (tag, object) {
 	return element;
 };
 
+Object.implement('isNode', function(){
+  if (this instanceof Node || this instanceof NodeList)
+    return true;
+  return false;
+});
+
 [Node, NodeList, Object].implement('getNode', function(){
 	if (this instanceof NodeList)
 		return this.first();
@@ -80,7 +86,8 @@ NodeList.implement('last', function() {
 	return this.item(this.length - 1);
 });
 
-[NodeList, Node].implement('set', function(name, value, type) {
+[Node, NodeList, Object].implement('set', function(name, value, type) {
+  if (!this.isNode()) return;
 	var item;
 
 	function set (item, name, value, type) {
@@ -134,7 +141,8 @@ NodeList.implement('last', function() {
 	}
 });	
 
-[NodeList, Node].implement('get', function(name, type) {
+[Node, NodeList, Object].implement('get', function(name, type) {
+  if (!this.isNode()) return;
 	function getData (item, name) {
 			<% if (settings.indexOf('ie') >= 0) { %>
 			var data = item.getData(name);

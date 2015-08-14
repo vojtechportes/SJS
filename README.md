@@ -1,5 +1,5 @@
 # SJS
-<small>version 1.1.11</small>
+<small>version 1.1.13</small>
 
 Simple javascript library for **modern browsers**.
 
@@ -774,6 +774,17 @@ Clear duplicites in array
 
 // return ['a', 'b']
 ```
+
+#### clean
+
+Clean values that are undefined or empty strings
+
+```javascript
+['a', 'b', undefined, '', 'c'].clean();
+
+// return ['a', 'b', 'c']
+```
+
 
 #### merge
 

@@ -15,8 +15,8 @@ Object.prototype.implement = function (key, val) {
 }
 
 if (window.$ == null) window.extend('$', function (elements) {
-    if (!/\s/.test(elements) && elements.charAt(0) === '#') return document.getElementById(elements.substr(1));
-    return document.querySelectorAll(elements);
+    if (!/\s/.test(elements) && elements.charAt(0) === '#') return document.getElementById(elements.substr(1)) || [];
+    return document.querySelectorAll(elements) || [];
 });
 
 window.SJS = {
@@ -34,6 +34,16 @@ Array.implement('clear', function () {
         dups[hash] = true;
         return !isDup;
     });
+});
+
+Array.implement('clean', function () {
+    for (var i = 0; i < this.length; i++) {
+        if (typeof this[i] === 'undefined' || (typeof this[i] === 'string' && this[i].length === 0)) {
+            this.splice(i, 1);
+            i--;
+        }
+    }
+    return this;
 });
 
 function getType(item) {
@@ -86,6 +96,7 @@ function mergeCopy(a, b, deep) {
 }
 
 Object.implement('merge', function (items, deep) {
+
     if (typeof deep === 'undefined') deep = false;
 
     if (items.length >= 2 && isSameType(items)) {
@@ -96,7 +107,7 @@ Object.implement('merge', function (items, deep) {
                 if (typeof items[key + 1] !== 'undefined') items[key + 1] = mergeCopy(item, items[key + 1], deep);
             });
 
-            return items[items.length - 1];
+            return items.clean()[items.length - 1];
         } else {
             console.error('Array or object expected as argument, "' + typeof items[0] + '" given instead.');
         }
@@ -230,6 +241,11 @@ var Element = function (tag, object) {
     return element;
 };
 
+Object.implement('isNode', function () {
+    if (this instanceof Node || this instanceof NodeList) return true;
+    return false;
+});
+
 [Node, NodeList, Object].implement('getNode', function () {
     if (this instanceof NodeList) return this.first();
     return this;
@@ -245,7 +261,8 @@ NodeList.implement('last', function () {
     return this.item(this.length - 1);
 });
 
-[NodeList, Node].implement('set', function (name, value, type) {
+[Node, NodeList, Object].implement('set', function (name, value, type) {
+    if (!this.isNode()) return;
     var item;
 
     function set(item, name, value, type) {
@@ -292,7 +309,9 @@ NodeList.implement('last', function () {
     }
 });
 
-[NodeList, Node].implement('get', function (name, type) {
+[Node, NodeList, Object].implement('get', function (name, type) {
+    if (!this.isNode()) return;
+
     function getData(item, name) {
 
         var data = item.dataset[name];
@@ -731,6 +750,8 @@ SEvent.implement('unregister', function () {
         this.each(function (item) {
             add(item, type, callback, capture, true);
         });
+
+        return this;
     } else {
         if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === true) {
             add(this, type, callback, capture, false);
@@ -743,6 +764,8 @@ SEvent.implement('unregister', function () {
         if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === false) {
             window.extend('hasReadyPassed', true);
         }
+
+        return this;
     }
 });
 
@@ -769,8 +792,10 @@ SEvent.implement('unregister', function () {
         this.each(function (item) {
             remove(item, type);
         });
+        return this;
     } else {
         remove(this, type);
+        return this;
     }
 });
 
@@ -798,7 +823,6 @@ SEvent.implement('unregister', function () {
         var e = window.getEventCache(item, type);
         $.each(e, function (evt) {
             type = translateEvent(evt.type);
-            console.log(type);
             name = "on" + type[1];
             if (evt && name in window) {
                 evt.fce.call(item, evt.event);
