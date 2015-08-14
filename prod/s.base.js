@@ -499,6 +499,7 @@ NodeList.implement('last', function () {
     } else {
         add(this, name);
     }
+    return this;
 });
 
 [NodeList, Node].implement('hasClass', function (name) {
@@ -559,6 +560,7 @@ NodeList.implement('last', function () {
     } else {
         remove(this, name);
     }
+    return this;
 });
 
 [NodeList, Node].implement('toggleClass', function (name) {
@@ -569,6 +571,7 @@ NodeList.implement('last', function () {
     } else {
         item.addClass(name);
     }
+    return item;
 });
 
 window.extend('eventCache', {});

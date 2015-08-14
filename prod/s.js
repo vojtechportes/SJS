@@ -549,6 +549,7 @@ NodeList.implement('last', function () {
     } else {
         add(this, name);
     }
+    return this;
 });
 
 [NodeList, Node].implement('hasClass', function (name) {
@@ -644,6 +645,7 @@ NodeList.implement('last', function () {
     } else {
         remove(this, name);
     }
+    return this;
 });
 
 [NodeList, Node].implement('toggleClass', function (name) {
@@ -654,6 +656,7 @@ NodeList.implement('last', function () {
     } else {
         item.addClass(name);
     }
+    return item;
 });
 
 [NodeList, Node].implement('setStyle', function (key, val) {
@@ -664,6 +667,7 @@ NodeList.implement('last', function () {
     } else {
         this.style[key] = val;
     }
+    return this;
 });
 
 [NodeList, Node].implement('setStyles', function (object) {
@@ -679,20 +683,21 @@ NodeList.implement('last', function () {
             item.style[key] = val;
         });
     }
+    return this;
 });
 
 [NodeList, Node].implement('getStyle', function (key) {
     var item = this.getNode();
 
     if (typeof item.style[key] !== 'undefined') return item.style[key];
-    return false;
+    return item;
 });
 
 [NodeList, Node].implement('removeStyle', function (key) {
     var item = this.getNode();
 
     if (typeof item.style[key] !== 'undefined') item.style[key] = null;
-    return false;
+    return item;
 });
 
 window.extend('eventCache', {});

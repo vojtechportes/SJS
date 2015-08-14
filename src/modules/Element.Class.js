@@ -23,6 +23,7 @@
 	} else {
 		add(this, name);
 	}
+  return this;
 });
 
 [NodeList, Node].implement('hasClass', function(name){
@@ -137,6 +138,7 @@
 	} else {
 		remove(this, name);
 	}
+  return this;
 });
 
 [NodeList, Node].implement('toggleClass', function(name) {
@@ -147,4 +149,5 @@
 	} else {
 		item.addClass(name);
 	}
+  return item;
 });	
