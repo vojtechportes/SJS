@@ -272,6 +272,8 @@ NodeList.implement('last', function () {
     } else {
         set(this, name, value, type);
     }
+
+    return this;
 });
 
 [Node, NodeList, Object].implement('get', function (name, type) {
@@ -342,6 +344,8 @@ NodeList.implement('last', function () {
         } else {
             remove(this.getNode(), name);
         }
+
+        return this;
     }
 });
 

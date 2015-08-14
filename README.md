@@ -238,7 +238,7 @@ $('div').first().getData('content');
 
 #### set
 
-Set attribute or data attribute to element
+Set attribute or data attribute to element, return element or html collection
 
 Special attributes:
 
@@ -281,7 +281,7 @@ $('div').get('content', 'data');
 
 #### removeData
 
-Remove data from window.dataCache object
+Remove data from window.dataCache object, return element or html collection
 
 Arguments:
 
@@ -295,7 +295,7 @@ $('div').removeData('content');
 
 #### getParent
 
-Get parent of element
+Return parent of element
 
 ```javascript
 $('div.someElement').getParent();
@@ -441,7 +441,7 @@ Element Class
 
 #### addClass
 
-Add class to element/s
+Add class to element/s, return element or html collection
 
 Arguments:
 
@@ -465,7 +465,7 @@ $('div').hasClass('item');
 
 #### removeClass
 
-Remove class from element/s
+Remove class from element/s, return element or html collection
 
 Arguments:
 
@@ -477,7 +477,7 @@ $('div').removeClass('item');
 
 #### toggleClass
 
-Toggle class on element
+Toggle class on element, return element or html collection
 
 Arguments:
 
@@ -492,7 +492,7 @@ Element Style
 
 #### setStyle
 
-Add style to element/s
+Add style to element/s, return element
 
 Arguments:
 
@@ -505,7 +505,7 @@ $('div').setStyle('background-color', 'blue');
 
 #### setStyles
 
-Add style object to element/s
+Add style object to element/s, return element or html collection
 
 Arguments:
 
@@ -533,7 +533,7 @@ $('div').getStyle('background-color');
 
 #### removeStyle
 
-Remove style from element or return false in case element has no such style
+Remove style from element or return false in case element has no such style, return element or html collection
 
 ```javascript
 $('div').removeStyle('color');
