@@ -115,6 +115,14 @@ document.addEvent('ready', function(){
 });
 ```
 
+#### Window Load
+
+```javascript
+window.addEvent('load', function(){
+	// Some code
+});
+```
+
 Each
 ----
 
