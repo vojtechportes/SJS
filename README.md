@@ -25,8 +25,8 @@ SJS without IE9 support
 
 SJS without IE9 support and without Element.Style, Dimension, Require Modules
 
-<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.js)	~ 24.92kb</strong><br>
-<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.min.js)	~ 12.628kb</strong>
+<strong>[s.base.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.js)	~ 24.92kb</strong><br>
+<strong>[s.base.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.min.js)	~ 12.628kb</strong>
 
 --------------------------------------------------------------------------------------
 
