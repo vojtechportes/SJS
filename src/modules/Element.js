@@ -224,11 +224,11 @@ NodeList.implement('last', function() {
 });
 
 [NodeList, Node].implement('getElement', function(selector){
-	return this.getNode().querySelector(selector);
+	return this.getNode().querySelector(selector).setSelector(selector, this.selector, true);
 });
 
 [NodeList, Node].implement('getElements', function(selector){
-	return this.getNode().querySelectorAll(selector);
+	return this.getNode().querySelectorAll(selector).setSelector(selector, this.selector, true);
 });
 
 [NodeList, Node].implement('getNext', function(){
@@ -240,11 +240,11 @@ NodeList.implement('last', function() {
 });	
 
 [NodeList, Node].implement('getFirstChild', function(){
-	return this.getNode().firstElementChild;
+	return this.getNode().firstElementChild.setSelector('> :first-child', this.selector, true);
 });
 
 [NodeList, Node].implement('getLastChild', function(){
-	return this.getNode().lastElementChild;
+	return this.getNode().lastElementChild.setSelector('> :last-child', this.selector, true);
 });
 
 [NodeList, Node].implement('getSiblings', function(){

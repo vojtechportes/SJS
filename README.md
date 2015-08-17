@@ -149,6 +149,18 @@ Element
 
 By setting window.SJS.data.object to true (by overriding or changing value in src/modules/Core.js or prod/s.*.js), behavior of set get methods will be changed  while setting or getting data. Istead of to element, data will be stored in dataCache on window object.
 
+When searching for element via $ selector, or getElement, getElements, getFirstChild, getLastChild, selector property can be used to return original selector.
+
+```javascript
+$('body').selector;
+
+// Return "body"
+
+$('body').getFirstChild().selector;
+
+// Return "body > :first-child"
+```
+
 #### Element constructor
 
 arguments:
