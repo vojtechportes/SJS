@@ -15,13 +15,18 @@ Simple javascript library for **modern browsers**.
 
 SJS with IE9 support
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 25.98kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 13.06kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 29.389kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 14.853kb</strong>
 
 SJS without IE9 support
 
-<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 24.16kb</strong><br>
-<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 12.30kb</strong>
+<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 27.568kb</strong><br>
+<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 14.093kb</strong>
+
+SJS without IE9 support and without Element.Style, Dimension, Require Modules
+
+<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.js)	~ 24.92kb</strong><br>
+<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.min.js)	~ 12.628kb</strong>
 
 --------------------------------------------------------------------------------------
 
