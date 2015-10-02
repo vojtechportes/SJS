@@ -10,7 +10,7 @@ function Request (object) {
 	if (typeof object.type !== 'undefined') {
 		this.type = object.type;
 	} else {
-		this.type = 'default';
+		this.type = '';
 	}
 
 	if (typeof object.async === 'undefined') {
@@ -93,6 +93,8 @@ Request.implement('send', function(query){
 			}
 
 			xhr.open(this.method, this.url, this.async);
+			if (this.method === 'POST')
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");			
 			xhr.send(query);
 		} catch (e) {
 
@@ -116,7 +118,6 @@ Request.implement('send', function(query){
 		'events': {
 			'complete': function(response) {
 				if (type === 'document') {
-					console.log(response);
 					node.inject(response);	
 				} else {
 					node.set('text', response);
@@ -125,34 +126,3 @@ Request.implement('send', function(query){
 		}
 	}).send();
 });
-
-function Require (paths, callback) {
-	var length, i = 0;
-
-	if (typeof paths === 'string')
-		paths = [paths];
-	length = paths.length;
-
-	$.each(paths, function(path, key){
-		var script = new Element('script', {
-			"src": path,
-			"data": {
-				"require": ""
-			},
-			"type": "text/javascript"
-		});
-
-		$('head').inject(script);
-
-		if (typeof callback !== 'undefined') {
-			script.addEvent("load", function(){ 
-				i++;
-				if (i === length) {
-					callback();
-				}
-			});
-		}
-	});
-
-
-};

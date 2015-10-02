@@ -1,3 +1,3 @@
-<% modules.forEach(function(key){ %>
+<% modules[name].forEach(function(key){ %>
 		<%- include('modules/' + key + '.js') %>
 <% }) %>

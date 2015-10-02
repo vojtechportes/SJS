@@ -16,12 +16,17 @@ var translateEvent = function (event) {
 
 Object.implement('getEventCache', function(element, type) {
 	if (typeof window.eventCache[element] !== 'undefined') {
-		var events = window.eventCache[element], e;
-		e = false;
-
+		var events = window.eventCache[element], e = {};
+    var pattNmsp = new RegExp(type.escapeRegex() + "$");
+    var patt = new RegExp(type.escapeRegex() + "\..*$");
+    
 		$.each(events, function(val, key){
-			if (val.type === type)
-				e = val;
+        if (type.charAt(0) === '.') {
+          if (pattNmsp.test(val.type))
+    				e[key] = val;
+        } else if (patt.test(val.type) || type === val.type) {
+          e[key] = val
+        }
 		});
 
 		return e;
@@ -31,10 +36,13 @@ Object.implement('getEventCache', function(element, type) {
 });
 
 var SEvent = function (object) {
-	this.eventID = object.eid || 'e_' + new Date().getTime();
+  var r = function() {return (((1+Math.random())*0x10000)|0).toString(16).substring(1);};
+  var token = (r()+r()+"-"+r()+"-"+r()+"-"+r()+"-"+r()+r()+r());
+
+	this.eventID = object.eid || 'e_' + new Date().getTime() + '_' + token;
 	this.el = object.el || null;
 	this.type = object.type || null;
-	this.fce = object.fce || null;
+	this.fce = object.fce || function (){};
 	this.event = object.event || null;
 }
 
@@ -52,7 +60,7 @@ SEvent.implement('unregister', function(){
 	delete window.eventCache[this.el][this.eventID];
 });
 
-[Node, NodeList].implement('addEvent', function(){
+[Object, Node, NodeList].implement('addEvent', function(){
 	var type, callback, capture = false, e = false;
 
 	function add (item, type, callback, capture, add) {
@@ -86,6 +94,8 @@ SEvent.implement('unregister', function(){
 		this.each(function(item) {
 			add(item, type, callback, capture, true);
 		}); 
+    
+    return this;
 	} else {	
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === true) {
 			add(this, type, callback, capture, false); callback(); return;
@@ -96,17 +106,21 @@ SEvent.implement('unregister', function(){
 		if (this.nodeName === '#document' && type === 'DOMContentLoaded' && window.hasReadyPassed === false) {
 			window.extend('hasReadyPassed', true);
 		}
+    
+    return this;
 	}
 });
 
-[Node, NodeList].implement('removeEvent', function(type, callback, capture){
+[Object, Node, NodeList].implement('removeEvent', function(type, callback, capture){
 	var elEvent;
 
 	function remove (item, type) {
 		elEvent = window.getEventCache(item, type[0]);
-		item.removeEventListener(type[1], elEvent.fce, capture);
-		var e = new SEvent({'el': item, 'eid': elEvent.eid});
-		e.unregister();		
+    $.each(elEvent, function (elv) {
+  			item.removeEventListener(type[1], elv.fce, capture);
+  			var e = new SEvent({'el': item, 'eid': elv.eid});
+  			e.unregister();		
+    });
 	}
 
 	type = translateEvent(type);
@@ -118,12 +132,14 @@ SEvent.implement('unregister', function(){
 		this.each(function(item) {
 			remove(item, type);
 		}); 
+    return this;
 	} else {
 		remove(this, type);
+    return this;
 	}
 });
 
-[Node, NodeList].implement('cloneEvent', function() {
+[Object, Node, NodeList].implement('cloneEvent', function() {
 	var type = arguments[0], element = false, item = this.getNode();
 	if (typeof arguments[1] !== 'undefined')
 		element = arguments[1]
@@ -131,27 +147,34 @@ SEvent.implement('unregister', function(){
 	var e = window.getEventCache(item, type);
 
 	if (element) {
-		element.addEvent(type, e.fce);
+    $.each(e, function(evt) {
+		  element.addEvent(type, evt.fce);
+    });
 	} else {
 		return e;
 	}
 });
 
-[Node, NodeList].implement('fireEvent', function(type){
-	var item, name = "on" + type;
+[Object, Node, NodeList].implement('fireEvent', function(type){
+	var item, name;
 
 	function fire (item, type) {
-		var e = window.getEventCache(item, type[0]);
-		if (e && name in window) {
-			e.fce.call(item, e.event);
-		} else {
-			e = document.createEvent("Event");
-			e.initEvent(type[1], true, true); 
-			item.dispatchEvent(e);
-		}		
+		var e = window.getEventCache(item, type);
+    $.each(e, function(evt){
+      type = translateEvent(evt.type);
+      name = "on" + type[1];
+  		if (evt && name in window) {
+  			evt.fce.call(item, evt.event);
+  		} else {
+  			evt = document.createEvent("Event");
+  			evt.initEvent(type[1], true, true); 
+  			item.dispatchEvent(evt);
+  		}		
+    });
 	}
 
-	type = translateEvent(type);
+  //if (type.indexOf('.') >= 0)
+	 //type = translateEvent(type)[0];
 
 	if (this instanceof NodeList) {
 		this.each(function(item) {

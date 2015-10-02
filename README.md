@@ -1,19 +1,38 @@
 # SJS
-<small>version 1.0.75</small>
+<small>version 1.1.13</small>
 
 Simple javascript library for **modern browsers**.
+
+## Benchmark
+
+<strong>[results](https://github.com/vojtechportes/SJS/blob/master/prod/benchmark/benchmark.MD)</strong>
+
+## Unit tests
+
+<strong>[results](https://github.com/vojtechportes/SJS/tree/master/prod/unittests)</strong>
 
 ## Download
 
 SJS with IE9 support
 
-<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 21.70kb</strong><br>
-<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 10.99kb</strong>
+<strong>[s.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.js)	~ 29.389kb</strong><br>
+<strong>[s.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.min.js)	~ 14.853kb</strong>
 
 SJS without IE9 support
 
-<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 19.60kb</strong><br>
-<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 10.32kb</strong>
+<strong>[s.modern.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.js)	~ 27.568kb</strong><br>
+<strong>[s.modern.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.modern.min.js)	~ 14.093kb</strong>
+
+SJS without IE9 support and without Element.Style, Dimension, Require Modules
+
+<strong>[s.base.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.js)	~ 24.92kb</strong><br>
+<strong>[s.base.min.js](https://github.com/vojtechportes/SJS/blob/master/prod/s.base.min.js)	~ 12.628kb</strong>
+
+--------------------------------------------------------------------------------------
+
+## Plugins
+
+[SJS-Cookie](https://github.com/vojtechportes/SJS-Cookie)
 
 --------------------------------------------------------------------------------------
 
@@ -37,6 +56,7 @@ SJS without IE9 support
 --------------------------------------------------------------------------------------
 
 - [Download](#download)
+- [Plugins](#plugins)
 - [Browser support](#browser-support)
 - [Core](#core)
 	- [Dollar selector](#dollar-selector)
@@ -46,9 +66,9 @@ SJS without IE9 support
 - [Element Class](#element-class)
 - [Element Style](#element-style)
 - [Element Event](#element-event)
-- [Type](#type)
-- [Array](#array)
 - [String](#string)
+- [Dimension](#dimension)
+- [Array / Object](#array--object)
 - [Request (AJAX + Require)](#request)
 
 Core
@@ -100,6 +120,14 @@ document.addEvent('ready', function(){
 });
 ```
 
+#### Window Load
+
+```javascript
+window.addEvent('load', function(){
+	// Some code
+});
+```
+
 Each
 ----
 
@@ -123,6 +151,20 @@ $('div').each(function(value, key){
 
 Element
 -------
+
+By setting window.SJS.data.object to true (by overriding or changing value in src/modules/Core.js or prod/s.*.js), behavior of set get methods will be changed  while setting or getting data. Istead of to element, data will be stored in dataCache on window object.
+
+When searching for element via $ selector, or getElement, getElements, getFirstChild, getLastChild, selector property can be used to return original selector.
+
+```javascript
+$('body').selector;
+
+// Return "body"
+
+$('body').getFirstChild().selector;
+
+// Return "body > :first-child"
+```
 
 #### Element constructor
 
@@ -213,7 +255,13 @@ $('div').first().getData('content');
 
 #### set
 
-Set attribute or data attribute to element
+Set attribute or data attribute to element, return element or html collection
+
+Special attributes:
+
+html - set inner html,
+text - set text content,
+tag - set tag name
 
 Arguments:
 
@@ -229,6 +277,12 @@ $('div').set('href', 'http://www.domain.tld');
 
 Get attribute or data attribute from element
 
+Special attributes:
+
+html - return inner html,
+text - return text content,
+tag - return tag name
+
 Arguments:
 
 * name - name of attribute
@@ -241,9 +295,24 @@ $('div').get('content', 'data');
 
 // return {"heading": "lorem ipsum", "text": "dolor sit amet"}
 ```
+
+#### removeData
+
+Remove data from window.dataCache object, return element or html collection
+
+Arguments:
+
+* name - name of data attribute
+
+```javascript
+$('div').removeData('content');
+
+// remove data "content" from all div elements
+```
+
 #### getParent
 
-Get parent of element
+Return parent of element
 
 ```javascript
 $('div.someElement').getParent();
@@ -389,7 +458,7 @@ Element Class
 
 #### addClass
 
-Add class to element/s
+Add class to element/s, return element or html collection
 
 Arguments:
 
@@ -405,7 +474,7 @@ Returns true or false
 
 Arguments:
 
-* name - class name
+* name - class name/s
 
 ```javascript
 $('div').hasClass('item');
@@ -413,11 +482,11 @@ $('div').hasClass('item');
 
 #### removeClass
 
-Remove class from element/s
+Remove class from element/s, return element or html collection
 
 Arguments:
 
-* name - class name
+* name - class name/s
 
 ```javascript
 $('div').removeClass('item');
@@ -425,11 +494,11 @@ $('div').removeClass('item');
 
 #### toggleClass
 
-Toggle class on element
+Toggle class on element, return element or html collection
 
 Arguments:
 
-* name - class name
+* name - class name/s
 
 ```javascript
 $('div').toggleClass('active');
@@ -440,7 +509,7 @@ Element Style
 
 #### setStyle
 
-Add style to element/s
+Add style to element/s, return element
 
 Arguments:
 
@@ -453,7 +522,7 @@ $('div').setStyle('background-color', 'blue');
 
 #### setStyles
 
-Add style object to element/s
+Add style object to element/s, return element or html collection
 
 Arguments:
 
@@ -481,7 +550,7 @@ $('div').getStyle('background-color');
 
 #### removeStyle
 
-Remove style from element or return false in case element has no such style
+Remove style from element or return false in case element has no such style, return element or html collection
 
 ```javascript
 $('div').removeStyle('color');
@@ -495,6 +564,8 @@ All events are stored on window object. They are accesible on window.eventCache.
 To trigger custom event use method fireEvent. To listen custom event, use addEvent method.
 
 Events can be namespaced in format eventname.namespace[.namespace,...]
+
+Events can be also removed, cloned, fired or retrieved from cache by its namespace.
 
 #### getEventCache
 
@@ -541,6 +612,7 @@ Remove event listener from cache
 
 ```javascript
 var e - new SEvent({'el': $('div').first(), 'eid': 'e_78354214568'});
+e.unregister();
 ```
 
 #### addEvent
@@ -582,6 +654,12 @@ Arguments:
 $('div').first().removeEvent('click');
 ```
 
+```javascript
+$('div').first().removeEvent('.myNamespace');
+
+// all events with namespace "myNamespace" from first div in collection
+```
+
 #### cloneEvent
 
 Return event listener cache object of element
@@ -603,6 +681,12 @@ $('div').first().cloneEvent('click', $('p'));
 // clone click event listener from first div element in DOM and apply it to all paragraph elements in DOM
 ```
 
+```javascript
+$('div').first().cloneEvent('.myNamespace', $('p'));
+
+// clone all event listeners with namespace "myNamespace" from first div element in DOM and apply it to all paragraph elements in DOM
+```
+
 #### fireEvent
 
 Fire event on element/s.
@@ -621,6 +705,12 @@ $('div').fireEvent('click');
 // Fire click event on div element
 
 $('div').first().fireEvent('click');
+```
+
+```javascript
+// Fire all events with namespace "myNamespace" on div element
+
+$('div').first().fireEvent('.myNamespace');
 ```
 
 String
@@ -646,31 +736,59 @@ Return string with first letter in upper case format
 // return Lorem ipsum
 ```
 
-Type
-----
+#### escapeRegex
 
-#### isArray
+Return escaped string that can be used in regex pattern
 
-Check if argument is an array and return true. In oposite case return false.
+```javascript
+'lorem.ipsum(dolor)'.escapeRegex();
+
+// return lorem\.ipsum\(dolor\)
+```
+
+Dimension
+---------
+
+#### offset
+
+Return offset of element as object
+
+```javascript
+$('div').offset();
+
+// return {'top': 8, 'bottom': 8, 'left': 8, 'right': 28}
+```
+
+#### offsetParent
+
+Return offset of parent element as object
+
+```javascript
+$('div').parentOffset();
+
+// return {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
+```
+
+#### size
+
+Return size of element or window as object
 
 Arguments:
 
-* data
+* outer - true / false (default) 
 
 ```javascript
-var a = [1, 2, 3];
-$.isArray(a);
+$('div').size();
 
-// Return true
+// return {'x': 800, 'y': 200}
 
-var b = 'lorem ipsum';
-$.isArray(b);
+window.size();
 
-// Return false
+// return {'x': 1920, 'y': 1200}
 ```
 
-Array
------
+Array / Object
+--------------
 
 #### clear
 
@@ -680,6 +798,40 @@ Clear duplicites in array
 ['a', 'b', 'a'].clear();
 
 // return ['a', 'b']
+```
+
+#### clean
+
+Clean values that are undefined or empty strings
+
+```javascript
+['a', 'b', undefined, '', 'c'].clean();
+
+// return ['a', 'b', 'c']
+```
+
+
+#### merge
+
+Merge the contents of two or more objects (object, or array) into first object
+
+Arguments:
+
+* objects - array, array of arrays or objects
+* deep - true / false (default), if true merge will become recursive
+
+```javascript
+$.merge([[1,2,3], [4]]);
+
+// ^- will output [4,2,3]
+
+$.merge([[1,[1,2],3], [1,[3]]]);
+
+// ^- will output [1,[3],3]
+
+$.merge([[1,[1,2],3], [1,[3]]], true);
+
+// ^- will output [1,[1,3],3]
 ```
 
 Request
@@ -693,7 +845,7 @@ Arguments:
 
 * object
 * object.method - POST (default) or GET
-* object.type - document or default (default)
+* object.type - document or none (empty string) (default)
 * object.async - true (default) or false
 * object.url - url can contain selector in format "url(space)selector"
 * object.events - loading, error, complete (complete event is mandatory)
@@ -756,7 +908,7 @@ Load is method of Node, NodeList. Return responseXML or responseText. Returned v
 Arguments:
 
 * url
-* type - docuemnt or default (default)
+* type - document or default (default)
 
 ```javascript
 $('#content').load('ajax.html #inner p', 'document');
@@ -776,4 +928,3 @@ Require(['script1.js', 'script2.js', 'script3.js'], function(){
 	console.log('all scripts are loaded.');
 });
 ```
-

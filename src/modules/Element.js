@@ -1,50 +1,64 @@
+window.extend('dataCache', {});
+
 var Element = function (tag, object) {
 	var element = document.createElement(tag);
 
-	$.each(object, function(value, key){
-		switch (key) {
-			case 'data':
-				$.each(value, function(data, k){
-					if (data instanceof Object) {
-						element.set(k, JSON.stringify(data), 'data');
-					} else {
-						element.set(k, data, 'data');
-					}
-				});
-				break;
-			case 'events':
-				$.each(value, function(data, k){
-					element.addEvent(k, data);
-				});
-				break;
-			case 'styles':
-				element.setStyles(value);
-				break;
-			case 'html':
-				if (value instanceof Array) {
-					if (value[0] instanceof Array) {
-						$.each(value, function(value, key){
+	if (object) {
+		$.each(object, function(value, key){
+			switch (key) {
+				case 'data':
+					$.each(value, function(data, k){
+						if (data instanceof Object) {
+							element.set(k, JSON.stringify(data), 'data');
+						} else {
+							element.set(k, data, 'data');
+						}
+					});
+					break;
+        <% if (typeof modules['Element.Event'] !== 'undefined') { %>  
+				case 'events':
+					$.each(value, function(data, k){
+						element.addEvent(k, data);
+					});
+					break;
+        <% } %>
+        <% if (typeof modules['Element.Style'] !== 'undefined') { %>
+				case 'styles':
+					element.setStyles(value);
+					break;
+        <% } %>
+				case 'html':
+					if (value instanceof Array) {
+						if (value[0] instanceof Array) {
+							$.each(value, function(value, key){
+								if (typeof value[2] === 'undefined') value[2] = 'inside';							
+								element.inject(new Element(value[0], value[1]), value[2]);
+							});
+						} else {
 							if (typeof value[2] === 'undefined') value[2] = 'inside';							
 							element.inject(new Element(value[0], value[1]), value[2]);
-						});
+						}
 					} else {
-						if (typeof value[2] === 'undefined') value[2] = 'inside';							
-						element.inject(new Element(value[0], value[1]), value[2]);
+						element.set(key, value);
 					}
-				} else {
+					break;
+				default:
 					element.set(key, value);
-				}
-				break;
-			default:
-				element.set(key, value);
-				break;
-		}
-	});
+					break;
+			}
+		});
+	}
 
 	return element;
 };
 
-[Node, NodeList].implement('getNode', function(){
+Object.implement('isNode', function(){
+  if (this instanceof Node || this instanceof NodeList)
+    return true;
+  return false;
+});
+
+[Node, NodeList, Object].implement('getNode', function(){
 	if (this instanceof NodeList)
 		return this.first();
 	return this;
@@ -72,24 +86,34 @@ NodeList.implement('last', function() {
 	return this.item(this.length - 1);
 });
 
-[NodeList, Node].implement('set', function(name, value, type) {
+[Node, NodeList, Object].implement('set', function(name, value, type) {
+  if (!this.isNode()) return;
 	var item;
 
 	function set (item, name, value, type) {
 		if (type == 'data') {
-			<% if (settings.indexOf('ie') >= 0) { %>
-			if (value instanceof Object) {
-				item.setData(name, JSON.stringify(value));
-			} else {
-				item.setData(name, value);
-			}
-			<% } else { %>
-			if (value instanceof Object) {
-				item.dataset[name] = JSON.stringify(value);
-			} else {
-				item.dataset[name] = value;
-			}
-			<% } %>
+      if (window.SJS.data.object) {
+        if (typeof window.dataCache[item] === 'undefined') {
+          window.dataCache[item] = {};
+          window.dataCache[item][name] = value;              
+        } else {
+          window.dataCache[item][name] = value;     
+        }
+      } else {
+  			<% if (settings.indexOf('ie') >= 0) { %>
+  			if (value instanceof Object) {
+  				item.setData(name, JSON.stringify(value));
+  			} else {
+  				item.setData(name, value);
+  			}
+  			<% } else { %>
+  			if (value instanceof Object) {
+  				item.dataset[name] = JSON.stringify(value);
+  			} else {
+  				item.dataset[name] = value;
+  			}
+  			<% } %>
+      }
 		} else {
 			switch (name) {
 				case 'html':
@@ -115,11 +139,13 @@ NodeList.implement('last', function() {
 	} else {
 		set(this, name, value, type);
 	}
+  
+  return this;
 });	
 
-[NodeList, Node].implement('get', function(name, type) {
-	function get (item, name, type) {
-		if (type == 'data') {
+[Node, NodeList, Object].implement('get', function(name, type) {
+  if (!this.isNode()) return;
+	function getData (item, name) {
 			<% if (settings.indexOf('ie') >= 0) { %>
 			var data = item.getData(name);
 			<% } else { %>
@@ -133,15 +159,26 @@ NodeList.implement('last', function() {
 				}
 			} else {
 				return false;
-			}		
+			}  
+  }
+  
+  function get (item, name, type) {
+		if (type == 'data') {
+      if (window.SJS.data.object) {
+        if (typeof window.dataCache[item][name] === 'undefined')        
+          return getData(item, name);
+        return window.dataCache[item][name];
+      } else {
+  			return getData(item, name);	
+      }
 		} else {
 			switch (name) {
+				case 'tag':
+					return item.nodeName;
 				case 'html':
 					return item.innerHTML;
 					break;
 				case 'text':
-					if (item.innerText)
-						return item.innerText;
 					return item.textContent;
 					break;
 				default:
@@ -158,16 +195,40 @@ NodeList.implement('last', function() {
 	return get(this.getNode(), name, type);
 });
 
+[NodeList, Node].implement('removeData', function(name) {
+  if (window.SJS.data.object) {
+    function remove (element, name) {  
+      var cache = window.dataCache, index;
+      if (typeof cache[element] !== 'undefined') {
+        index = cache[element].indexOf(name);
+        if (index > -1)
+          return cache[element].splice(index, 1);
+        return false;
+      } 
+    }
+    
+  	if (this instanceof NodeList) {		
+  		this.each(function(item){
+  			remove(this, name);
+  		});
+  	} else {
+  		remove(this.getNode(), name);
+  	}
+    
+    return this;
+  }
+});
+
 [NodeList, Node].implement('getParent', function(){
 	return this.getNode().parentNode;
 });
 
 [NodeList, Node].implement('getElement', function(selector){
-	return this.getNode().querySelectorAll(selector).first();
+	return this.getNode().querySelector(selector).setSelector(selector, this.selector, true);
 });
 
 [NodeList, Node].implement('getElements', function(selector){
-	return this.getNode().querySelectorAll(selector);
+	return this.getNode().querySelectorAll(selector).setSelector(selector, this.selector, true);
 });
 
 [NodeList, Node].implement('getNext', function(){
@@ -179,11 +240,11 @@ NodeList.implement('last', function() {
 });	
 
 [NodeList, Node].implement('getFirstChild', function(){
-	return this.getNode().firstElementChild;
+	return this.getNode().firstElementChild.setSelector('> :first-child', this.selector, true);
 });
 
 [NodeList, Node].implement('getLastChild', function(){
-	return this.getNode().lastElementChild;
+	return this.getNode().lastElementChild.setSelector('> :last-child', this.selector, true);
 });
 
 [NodeList, Node].implement('getSiblings', function(){
@@ -215,6 +276,7 @@ NodeList.implement('last', function() {
 				parent.getParent().insertBefore(element, parent.nextSibling);
 				break;
 		}		
+		return element;
 	}
 
 	if (typeof arguments[0] === 'string') {
@@ -222,6 +284,9 @@ NodeList.implement('last', function() {
 	} else if (arguments[0] instanceof Node || arguments[0] instanceof Array) {
 		element = arguments[0];
 	}
+
+	if (typeof arguments[1] === 'undefined')
+		object = {};
 
 	if (arguments[1] instanceof Object) {
 		object = arguments[1]
@@ -231,19 +296,20 @@ NodeList.implement('last', function() {
 
 	if (typeof arguments[2] === 'string')
 		where = arguments[2];
-	
+
 	if (tag && object && where)
 		element = new Element(tag, object);
 
 	parent = this.getNode();
 
 	if (element instanceof Array) {
-		elements = element;
+		elements = element, arr = [];
 		$.each(elements, function(element, key){
-			inject(element, parent, where);
+			arr.push(inject(element, parent, where));
 		});
+		return arr;
 	} else {
-		inject(element, parent, where);		
+		return inject(element, parent, where);		
 	}
 });
 

@@ -9,10 +9,11 @@ var settings = require('./settings.js');
 
 gulp.task('sjs', function() {
     return Object.keys(settings.browserSupport).forEach(function(key) {
-        console.log(settings.browserSupport[key]);
+        console.log(key);
+        
 
         gulp.src('./src/s.js')
-            .pipe(ejs({"settings": settings.browserSupport[key], "modules": settings.modules}, {ext: '.js', 'rmWhitespace': true}))
+            .pipe(ejs({"settings": settings.browserSupport[key], "name": key, "modules": settings.modules}, {ext: '.js', 'rmWhitespace': true}))
             .pipe(beautify())
             .pipe(rename(key + '.js'))
             .pipe(gulp.dest('./prod/'));
@@ -28,6 +29,11 @@ gulp.task('benchmark', function(){
     return gulp.src('./src/benchmark/**')
     .pipe(gulp.dest('./prod/benchmark/'));
 });
+
+gulp.task('unittests', ['sjs'], function(){
+    return gulp.src('./src/unittests/**')
+    .pipe(gulp.dest('./prod/unittests/'));
+});
  
 gulp.task('compress', ['sjs'], function() {
     return Object.keys(settings.browserSupport).forEach(function(key) {
@@ -38,7 +44,7 @@ gulp.task('compress', ['sjs'], function() {
     });   
 });
 
-gulp.task('move', ['compress'], function() {
+gulp.task('move', ['sjs', 'compress','html', 'benchmark', 'unittests'], function() {
   return gulp.src('./prod/**/*')
     .pipe(gulp.dest('C:/xampp/htdocs/sjs/'));
 });
@@ -46,9 +52,10 @@ gulp.task('move', ['compress'], function() {
 gulp.task('watch', function() {   
     gulp.watch(['./src/*.js', './src/modules/**'], ['sjs', 'compress']);
     gulp.watch('./src/test/**', ['html']);
+    gulp.watch('./src/unittests/**', ['unittests']);
     gulp.watch('./src/benchmark/*', ['benchmark']);
-    gulp.watch('./src/**/*', ['move']);
+    gulp.watch('./src/**/*', ['sjs', 'compress', 'move']);
 });
 
-gulp.task('default', ['watch', 'compress', 'html', 'benchmark', 'move'], function() {});
+gulp.task('default', ['watch', 'sjs','compress', 'html', 'unittests', 'move'], function() {});
 

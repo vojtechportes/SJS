@@ -6,6 +6,7 @@
 	} else {
 		this.style[key] = val;
 	}
+  return this;
 });
 
 [NodeList, Node].implement('setStyles', function(object){
@@ -21,6 +22,7 @@
 			item.style[key] = val;
 		});
 	}
+  return this;
 });
 
 [NodeList, Node].implement('getStyle', function(key) {
@@ -28,7 +30,7 @@
 
 	if (typeof item.style[key] !== 'undefined')
 		return item.style[key];
-	return false;
+	return item;
 });
 
 [NodeList, Node].implement('removeStyle', function(key) {
@@ -36,5 +38,5 @@
 	
 	if (typeof item.style[key] !== 'undefined')
 		item.style[key] = null;
-	return false;
+	return item;
 });

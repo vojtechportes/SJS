@@ -9,15 +9,15 @@
 		callback = arguments[1];
 	}
 
-	if (this instanceof NodeList === false) {
+	if (!(data instanceof Array) && !(data instanceof NodeList)) {
 		for (var key in data) {
-			if (data.hasOwnProperty(key) && key !== 'length') {
+			if (data.hasOwnProperty(key)) {
 				callback.call(null, data[key], key);
 			}
 		}
 	} else {
-		for (var i = 0; item = data[i++];) {
-			callback.call(item, item, i - 1);
+		for (var i = 0; i < data.length; i++) {
+			callback.call(data[i], data[i], i);
 		}
 	}
 });

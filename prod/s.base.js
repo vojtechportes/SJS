@@ -140,41 +140,6 @@ Object.implement('merge', function (items, deep) {
     }
 });
 
-[NodeList, Node, Object].implement('size', function (outer) {
-    var item = this.getNode();
-
-    if (typeof outer === 'undefined') outer = false;
-
-    if (item.self == window) {
-        var obj = {
-            'x': (outer) ? item.outerWidth : item.innerWidth,
-            'y': (outer) ? item.outerHeight : item.innerHeight
-        }
-    } else {
-        var obj = {
-            'x': (outer) ? item.offsetWidth : item.clientWidth,
-            'y': (outer) ? item.offsetHeight : item.clientHeight
-        }
-    }
-
-    return obj;
-});
-
-[NodeList, Node].implement('offset', function () {
-    var item = this.getNode();
-
-    return {
-        'top': item.offsetTop,
-        'bottom': $('html').size(true).y - (item.offsetTop + item.size(true).y),
-        'left': item.offsetLeft,
-        'right': window.size(true).x - (item.offsetLeft + item.size(true).x)
-    };
-});
-
-[NodeList, Node].implement('offsetParent', function () {
-    return this.getNode().offsetParent.offset();
-});
-
 String.implement('toCamelCase', function () {
     var reg = new RegExp(/([^\_\-\s]+)/g),
         res, str = '';
@@ -633,47 +598,6 @@ NodeList.implement('last', function () {
     return item;
 });
 
-[NodeList, Node].implement('setStyle', function (key, val) {
-    if (this instanceof NodeList) {
-        this.each(function (item) {
-            item.style[key] = val;
-        });
-    } else {
-        this.style[key] = val;
-    }
-    return this;
-});
-
-[NodeList, Node].implement('setStyles', function (object) {
-    if (this instanceof NodeList) {
-        this.each(function (item) {
-            $.each(object, function (val, key) {
-                item.style[key] = val;
-            });
-        });
-    } else {
-        var item = this;
-        $.each(object, function (val, key) {
-            item.style[key] = val;
-        });
-    }
-    return this;
-});
-
-[NodeList, Node].implement('getStyle', function (key) {
-    var item = this.getNode();
-
-    if (typeof item.style[key] !== 'undefined') return item.style[key];
-    return item;
-});
-
-[NodeList, Node].implement('removeStyle', function (key) {
-    var item = this.getNode();
-
-    if (typeof item.style[key] !== 'undefined') item.style[key] = null;
-    return item;
-});
-
 window.extend('eventCache', {});
 
 window.extend('hasReadyPassed', false);
@@ -997,33 +921,3 @@ Request.implement('send', function (query) {
         }
     }).send();
 });
-
-function Require(paths, callback) {
-    var length, i = 0;
-
-    if (typeof paths === 'string') paths = [paths];
-    length = paths.length;
-
-    $.each(paths, function (path, key) {
-        var script = new Element('script', {
-            "src": path,
-            "data": {
-                "require": ""
-            },
-            "type": "text/javascript"
-        });
-
-        $('head').inject(script);
-
-        if (typeof callback !== 'undefined') {
-            script.addEvent("load", function () {
-                i++;
-                if (i === length) {
-                    callback();
-                }
-            });
-        }
-    });
-
-
-};
