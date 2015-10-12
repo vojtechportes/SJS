@@ -5,9 +5,9 @@ var settings = {
 		"s": ["ie"],
 	},
 	"modules": {
-    "s.modern": ["Core", "Array", "Dimension", "String", "Each", "Element", "Element.Class", "Element.Style", "Element.Event", "Request", "Require"],
-    "s.base": ["Core", "Array", "String", "Each", "Element", "Element.Class", "Element.Event", "Request"],
-    "s": ["Core", "Array", "Dimension", "String", "Each", "Element", "Element.Class", "Element.Style", "Element.Event", "Request", "Require"]
+    "s.modern": ["Core", "Data", "Array", "Dimension", "String", "Each", "Element", "Element.Class", "Element.Style", "Element.Event", "Request", "Require"],
+    "s.base": ["Core", "Data", "Array", "String", "Each", "Element", "Element.Class", "Element.Event", "Request"],
+    "s": ["Core", "Data", "Array", "Dimension", "String", "Each", "Element", "Element.Class", "Element.Style", "Element.Event", "Request", "Require"]
   }
 }; 
 
