@@ -1,6 +1,8 @@
 # SJS
 <small>version 1.1.13</small>
 
+<h1>Issues with Event and Data attribute modules are awaiting to be fixed. Therefore SJS should be used only without this modules. Fix should be ready till April 2016</h1>
+
 Simple javascript library for **modern browsers**.
 
 ## Benchmark
